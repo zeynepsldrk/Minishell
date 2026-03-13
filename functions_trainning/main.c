@@ -71,3 +71,14 @@ rl_on_new_line()    → "readline'a: artık yeni satırdayız"
 rl_replace_line()   → "readline'a: satırı bununla değiştir"
 rl_redisplay()      → "readline'a: ekranı yenile"
 */
+
+/*
+access()
+"Bu dosyaya erişebilir miyim?" kontrolü yapar. Dosya var mı, izinler uygun mu gibi.
+#include <unistd.h>
+
+int access(const char *path, int mode);
+
+mode yerine F_OK R_OK W_OK X_OK gibi makrolar kullanılır. Bunlar sırasıyla "var mı?", "okuma izni var mı?", "yazma izni var mı?", "çalıştırma izni var mı?" anlamına gelir.
+
+*/
