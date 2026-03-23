@@ -72,13 +72,25 @@ rl_replace_line()   → "readline'a: satırı bununla değiştir"
 rl_redisplay()      → "readline'a: ekranı yenile"
 */
 
+
 /*
-access()
-"Bu dosyaya erişebilir miyim?" kontrolü yapar. Dosya var mı, izinler uygun mu gibi.
-#include <unistd.h>
+Şimdi de access, open, read, close fonksiyonlarını inceleyeceğim. redirection kısımlarında kullanılacaklar.
 
-int access(const char *path, int mode);
+Bunları yapma sebeplerimiz: cat ile dosya okuma gibi işlemler yaparken dosyanın durumunu kontrol etmek,
+gereksiz process oluşturmayı önlemek
+güvenli doğru çıkışı yapabilmek 
 
-mode yerine F_OK R_OK W_OK X_OK gibi makrolar kullanılır. Bunlar sırasıyla "var mı?", "okuma izni var mı?", "yazma izni var mı?", "çalıştırma izni var mı?" anlamına gelir.
+->ilk olarak access()
+prototipi => int access(const char *pathname, int mode);
 
+	Bu dosyaya erişebilir miyim?" kontrolü yapar. Dosya var mı, izinler uygun mu gibi.
+	mode yerine F_OK R_OK W_OK X_OK gibi makrolar kullanılır.
+	Bunlar sırasıyla "var mı?", "okuma izni var mı?", "yazma izni var mı?", "çalıştırma izni var mı?" anlamına gelir.
+
+access içinde girilecek PATH hakkında:
+	ortam değişkenlerinin(envp) içindeki Path değişkeni içindeki klasörleridir. 
+	Klasör içlerinde aranan komut var mı kontrol ederken kullanılır.
+
+->open()
+Prototipi => int open(const char *pathname, int flags, mode_t mode);
 */
