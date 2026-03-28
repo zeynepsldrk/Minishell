@@ -7,6 +7,19 @@ int	nonspace_index(char *str, int ind)
 	return ind;
 }
 
+t_token	*new_token(t_token_type type, char *value)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if(!token)
+		return (NULL);
+	token->type = type;
+	token->value = value;
+	token->ne = NULL;
+	return (token);
+}
+
 void	get_value(char *str, int i)
 {
 	int j;
