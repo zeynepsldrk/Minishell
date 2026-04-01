@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:03:29 by asay              #+#    #+#             */
-/*   Updated: 2026/04/01 17:17:39 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/01 20:35:32 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int prompt(t_shell *shell) //readline basmalı
         free(trimmed);
         return 0;
     }
-    lexer(shell, trimmed);
+    (void)shell;
+    //lexer(shell, trimmed);
     free(trimmed);
     return 0;
 }
@@ -44,11 +45,14 @@ int prompt(t_shell *shell) //readline basmalı
 int main(int argc, char **argv, char **env)
 {
     t_shell *shell;
-    char *line;
-
+    (void)argv;
+    (void)argc;
+    (void)env;
+    
+    shell = NULL;
     // init func.
     //env = getenv()
-    while(prompt(&shell))
+    while(prompt(shell))
     {
         
         
@@ -56,4 +60,3 @@ int main(int argc, char **argv, char **env)
     //cleaning
     return(shell->exit_value);
 }
-

@@ -6,15 +6,14 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:38:00 by asay              #+#    #+#             */
-/*   Updated: 2026/04/01 18:29:39 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/01 19:25:17 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-
-t_token	*new_token(t_token_type type, char *value)
+t_token	*new_token(t_token_type type, char *context)
 {
 	t_token	*token;
 
@@ -22,7 +21,7 @@ t_token	*new_token(t_token_type type, char *value)
 	if(!token)
 		return (NULL);
 	token->type = type;
-	token->value = value;
+	token->context = ft_strdup(context);
 	token->next = NULL;
 	return (token);
 }

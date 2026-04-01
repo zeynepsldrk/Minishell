@@ -6,11 +6,11 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 18:06:47 by asay              #+#    #+#             */
-/*   Updated: 2026/04/01 18:56:46 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/01 20:56:25 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "stdio.h"
+#include "minishell.h"
 int ft_strlen(char *str)
 {
 	int i;
@@ -21,13 +21,13 @@ int ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strdup(const char *str)
+char	*ft_strdup(char *str)
 {
 	char	*dupe;
 	size_t	i;
 
 	i = 0;
-	dupe = (char *)malloc((ft_strlen(str) + 1) * sizeof(char));
+	dupe = malloc((ft_strlen(str) + 1) * sizeof(char));
 	if (!dupe)
 		return (NULL);
 	while (str[i])
@@ -54,7 +54,7 @@ char *trim(char *str)
         return NULL;
     while((str[i] == ' ' || str[i] == '\t') && str[i])
         i++;
-    while((str[j] == ' ' || str[j] == '\t' && j > 0))
+    while((str[j] == ' ' || str[j] == '\t') && j > 0)
         j--;
     while(i < j)
         dup[k++] = str[i++];
