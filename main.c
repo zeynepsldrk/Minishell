@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:03:29 by asay              #+#    #+#             */
-/*   Updated: 2026/04/01 20:35:32 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/02 21:43:15 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int prompt(t_shell *shell) //readline basmalı
     if (line[0] == '\0')
     {
         free(line);
-        return (0);
+        return (1);
     }
     add_history(line);
     trimmed = trim(line);
@@ -34,12 +34,12 @@ int prompt(t_shell *shell) //readline basmalı
     if(!trimmed || trimmed[0] == '\0')
     {
         free(trimmed);
-        return 0;
+        return (1);
     }
     (void)shell;
     //lexer(shell, trimmed);
     free(trimmed);
-    return 0;
+    return (1);
 }
 
 int main(int argc, char **argv, char **env)
@@ -47,16 +47,19 @@ int main(int argc, char **argv, char **env)
     t_shell *shell;
     (void)argv;
     (void)argc;
-    (void)env;
-    
-    shell = NULL;
-    // init func.
-    //env = getenv()
+
+    shell = malloc(sizeof(t_shell));
+    if (!shell)
+        return 1; 
+    if (sh_init(shell, env) == -1)
+    {
+        write(2, "Initialization failed\n", 22);
+        return (1);
+    }
     while(prompt(shell))
     {
         
-        
     }
-    //cleaning
+    free_sh(shell);
     return(shell->exit_value);
 }
