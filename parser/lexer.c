@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:37:52 by asay              #+#    #+#             */
-/*   Updated: 2026/04/01 20:52:51 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/02 22:30:39 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,41 +24,65 @@ int lexer(t_shell *shell, char *str)
     return (1);
 }
 
-t_token *get_tokens(char *str)
+void whitspace_tkn(t_lexer *ptr, char *str)
 {
-    int i;
-    int j;
-    char *buff;
-    t_token *head;
-    t_token *curr;
-    t_token_type value;
-
-    i = 0;
-    j = 0;
-    head = NULL;
-    buff = malloc(sizeof(char) * (ft_strlen(str) + 1));
-    if(!buff)
-        return NULL;
-    while(str[i])
-    {
-        value = get_value(str, &i);
-        if(str[i] == 32 || str[i] == '<' || str[i] == '>'
-            || str[i] == 34 || str[i] == 39 || str[i] == '|')
+    if(ptr->buff[0])
         {
-            if(!buff[0])
-                i++;
-            else
-            {
-                curr = new_token(value, buff);
-                //add_token(&head, curr); //add_token daha yazılmadı. 
-                buff[0] = '\0';
-                j = 0;
-                i++;
-            }
+            ptr->curr = new_token(ptr->value, ptr->buff);
+            add_token(&ptr->head, ptr->curr);
+            ptr->buff[0] = '\0';
+            ptr->j = 0;
+            ptr->i++;
         }
         else
-            buff[j++] = str[i++];
+        {
+            while(str[ptr->i] == 32)
+                ptr->i++;
+        }
+}
+
+void redirect_tkn(t_lexer *ptr, char *str)
+{
+    
+}
+
+void quote_tkn(t_lexer *ptr, char *str)
+{
+    
+}
+
+void pipe_tkn(t_lexer *ptr, char *str)
+{
+    
+}
+
+t_token *get_tokens(char *str)
+{
+    t_lexer *ptr;
+
+    ptr = malloc(sizeof(t_lexer));
+    if(!ptr)
+        return NULL;
+    ptr->i = 0;
+    ptr->j = 0;
+    ptr->head = NULL;
+    ptr->buff = malloc(sizeof(char) * (ft_strlen(str) + 1));
+    if(!ptr->buff)
+        return NULL;
+    while(str[ptr->i])
+    {
+        ptr->value = get_value(str, &(ptr->i));
+        if(str[ptr->i] == 32)
+            whitsepace_tkn(ptr, str);
+        else if(str[ptr->i] == '<' || str[ptr->i] == '>')
+            redirect_tkn(ptr, str);
+        else if(str[ptr->i] == 34 || str[ptr->i] == 39)
+            quote_tkn(ptr, str);
+        else if(str[ptr->i] == '|')
+            pipe_tkn(ptr, str);
+        else
+            ptr->buff[ptr->j++] = str[ptr->i++];
     }
-    return (head);
+    return (ptr->head);
 }
 
