@@ -19,6 +19,8 @@ readline() sana malloc ile ayrılmış bir string verir. Sen free() etmekle soru
 
 */
 
+
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -64,6 +66,8 @@ int main(void)
     }
     return (0);
 }
+
+*/
 
 /*
 add_history() fonksiyonu yukarıda kullanıldığı gibi önceki komudu getirir.
@@ -198,6 +202,37 @@ minishell projesinde kullanılmaya gerek yoktur.
 
 ->getcwd()
 Prototipi => char *getcwd(char *buf, size_t size);
+
+    -Bir program çalıştığında program bir konum üzerindedir. Bu konumu veren fonk.
+    -*buf: dizinin yolunun yazıldığı dizi 
+    -*size: dizinin boyutu
+    -getcwd() fonk. pwd komutunun çalışması için kullanacağız. Ya da cd ile dizinin değiştirdiğimiz
+    yeni konumu alırken de kullanılır.
+
+    !!Attention!!
+    -getcwd(NULL, 0); durumunda içeride malloc açılır. Free yapılması gerekir. Kendi buf'ını stack de
+    tanımlarsak free gerekli değil. 
+    -Mevcut dizi bir şekilde silindi. getcwd() fonk. hata veriri. Bu durumda shell çökmemeli, eğer konumu okuma yetkisi
+    elinden alınırsa fonk. hata döner.
+    Yanii getcwd() fonk. başarısız olursa NULL döner. Başarısız olma durumları:
+        -Eğer buf NULL değilse ve size sıfır ise.
+        -Eğer buf NULL değilse ve size çok küçükse.
+        -Eğer buf NULL ise ve malloc başarısız olursa.
+        -Eğer mevcut dizinin konumunu okuma yetkisi elinden alınırsa.
+    -getcwd() fonk. başarısız olursa errno değişkeni şu değerleri alır:
+        -ERANGE: Eğer buf NULL değilse ve size sıfır ise veya buf NULL değilse ve size çok küçükse.
+        -ENOMEM: Eğer buf NULL ise ve malloc başarısız olursa.
+        -EACCES: Eğer mevcut dizinin konumunu okuma yetkisi elinden alınırsa.
+    NULL döndüğü durumlarda errno'ya bakarak hatanın ne olduğunu anlayabiliriz. perror() ile
+    o kısmı atla programçalışmaya devam etmeli.
+
+
+->chdir()
+Prototipi => int chdir(const char *path);
+
+    -chdir() fonk. cd komutunun çalışması için kullanacağız.
+    -*path: gitmek istediğimiz dizinin yolu. İşlem başarılı olursa 0 döner, başarısız olursa -1 döner.
+    
 
 	
 
