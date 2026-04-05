@@ -50,9 +50,12 @@ typedef struct s_minishell
 {
     t_env_node *env_list;
 	char **env;
+    char *input;
 	int exit_value;
 	t_token *tokens;
+    t_cmd *cmds;
 } t_shell;
+
 
 
 #endif
