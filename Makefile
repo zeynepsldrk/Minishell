@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRCS = main.c
+SRCS = src/main.c
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -I include
@@ -10,7 +10,7 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -lreadline -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
