@@ -18,10 +18,10 @@ void start_execute(t_shell *shell)
     olarak çalıştırılması, ek olarak içeride redirect işlemleri kontrolü de yapılmalıdır.*/
     if (cmd->next != NULL) //birden fazla cmd varsa pipe var demektir
         pipe_working(shell); //cmd listesini dolaşarak pipe işlemlerini yapar
-    else if (is_builtin(cmd->argv[0])) //tek cmd varsa ve bu cmd bir built-in komutsa
-        execute_builtin(shell); //built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+    else if (is_builtin(cmd->argv[0], shell)) //cmd tek ise builtin mi diye kontrol eder
+        execute_builtin(cmd->argv[0], shell); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
     else
-        execute_external(shell); //external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+        execute_external(shell); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
     
 }
 
@@ -43,16 +43,6 @@ void lets_start_shell(t_shell *shell)
             start_execute(shell);
         free(shell->input);
     }
-}
-
-t_shell *init_shell(t_shell *shell, char **envp)
-{ 
-    shell->env_list = NULL;
-    shell->env = envp;
-    shell->exit_value = 0;
-    shell->tokens = NULL;
-    shell->cmds = NULL;
-    return (shell);
 }
 
 int main(int argc, char **argv, char **envp)
