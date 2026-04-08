@@ -18,7 +18,7 @@ t_builtin *init_builtins(t_builtin *builtins)
     builtins[5].name = "unset";
     builtins[5].func = builtin_unset;
     builtins[6].name = "env";
-    builtins[6].func = builtin_env;      
+    builtins[6].func = builtin_env;
     return (builtins);
 }
 
