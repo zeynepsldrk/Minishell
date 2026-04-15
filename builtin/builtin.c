@@ -3,21 +3,6 @@
 int builtin_cd(t_shell *shell);
 int builtin_echo(t_shell *shell);
 
-void *apply_redir(t_redirect *redir, t_shell *shell)
-{
-    while (redir)
-    {
-        if(redir->type == REDIRECT_IN)
-            apply_redirect_in(redir, shell);
-        else if(redir->type == REDIRECT_OUT)
-            apply_redirect_out(redir, shell);
-        else if(redir->type == HEREDOC)
-            apply_heredoc(redir, shell);
-        else if(redir->type == APPEND)
-            apply_append(redir, shell);
-        redir = redir->next;
-    }
-}
 
 void *execute_builtin(char *cmd, t_shell *shell) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
 {                                           //Burada redir olup olmaması fark etmeksizin
