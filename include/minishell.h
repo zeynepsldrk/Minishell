@@ -64,6 +64,8 @@ typedef struct s_minishell
     t_cmd *cmds;
 } t_shell;
 
+
+
 t_cmd *start_parser(char *input, t_shell *shell);
 
 t_shell *init_shell(t_shell *shell, char **envp);
