@@ -37,13 +37,18 @@ void apply_heredoc(redir, shell)
     while (1)
     {
         line = readline("> ");
-        if (line == NULL || strcmp(line, redir->target_file) == 0)
+        if (line == NULL || str_cmp(line, redir->target_file) == 0)
             break;
         write(fd, line, strlen(line));
         write(fd, "\n", 1);
         free(line);
     }
     free(line);
+    close(fd); //geçici dosyama write ile yazdırdım artık işim bitiyor tekrar açmalıyım
+    //ama yanlızca okumak için terminalden okumasın da geçici dosyadan okusun diye dup2 ile stdin de geçici dosya da aynı yöne yönlendirildi
+    fd = open(temp_file, O_RDONLY);
+    if (redir_error(fd))
+        return ;
     dup2(fd, STDIN_FILENO);
     close(fd);
 }
