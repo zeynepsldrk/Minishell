@@ -44,7 +44,7 @@ int main(void)
         }
 
 		// "clear" yazılırsa ekranı temizle ve prompt'u yenile
-        if (strcmp(line, "clear") == 0)
+        if (str_cmp(line, "clear") == 0)
         {
             free(line);
             rl_on_new_line();  // readline'a: artık yeni satırdayız 
