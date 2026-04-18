@@ -49,3 +49,18 @@ int sh_init(t_shell *shell, char **env)
         return (-1);
     return (0);   
 }
+
+int lexer_init(t_lexer *ptr, char *str)
+{
+    ptr->buff = malloc(sizeof(char) * (ft_strlen(str) + 1));
+    if(!ptr->buff)
+        return (-1);
+    ptr->head = NULL;
+    ptr->curr = NULL;
+    ptr->i = 0;
+    ptr->j = 0;
+    ptr->buff[0] = '\0';
+    ptr->in_single = 0;
+    ptr->in_double = 0;
+    return (0);
+}

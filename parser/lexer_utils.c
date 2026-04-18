@@ -26,29 +26,41 @@ t_token	*new_token(t_token_type type, char *context)
 	return (token);
 }
 
-t_token_type	get_value(char *str, int *i)
+//kontrol edildi.
+//gelen inputta str[*i]'nin ne olduğunu kontrol ediyoruz.
+t_token_type	get_value(char *str, int *i) 
 {
 	if (str[*i] == '>')
 	{
 		if(str[*i+1] == '>')
-		{
-			return(APPEND);
-			(*i)++;
-		}
+			return((*i)++, APPEND);
+		(*i)++;
 		return(REDIRECT_OUT);
 	}
 	else if (str[*i] == '<')
 	{
 		if(str[*i+1] == '<')
-		{
-			return(HEREDOC);
-			(*i)++;
-		}
+			return((*i)++, HEREDOC);
+		(*i)++;
 		return(REDIRECT_IN);
 	}
 	else if(str[*i] == '|')
-		return(PIPE);
+		return((*i)++, PIPE);
 	else
 		return(WORD);
-	(*i)++;
+}
+
+void add_token(t_token **head, t_token *new)
+{
+	t_token *temp;
+
+	if(!*head)
+	{
+		*head = new;
+		return ;
+	}
+	temp = *head;
+	while(temp->next)
+    	temp = temp->next;
+	temp->next = new;
 }
