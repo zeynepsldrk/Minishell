@@ -71,23 +71,33 @@ typedef struct s_lexer
     t_token *head;
     t_token *curr;
     t_token_type value;
+	int in_single;
+	int in_double;
 } t_lexer;
 
 // int	is_quote_open(char *str);
 t_token			*new_token(t_token_type type, char *context);
 t_token_type	get_value(char *str, int *i);
-t_token 		*get_tokens(char *str);
-int 			pipe_ctrl(char *str, int i);
-int 			ft_strlen(char *str);
-char			*ft_strdup(char *str); //kullanmıyo olabilirm
+t_token			*get_tokens(char *str);
+int				pipe_ctrl(char *str, int i);
+int				ft_strlen(char *str);
+char			*ft_strdup(char *str);
 char 			*trim(char *str);
-int 			prompt(t_shell *shell); //readline basmalı
+int				prompt(t_shell *shell); //readline basmalı
 char			*ft_substr(char *str, int start, int len);
 t_token 		*get_token_util(char *str, t_token **curr, int *i, char *buff);
 char 			**copy_env(char **env);
-int 			sh_init(t_shell *shell, char **env);
+int				sh_init(t_shell *shell, char **env);
 void    		free_str(char **str);
 void			free_sh(t_shell *shell);
+int				lexer(t_shell *shell, char *str);
+void 			whitespace_tkn(t_lexer *ptr, char *str);
+void 			redirect_tkn(t_lexer *ptr, char *str);
+void 			quote_tkn(t_lexer *ptr, char *str);
+void 			pipe_tkn(t_lexer *ptr, char *str);
+int				lexer_init(t_lexer *ptr, char *str);
+
+
 
 
 #endif
