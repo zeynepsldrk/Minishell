@@ -80,12 +80,26 @@ void redirect_tkn(t_lexer *ptr, char *str)
 void quote_tkn(t_lexer *ptr, char *str)
 {
     char quote;
+    int temp;
 
+    temp = ptr->j;
     quote = str[ptr->i];
     ptr->i++;
     while(str[ptr->i] && str[ptr->i] != quote)
         ptr->buff[ptr->j++] = str[ptr->i++];
     ptr->i++; // quote karakterini atla
+    if(temp == ptr->j) // eğer tırnak içinde hiç karakter yoksa, boş bir token ekle
+    {
+        if(ptr->j > 0) // buffer'da hem bir WORd hem de boş bir tırnak varsa diye bir de "buff dolu muydu?" diye bakıyoruz.
+        {
+            ptr->curr = new_token(WORD, ptr->buff);
+            add_token(&ptr->head, ptr->curr);
+            ft_memset(ptr->buff, 0, ptr->j);
+            ptr->j = 0;
+        }
+        ptr->curr = new_token(WORD, "");
+        add_token(&ptr->head, ptr->curr);
+    }
 }
 // "hello"aleyna"world" -> "helloaleynaworld" şeklinde tek bir token olarak alınacak. 
 // yukarıdaki farklı kombinasyonlara göre fonksiyon geliştirilecek.
