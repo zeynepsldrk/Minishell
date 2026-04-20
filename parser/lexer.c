@@ -20,7 +20,15 @@ int lexer(t_shell *shell, char *str)
     tokens = get_tokens(str);
     if(!tokens)
         return (0);
+
     //tokenleri sırayla yazdırıp kontrol et.
+    t_token *temp = tokens;
+    while(temp)
+    {
+        printf("Type: %d, Context: '%s'\n", temp->type, temp->context);
+        temp = temp->next;
+    }
+    //test bitti.
     return (1);
 }
 
@@ -29,15 +37,14 @@ void whitespace_tkn(t_lexer *ptr, char *str)
 {
     if(ptr->buff[0])
     {
-        ptr->curr = new_token(ptr->value, ptr->buff);
+        ptr->curr = new_token(WORD, ptr->buff);
         add_token(&ptr->head, ptr->curr);
-        ptr->buff[0] = '\0';
-        ptr->j = 0;   
+        ft_memset(ptr->buff, 0, ptr->j);
+        ptr->j = 0; 
     }
-    while(str[ptr->i] == 32)
+    while(str[ptr->i] == 32 && str[ptr->i])
         ptr->i++;
 }
-
 
 void redirect_tkn(t_lexer *ptr, char *str)
 {
@@ -47,49 +54,42 @@ void redirect_tkn(t_lexer *ptr, char *str)
     {
         ptr->curr = new_token(WORD, ptr->buff);
         add_token(&ptr->head, ptr->curr);
-        ptr->buff[0] = '\0';
-        ptr->j = 0;   
+        ft_memset(ptr->buff, 0, ptr->j);
+        ptr->j = 0;  
     }
     //redirect > görüldüğü her koşulda eklenecek o yüzden herhangi bir if yok
-    ptr->curr = new_token(ptr->value, ""); //zaten get_value'dan value burada saklanıyor. context'in > olduğu belli. direkt boş string veriyoruz. 
+    if(ptr->value == APPEND)
+        ptr->curr = new_token(ptr->value, ">>");
+    else if(ptr->value == HEREDOC)
+        ptr->curr = new_token(ptr->value, "<<");
+    else if(ptr->value == REDIRECT_OUT)
+        ptr->curr = new_token(ptr->value, ">");
+    else
+        ptr->curr = new_token(ptr->value, "<");
     add_token(&ptr->head, ptr->curr);
+    if(ptr->value == APPEND || ptr->value == HEREDOC)
+        ptr->i++;
+    ptr->i++;
     while(str[ptr->i] == 32)
         ptr->i++;
+    ft_memset(ptr->buff, 0, ptr->j);
+    ptr->j = 0;
 }
 
+// çift tırnak veya tek tırnak görünce çağrılır ve tırnak karakterini atlayarak başlar, aynı tırnak karakteriyle karşılaşana kadar buffera yazmaya devam eder.
 void quote_tkn(t_lexer *ptr, char *str)
 {
-    if(str[ptr->i] == 34)
-        ptr->in_double = 1;
-    if(str[ptr->i] == 39)
-        ptr->in_single = 1;
+    char quote;
+
+    quote = str[ptr->i];
     ptr->i++;
-    while(str[ptr->i] && (ptr->in_double || ptr->in_single))
-    {
-        if(str[ptr->i] == 34 && ptr->in_double)
-        {
-            ptr->in_double = 0;
-            ptr->i++;
-        }
-        else if(str[ptr->i] == 39 && ptr->in_single)
-        {            
-            ptr->in_single = 0;
-            ptr->i++;
-        }
-        else
-        {
-            ptr->buff[ptr->j] = str[ptr->i];
-            ptr->i++;
-            ptr->j++;
-        }
-    }
-    ptr->curr = new_token(WORD, ptr->buff);
-    add_token(&ptr->head, ptr->curr);
-    ptr->buff[0] = '\0';
-    ptr->j = 0;   
-    while(str[ptr->i] == 32)
-        ptr->i++;
+    while(str[ptr->i] && str[ptr->i] != quote)
+        ptr->buff[ptr->j++] = str[ptr->i++];
+    ptr->i++; // quote karakterini atla
 }
+// "hello"aleyna"world" -> "helloaleynaworld" şeklinde tek bir token olarak alınacak. 
+// yukarıdaki farklı kombinasyonlara göre fonksiyon geliştirilecek.
+// bash nasıl çalışıyor inceleyip ona göre davranırız.
 
 void pipe_tkn(t_lexer *ptr, char *str)
 {
@@ -100,14 +100,17 @@ void pipe_tkn(t_lexer *ptr, char *str)
     {
         ptr->curr = new_token(WORD, ptr->buff);
         add_token(&ptr->head, ptr->curr);
-        ptr->buff[0] = '\0';
+        ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;   
     }
     //pipe | görüldüğü her koşulda eklenecek o yüzden herhangi bir if yok
-    ptr->curr = new_token(ptr->value, ""); //zaten get_value'dan value burada saklanıyor. context'in | olduğu belli. direkt boş string veriyoruz. 
+    ptr->curr = new_token(ptr->value, "|"); //zaten get_value'dan value burada saklanıyor. context'in | olduğu belli. direkt boş string veriyoruz. 
     add_token(&ptr->head, ptr->curr);
+    ptr->i++;
     while(str[ptr->i] == 32)
         ptr->i++;
+    ft_memset(ptr->buff, 0, ptr->j);
+    ptr->j = 0;
 }
 
 t_token *get_tokens(char *str)
@@ -133,6 +136,9 @@ t_token *get_tokens(char *str)
         else
             ptr->buff[ptr->j++] = str[ptr->i++];
     }
+    if (ptr->j > 0)
+        add_token(&ptr->head, new_token(WORD, ptr->buff));
+
     return (ptr->head);
 }
 

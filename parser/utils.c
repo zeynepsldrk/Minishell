@@ -57,7 +57,7 @@ char *trim(char *str)
         i++;
     while((str[j] == ' ' || str[j] == '\t') && j > 0)
         j--;
-    while(i < j)
+    while(i <= j)
         dup[k++] = str[i++];
     dup[k] = '\0';
     return dup;
@@ -76,6 +76,23 @@ char *ft_substr(char *str, int start, int len)
         sub[i++] = str[start++];
     sub[i] = '\0';
     return (sub);
+}
+
+void	*ft_memset(void *b, int c, size_t len)
+{
+	unsigned char	*b2;
+	unsigned char	c2;
+	size_t			i;
+
+	i = 0;
+	b2 = (unsigned char *)b;
+	c2 = (unsigned char )c;
+	while (i < len)
+	{
+		b2[i] = c2;
+		i++;
+	}
+	return (b);
 }
 
 // int	is_quote_open(char *str)

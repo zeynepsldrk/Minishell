@@ -19,15 +19,9 @@ int prompt(t_shell *shell) //readline basmalı
 
     line = readline("minishell > ");
     if(!line)
-    {
-        write(1, "\n", 1);
-        return (0);
-    }
+        return (write(1, "\n", 1), 0);
     if (line[0] == '\0')
-    {
-        free(line);
-        return (1);
-    }
+        return (free(line), 1);
     add_history(line);
     trimmed = trim(line);
     free(line);
@@ -37,7 +31,7 @@ int prompt(t_shell *shell) //readline basmalı
         return (1);
     }
     (void)shell;
-    //lexer(shell, trimmed);
+    lexer(shell, trimmed);
     free(trimmed);
     return (1);
 }
