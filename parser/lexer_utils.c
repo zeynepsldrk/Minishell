@@ -33,19 +33,17 @@ t_token_type	get_value(char *str, int *i)
 	if (str[*i] == '>')
 	{
 		if(str[*i+1] == '>')
-			return((*i)++, APPEND);
-		(*i)++;
+			return(APPEND);
 		return(REDIRECT_OUT);
 	}
 	else if (str[*i] == '<')
 	{
 		if(str[*i+1] == '<')
-			return((*i)++, HEREDOC);
-		(*i)++;
+			return(HEREDOC);
 		return(REDIRECT_IN);
 	}
 	else if(str[*i] == '|')
-		return((*i)++, PIPE);
+		return(PIPE);
 	else
 		return(WORD);
 }

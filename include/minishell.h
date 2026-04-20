@@ -96,8 +96,8 @@ void 			redirect_tkn(t_lexer *ptr, char *str);
 void 			quote_tkn(t_lexer *ptr, char *str);
 void 			pipe_tkn(t_lexer *ptr, char *str);
 int				lexer_init(t_lexer *ptr, char *str);
-
-
+void			add_token(t_token **head, t_token *new);
+void	*ft_memset(void *b, int c, size_t len);
 
 
 #endif

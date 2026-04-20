@@ -52,6 +52,9 @@ int sh_init(t_shell *shell, char **env)
 
 int lexer_init(t_lexer *ptr, char *str)
 {
+    int i;
+
+    i = 0;
     ptr->buff = malloc(sizeof(char) * (ft_strlen(str) + 1));
     if(!ptr->buff)
         return (-1);
@@ -59,7 +62,8 @@ int lexer_init(t_lexer *ptr, char *str)
     ptr->curr = NULL;
     ptr->i = 0;
     ptr->j = 0;
-    ptr->buff[0] = '\0';
+    while(i < (ft_strlen(str) + 1))
+        ptr->buff[i++] = 0;
     ptr->in_single = 0;
     ptr->in_double = 0;
     return (0);
