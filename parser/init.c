@@ -66,5 +66,6 @@ int lexer_init(t_lexer *ptr, char *str)
         ptr->buff[i++] = 0;
     ptr->in_single = 0;
     ptr->in_double = 0;
+    ptr->has_quote = 0;
     return (0);
 }
