@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
+/*   Updated: 2026/04/25 15:15:56 by zedurak          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_cmd *start_parser(char *input, t_shell *shell)
@@ -19,7 +31,7 @@ void start_execute(t_shell *shell)
     if (cmd->next != NULL) //birden fazla cmd varsa pipe var demektir
         pipe_working(shell); //cmd listesini dolaşarak pipe işlemlerini yapar
     else if (is_builtin(cmd->argv[0], shell)) //cmd tek ise builtin mi diye kontrol eder
-        execute_builtin(cmd->argv[0], shell); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+        execute_builtin(cmd->argv[0], shell, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
     else
         execute_external(shell); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
     //!!sondaki else bir şekilde azaltılabilir mi diye düşünüyorum, çünkü cmd tek ise ve builtin değilse zaten external komut oluyor, yani tek if ile de halledilebilir gibi geliyor bana.!!
