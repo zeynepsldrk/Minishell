@@ -30,8 +30,9 @@ int prompt(t_shell *shell) //readline basmalı
         free(trimmed);
         return (1);
     }
-    (void)shell;
     lexer(shell, trimmed);
+    free_tokens(shell->tokens);
+    shell->tokens = NULL;
     free(trimmed);
     return (1);
 }
@@ -44,7 +45,7 @@ int main(int argc, char **argv, char **env)
 
     shell = malloc(sizeof(t_shell));
     if (!shell)
-        return 1; 
+        return 1;
     if (sh_init(shell, env) == -1)
     {
         write(2, "Initialization failed\n", 22);
