@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/04/02 22:17:27 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/25 19:26:34 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_token
 	t_token_type type;
 	char *context;
 	struct s_token *next;
+	int expand;
 } t_token;
 	
 typedef struct s_redirect
@@ -76,7 +77,6 @@ typedef struct s_lexer
 	int has_quote;
 } t_lexer;
 
-// int	is_quote_open(char *str);
 t_token			*new_token(t_token_type type, char *context);
 t_token_type	get_value(char *str, int *i);
 t_token			*get_tokens(char *str);
@@ -86,7 +86,6 @@ char			*ft_strdup(char *str);
 char 			*trim(char *str);
 int				prompt(t_shell *shell); //readline basmalı
 char			*ft_substr(char *str, int start, int len);
-t_token 		*get_token_util(char *str, t_token **curr, int *i, char *buff);
 char 			**copy_env(char **env);
 int				sh_init(t_shell *shell, char **env);
 void    		free_str(char **str);
@@ -101,7 +100,7 @@ void			add_token(t_token **head, t_token *new);
 void			*ft_memset(void *b, int c, size_t len);
 void			free_tokens(t_token *token);
 void			free_commands(t_cmd *cmds);
-void clean_get_tkns(t_lexer *ptr);
+void			clean_get_tkns(t_lexer *ptr);
 
 
 
