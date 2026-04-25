@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/25 13:25:13 by zedurak           #+#    #+#             */
+/*   Updated: 2026/04/25 13:27:52 by zedurak          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void apply_redirect_out(redir, shell)
+void apply_redirect_out(t_redirect *redir, t_shell *shell)
 {
     int fd;
 
@@ -12,7 +24,7 @@ void apply_redirect_out(redir, shell)
     //hedef dosyayı bir tane dosya açarak yönlendirmesini yaptıktan sonra artık kullanılması bitmiş oluyor.
 }
 
-void apply_redirect_in(redir, shell)
+void apply_redirect_in(t_redirect *redir, t_shell *shell)
 {
     //burada okumayı yani stdin i hedef dosyayay yönelendircez
     int fd;
@@ -24,7 +36,7 @@ void apply_redirect_in(redir, shell)
     close(fd); //hedef dosyayı yöneldirdik bitti kapat gari
 }
 
-void apply_heredoc(redir, shell)
+void apply_heredoc(t_redirect *redir, t_shell *shell)
 {
     //şimdii burada stdin (0) e yazdıklarım yeni bir dosyaya birikecek EOF kadar sonra o dosyadan stdout (1) a yönlendirilecek
     int fd;
@@ -53,7 +65,7 @@ void apply_heredoc(redir, shell)
     close(fd);
 }
 
-void apply_append(redir, shell)
+void apply_append(t_redirect *redir, t_shell *shell)
 {
     int fd;
 
