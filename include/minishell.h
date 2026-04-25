@@ -8,6 +8,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# define MAX_PATH 1024
+
 typedef enum e_token_type
 {
 	WORD,
@@ -49,46 +51,48 @@ typedef struct s_env_node
 {
     char *key;
     char *value;
-    int has_value;
+    int has_value; //kullanılmıyor
     struct s_env_node *next;
 } t_env_node;
 
 typedef struct s_minishell
 {
-    t_env_node *env_list;
-	char **env;
-    char *input;
-	int exit_value;
-	t_token *tokens;
-    t_builtin *builtins;
-    t_cmd *cmds;
+	t_env_node	*env_list;
+	char		**env;
+	char		*input;
+	int			exit_value;
+	t_token		*tokens;
+	t_builtin	list_builtin[8];
+	t_cmd		*cmds;
 } t_shell;
 
 
 
-t_cmd *start_parser(char *input, t_shell *shell);
+t_cmd	*start_parser(char *input, t_shell *shell);
 
-t_shell *init_shell(t_shell *shell, char **envp);
-void lets_start_shell(t_shell *shell);
-void start_execute(t_shell *shell);
+t_shell	*init_shell(t_shell *shell, char **envp);
+void	lets_start_shell(t_shell *shell);
+void	start_execute(t_shell *shell);
 
+char *my_little_getenv(t_env_node *env_list, char *key);
+int	is_builtin(char *cmd, t_shell *shell);
+int	builtin_cd(t_shell *shell);
+int	builtin_echo(t_shell *shell);
+int	builtin_exit(t_shell *shell);
+int	builtin_pwd(t_shell *shell);
+int	builtin_export(t_shell *shell);
+int	builtin_unset(t_shell *shell);
+int	builtin_env(t_shell *shell);
 
-int is_builtin(char *cmd, t_shell *shell);
-int builtin_cd(t_shell *shell);
-int builtin_echo(t_shell *shell);
-int builtin_exit(t_shell *shell);
-int builtin_pwd(t_shell *shell);
-int builtin_export(t_shell *shell);
-int builtin_unset(t_shell *shell);
-int builtin_env(t_shell *shell);
+void	my_bzero(void *p, size_t num);
+char	*str_dup(const char *s);
+int		str_cmp(char *s1, char *s2);
+int		str_len(char *str);
+int		redir_error(int fd);
 
-int	str_cmp(char *s1, char *s2);
-int str_len(char *str);
-int redir_error(int fd);
-
-int print_with_escapes(char *str, int i);
-int info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);
-void *execute_builtin(char *cmd, t_shell *shell);
-void apply_redir(t_redirect *redirects, t_shell *shell);
+int		print_with_escapes(char *str, int i);
+int		info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);
+void	*execute_builtin(char *cmd, t_shell *shell, int i);
+void	apply_redir(t_redirect *redirects, t_shell *shell);
 
 #endif
