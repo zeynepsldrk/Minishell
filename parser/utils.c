@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 18:06:47 by asay              #+#    #+#             */
-/*   Updated: 2026/04/01 20:56:25 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/25 15:35:20 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,24 +94,3 @@ void	*ft_memset(void *b, int c, size_t len)
 	}
 	return (b);
 }
-
-// int	is_quote_open(char *str)
-// {
-// 	int	in_double;
-// 	int in_single;
-// 	int	i;
-
-// 	in_double = 0;
-// 	in_single = 0;
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == 34 && !in_single)
-// 			in_double = !in_double;
-// 		else if (str[i] == 39 && !in_double)
-// 			in_single = !in_single;
-// 		i++;
-// 	}
-// 	return (in_double || in_single);
-// }
-
