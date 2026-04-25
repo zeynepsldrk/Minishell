@@ -73,6 +73,7 @@ typedef struct s_lexer
     t_token_type value;
 	int in_single;
 	int in_double;
+	int has_quote;
 } t_lexer;
 
 // int	is_quote_open(char *str);
@@ -97,7 +98,11 @@ void 			quote_tkn(t_lexer *ptr, char *str);
 void 			pipe_tkn(t_lexer *ptr, char *str);
 int				lexer_init(t_lexer *ptr, char *str);
 void			add_token(t_token **head, t_token *new);
-void	*ft_memset(void *b, int c, size_t len);
+void			*ft_memset(void *b, int c, size_t len);
+void			free_tokens(t_token *token);
+void			free_commands(t_cmd *cmds);
+void clean_get_tkns(t_lexer *ptr);
+
 
 
 #endif
