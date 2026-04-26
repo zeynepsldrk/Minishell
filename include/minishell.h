@@ -9,6 +9,8 @@
 # include <readline/history.h>
 
 # define MAX_PATH 1024
+# define KEY 1
+# define VALUE 2
 
 typedef struct s_minishell t_shell;
 typedef struct s_builtin t_builtin;
@@ -103,8 +105,7 @@ void	apply_redir(t_redirect *redirects, t_shell *shell);
 void pipe_working(t_shell *shell);
 void execute_external(t_shell *shell);
 
-char *get_key_from_export_arg(char *arg, int i);
-char *get_value_from_export_arg(char *arg, int i);
+char *find_key_or_value(char *arg, int i, int which_one);
 int is_valid_for_export(char **args, int i, int j);
 int is_key_inside(char *key, t_env_node *env_list);
 
