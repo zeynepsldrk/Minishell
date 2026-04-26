@@ -55,6 +55,21 @@ int is_builtin(char *cmd, t_shell *shell)
         return (1);
     return (0);
 }
+
+char *my_little_getenv(t_env_node *env_list, char *key)
+{
+    t_env_node *temp;
+
+    temp = env_list;
+    while (temp)
+    {
+        if (str_cmp(temp->key, key) == 0)
+            return (temp->value); // Değeri bulduk, adresi döndür
+        temp = temp->next;
+    }
+    return (NULL); // Bulamazsak NULL dön
+}
+
 int builtin_exit(t_shell *shell);
 int builtin_pwd(t_shell *shell);
 int builtin_unset(t_shell *shell);
