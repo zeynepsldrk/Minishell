@@ -26,35 +26,33 @@ int is_key_inside(char *key, t_env_node *env_list)
     return (0);
 }
 
-char *get_value_from_export_arg(char *arg, int i)
+char *find_key_or_value(char *arg, int i, int which_one)
 {
-    char *value;
+    char *result;
 
-    while (arg[i])
+    if (which_one == 1)
+    {
+        while (arg[i] && arg[i] != '=')
+        {
+            result[i] = arg[i];
+            i++;
+        }
+        result[i] = '\0';
+        return (result);
+    }
+    if (which_one == 2)
+    {
+            while (arg[i])
     {
         if (arg[i] == '=')
         {
-            value = str_dup(arg + i + 1); //= işaretinden sonraki kısmı value olarak alıyoruz
-            return (value);
+            result = str_dup(arg + i + 1); //= işaretinden sonraki kısmı value olarak alıyoruz
+            return (result);
         }
         i++;
     }
-    return (NULL);
-}
-
-char *get_key_from_export_arg(char *arg, int i)
-{
-    char *key;
-
-    while (arg[i])
-    {
-        if (arg[i] == '=')
-            break ;
-        key[i] = arg[i];
-        i++;
     }
-    key[i] = '\0';
-    return (key);
+    return (NULL);
 }
 
 int is_valid_for_export(char **args, int i, int j)
@@ -89,8 +87,8 @@ int	builtin_export(t_shell *shell)
         return (1);
     while (shell->cmds->argv[i])
     {
-        key = get_key_from_export_arg(shell->cmds->argv[i], 0); //key değerini = den ayırmak için 
-        value = get_value_from_export_arg(shell->cmds->argv[i], 0); //value değerini = den ayırmak için
+        key = find_key_or_value(shell->cmds->argv[i], 0, KEY); //key değerini = den ayırmak için 
+        value = find_key_or_value(shell->cmds->argv[i], 0, VALUE); //value değerini = den ayırmak için
         if (!key)
             return (1);
         update_env_node(key, value, shell); //key zaten varsa değerini güncelliyor
