@@ -10,6 +10,9 @@
 
 # define MAX_PATH 1024
 
+typedef struct s_minishell t_shell;
+typedef struct s_builtin t_builtin;
+
 typedef enum e_token_type
 {
 	WORD,
@@ -85,6 +88,8 @@ int	builtin_unset(t_shell *shell);
 int	builtin_env(t_shell *shell);
 
 void	my_bzero(void *p, size_t num);
+int ft_isalpha(int c);
+int ft_isalnum(int c);
 char	*str_dup(const char *s);
 int		str_cmp(char *s1, char *s2);
 int		str_len(char *str);
@@ -94,5 +99,20 @@ int		print_with_escapes(char *str, int i);
 int		info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);
 void	*execute_builtin(char *cmd, t_shell *shell, int i);
 void	apply_redir(t_redirect *redirects, t_shell *shell);
+
+void pipe_working(t_shell *shell);
+void execute_external(t_shell *shell);
+
+char *get_key_from_export_arg(char *arg, int i);
+char *get_value_from_export_arg(char *arg, int i);
+int is_valid_for_export(char **args, int i, int j);
+int is_key_inside(char *key, t_env_node *env_list);
+
+
+void	update_env_node(char *key, char *value, t_shell *shell);
+void add_env_node(t_env_node **env_list, t_env_node *new_node);
+void delete_env_node(t_env_node **env_list, char *key, char *value);
+void print_env_list(t_env_node *env_list);
+void create_new_node(t_shell *shell, char *key, char *value);
 
 #endif
