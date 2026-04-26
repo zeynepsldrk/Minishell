@@ -63,16 +63,12 @@ char	*str_dup(const char *s)
 	return (a);
 }
 
-void	my_bzero(void *p, int num)
+int ft_isalpha(int c)
 {
-	int i;
-	unsigned char *ptr;
+    return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+}
 
-	i = 0;
-	ptr = (unsigned char *)p;
-	while (i < num)
-	{
-		ptr[i] = '\0';
-		i++;
-	}
+int ft_isalnum(int c)
+{
+    return (ft_isalpha(c) || (c >= '0' && c <= '9'));
 }
