@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/04/25 19:26:34 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/27 20:32:28 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,9 @@ void			*ft_memset(void *b, int c, size_t len);
 void			free_tokens(t_token *token);
 void			free_commands(t_cmd *cmds);
 void			clean_get_tkns(t_lexer *ptr);
-
-
+void			is_gonna_expand(t_lexer *lex, t_token *tkn);
+void			get_token_helper(t_lexer *lex);
+int				ft_isalnum(char c);
+char			*get_env_key(char *str,char *key, int i);
 
 #endif
