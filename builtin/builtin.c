@@ -23,7 +23,7 @@ void *execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem d
         apply_redir(shell->cmds->redirects, shell);
     while (shell->list_builtin[i].name) //komutu çalıştır
     {
-        if (str_cmp(cmd, shell->list_builtin[i].name) == 0)
+        if (ft_strcmp(cmd, shell->list_builtin[i].name) == 0)
         {
             shell->list_builtin[i].func(shell);
             break ;
@@ -45,13 +45,13 @@ int is_builtin(char *cmd, t_shell *shell)
         shell->exit_value = 127;
         return (0);
     }
-    if (str_cmp(cmd, "cd") == 0 || str_cmp(cmd, "echo") == 0)
+    if (ft_strcmp(cmd, "cd") == 0 || ft_strcmp(cmd, "echo") == 0)
         return (1);
-    else if (str_cmp(cmd, "exit") == 0 || str_cmp(cmd, "pwd") == 0)
+    else if (ft_strcmp(cmd, "exit") == 0 || ft_strcmp(cmd, "pwd") == 0)
         return (1);
-    else if (str_cmp(cmd, "export") == 0 || str_cmp(cmd, "unset") == 0)
+    else if (ft_strcmp(cmd, "export") == 0 || ft_strcmp(cmd, "unset") == 0)
         return (1);
-    else if (str_cmp(cmd, "env") == 0)
+    else if (ft_strcmp(cmd, "env") == 0)
         return (1);
     return (0);
 }
@@ -63,7 +63,7 @@ char *my_little_getenv(t_env_node *env_list, char *key)
     temp = env_list;
     while (temp)
     {
-        if (str_cmp(temp->key, key) == 0)
+        if (ft_strcmp(temp->key, key) == 0)
             return (temp->value); // Değeri bulduk, adresi döndür
         temp = temp->next;
     }

@@ -14,14 +14,14 @@
 
 char	*cd_special_control(t_shell *shell, char *new_path)
 {
-	if (!shell->cmds->argv[1] || str_cmp(shell->cmds->argv[1], '~'))
+	if (!shell->cmds->argv[1] || ft_strcmp(shell->cmds->argv[1], '~'))
 	{
 		new_path = my_little_getenv(shell->env_list, "HOME");
 		if (!new_path)
 			write(2, "cd: HOME not set\n", 18), 1;
         return (new_path);
 	}
-	else if (str_cmp(shell->cmds->argv[1], '-') == 0)
+	else if (ft_strcmp(shell->cmds->argv[1], '-') == 0)
 	{
 		new_path = my_little_getenv(shell->env_list, "OLDPWD");
 		if (!new_path)

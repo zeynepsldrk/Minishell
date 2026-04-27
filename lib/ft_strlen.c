@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int str_len(char *str)
+int ft_strlen(char *str)
 {
     int i;
 
