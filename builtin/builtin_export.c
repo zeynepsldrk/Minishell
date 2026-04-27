@@ -50,26 +50,6 @@ void execute_export(t_shell *shell, char *key, char *value, int i)
     }
 }
 
-int is_valid_for_export(char **args, int i, int j)
-{
-    while (args[i])
-    {
-        j = 0;
-        if (!(ft_isalpha(args[i][0]) || args[i][0] == '_'))
-            return (write(2, "export: not a valid identifier\n", 31), 1);
-        while (args[i][j] && args[i][j] != '=')
-        {
-            if (args[i][j] == '+' && args[i][j + 1] == '=')
-                break ; // += durumu geçerlidir, döngüden çık
-            if (!(ft_isalnum(args[i][j]) || args[i][j] == '_'))
-                return (write(2, "export: not a valid identifier\n", 31), 1);
-            j++;
-        }
-        i++;
-    }
-    return (0);
-}
-
 void only_export_command(t_env_node *env_list)
 {
     ft_bubble_sort(&env_list, 1);
@@ -83,28 +63,35 @@ void only_export_command(t_env_node *env_list)
     }
 }
 
-int	builtin_export(t_shell *shell)
+int	process_export_arg(t_shell *shell, int i)
+{
+    char    *key;
+    char    *value;
+
+    if (is_valid_identifier(shell->cmds->argv[i]))
+        return (write(2, "export: not a valid identifier\n", 31), 1);
+    key = find_key_or_value(shell->cmds->argv[i], 0, KEY);
+    value = find_key_or_value(shell->cmds->argv[i], 0, VALUE);
+    if (!key)
+        return (1);
+    execute_export(shell, key, value, i);
+    return (0);
+}
+
+int builtin_export(t_shell *shell)
 {
     int i;
-    char *key;
-    char *value;
+    int ret;
 
     i = 1;
+    ret = 0;
     if (!shell->cmds->argv[1])
-    {
-        only_export_command(shell->env_list); //eğer export komutundan sonra hiç argüman gelmezse env_list'i yazdırıyoruz
-        return (0);
-    }
-    if (is_valid_for_export(shell->cmds->argv, 1, 0)) //key olması için bazı kuralları kontrol ettim
-        return (1);
+        return (only_export_command(shell->env_list), 0);
     while (shell->cmds->argv[i])
     {
-        key = find_key_or_value(shell->cmds->argv[i], 0, KEY); //key değerini = den ayırmak için 
-        value = find_key_or_value(shell->cmds->argv[i], 0, VALUE); //value değerini = den ayırmak için
-        if (!key)
-            return (1);
-        execute_export(shell, key, value, i);
+        if (process_export_arg(shell, i))
+            ret = 1;
         i++;
     }
-    return (0);
+    return (ret);
 }
