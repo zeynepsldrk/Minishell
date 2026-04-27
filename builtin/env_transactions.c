@@ -41,10 +41,8 @@ void create_new_node(t_shell *shell, char *key, char *value)
 
 void delete_env_node(t_env_node **env_list, char *key, char *value)
 {
-    int i;
     t_env_node *temp;
 
-    i = 0;
     while (*env_list)
     {
         if (ft_strcmp((*env_list)->key, key) == 0)
@@ -64,7 +62,8 @@ void print_env_list(t_env_node *env_list)
 {
     while (env_list)
     {
-        printf("%s=%s\n", env_list->key, env_list->value);
+        if (env_list->value != NULL)
+            printf("%s=%s\n", env_list->key, env_list->value);
         env_list = env_list->next;
     }
 }
