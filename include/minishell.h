@@ -89,13 +89,13 @@ int	builtin_export(t_shell *shell);
 int	builtin_unset(t_shell *shell);
 int	builtin_env(t_shell *shell);
 
-void	my_bzero(void *p, size_t num);
+void	ft_bzero(void *p, size_t num);
 int ft_isalpha(int c);
 int ft_isalnum(int c);
-char	*str_dup(const char *s);
-int		str_cmp(char *s1, char *s2);
-int		str_len(char *str);
-int		redir_error(int fd);
+char	*ft_strdup(const char *s);
+int		ft_str_cmp(char *s1, char *s2);
+int		ft_str_len(char *str);
+int		ft_redir_error(int fd);
 
 int		print_with_escapes(char *str, int i);
 int		info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);
