@@ -12,47 +12,42 @@
 
 #include "minishell.h"
 
-int is_key_inside(char *key, t_env_node *env_list)
+void handle_append(t_shell *shell, char *key, char *new_val)
 {
-    int i;
+    t_env_node  *node;
+    char        *joined;
 
-    i = 0;
-    while (env_list)
+    node = shell->env_list;
+    while (node)
     {
-        if (str_cmp(env_list->key, key) == 0)
-            return (1);
-        env_list = env_list->next;
+        if (ft_strcmp(node->key, key) == 0)
+        {
+            if (node->value && new_val)
+            {
+                joined = ft_strjoin(node->value, new_val); // mevcut + yeni
+                free(node->value);
+                node->value = joined;
+            }
+            else if (new_val)
+                node->value = ft_strdup(new_val);
+            return ;
+        }
+        node = node->next;
     }
-    return (0);
+    create_new_node(shell, key, new_val);
 }
 
-char *find_key_or_value(char *arg, int i, int which_one)
+void execute_export(t_shell *shell, char *key, char *value, int i)
 {
-    char *result;
-
-    if (which_one == 1)
+    if (is_append(shell->cmds->argv[i]))
+        handle_append(shell, key, value);   // += durumu
+    else
     {
-        while (arg[i] && arg[i] != '=')
-        {
-            result[i] = arg[i];
-            i++;
-        }
-        result[i] = '\0';
-        return (result);
+        if (is_key_inside(key, shell->env_list))
+            update_env_node(key, value, shell);
+        else
+            create_new_node(shell, key, value);
     }
-    if (which_one == 2)
-    {
-            while (arg[i])
-    {
-        if (arg[i] == '=')
-        {
-            result = str_dup(arg + i + 1); //= işaretinden sonraki kısmı value olarak alıyoruz
-            return (result);
-        }
-        i++;
-    }
-    }
-    return (NULL);
 }
 
 int is_valid_for_export(char **args, int i, int j)
@@ -62,18 +57,30 @@ int is_valid_for_export(char **args, int i, int j)
         j = 0;
         if (!(ft_isalpha(args[i][0]) || args[i][0] == '_'))
             return (write(2, "export: not a valid identifier\n", 31), 1);
-        else
+        while (args[i][j] && args[i][j] != '=')
         {
-            while (args[i][j] && args[i][j] != '=')
-            {
-                if (!(ft_isalnum(args[i][j]) || args[i][j] == '_'))
-                    return (write(2, "export: not a valid identifier\n", 31), 1);
-                j++;
-            }
+            if (args[i][j] == '+' && args[i][j + 1] == '=')
+                break ; // += durumu geçerlidir, döngüden çık
+            if (!(ft_isalnum(args[i][j]) || args[i][j] == '_'))
+                return (write(2, "export: not a valid identifier\n", 31), 1);
+            j++;
         }
         i++;
     }
     return (0);
+}
+
+void only_export_command(t_env_node *env_list)
+{
+    ft_bubble_sort(&env_list, 1);
+    while (env_list)
+    {
+        printf("declare -x %s", env_list->key);
+        if (env_list->value) //env de görünmeyen value değerleri NULL olan değişkenleri de export ile yazdırabilmek için(= olmadan yazılıyorlar)
+            printf("=\"%s\"", env_list->value); //value tırnak içinde yazılmalı
+        printf("\n");
+        env_list = env_list->next;
+    }
 }
 
 int	builtin_export(t_shell *shell)
@@ -83,7 +90,12 @@ int	builtin_export(t_shell *shell)
     char *value;
 
     i = 1;
-    if (!is_valid_for_export(shell->cmds->argv, 1, 0)) //key olması için bazı kuralları kontrol ettim
+    if (!shell->cmds->argv[1])
+    {
+        only_export_command(shell->env_list); //eğer export komutundan sonra hiç argüman gelmezse env_list'i yazdırıyoruz
+        return (0);
+    }
+    if (is_valid_for_export(shell->cmds->argv, 1, 0)) //key olması için bazı kuralları kontrol ettim
         return (1);
     while (shell->cmds->argv[i])
     {
@@ -91,9 +103,7 @@ int	builtin_export(t_shell *shell)
         value = find_key_or_value(shell->cmds->argv[i], 0, VALUE); //value değerini = den ayırmak için
         if (!key)
             return (1);
-        update_env_node(key, value, shell); //key zaten varsa değerini güncelliyor
-        if (!is_key_inside(key, shell->env_list)) //eğer o key değeri hiç yoksa yeni bir node oluşturup onu ekliyoruz
-            create_new_node(shell, key, value);
+        execute_export(shell, key, value, i);
         i++;
     }
     return (0);
