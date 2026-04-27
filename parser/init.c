@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 21:02:35 by asay              #+#    #+#             */
-/*   Updated: 2026/04/25 19:30:00 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/27 17:15:24 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int sh_init(t_shell *shell, char **env)
     shell->cmds = NULL;
     shell->input = NULL;
     shell->tokens = NULL;
-    shell->tokens->expand = 0;
     shell->exit_value = 0; //bash ilk çalıştığında exit değeri için echo $? denildiğinde 0 dönüyor. 
     shell->env = copy_env(env);
     if(!shell->env)
