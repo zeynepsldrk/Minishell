@@ -4,6 +4,8 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <limits.h>
+# include <errno.h>
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -11,6 +13,8 @@
 # define MAX_PATH 1024
 # define KEY 1
 # define VALUE 2
+
+# define ERANGE	34
 
 typedef struct s_minishell t_shell;
 typedef struct s_builtin t_builtin;
@@ -84,7 +88,7 @@ int	is_builtin(char *cmd, t_shell *shell);
 int	builtin_cd(t_shell *shell);
 int	builtin_echo(t_shell *shell);
 int	builtin_exit(t_shell *shell);
-int	builtin_pwd(t_shell *shell);
+int	builtin_pwd(void);
 int	builtin_export(t_shell *shell);
 int	builtin_unset(t_shell *shell);
 int	builtin_env(t_shell *shell);
@@ -106,7 +110,7 @@ void pipe_working(t_shell *shell);
 void execute_external(t_shell *shell);
 
 char *find_key_or_value(char *arg, int i, int which_one);
-int is_valid_for_export(char **args, int i, int j);
+int is_valid_identifier(char *arg);
 int is_key_inside(char *key, t_env_node *env_list);
 
 
