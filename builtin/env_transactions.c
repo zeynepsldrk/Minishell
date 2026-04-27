@@ -63,12 +63,9 @@ void delete_env_node(t_env_node **env_list, char *key, char *value)
 
 void print_env_list(t_env_node *env_list)
 {
-    int i;
-
-    i = 0;
     while (env_list)
     {
-        printf("Key: %s, Value: %s\n", env_list->key, env_list->value);
+        printf("%s=%s\n", env_list->key, env_list->value);
         env_list = env_list->next;
     }
 }
