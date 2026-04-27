@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:03:29 by asay              #+#    #+#             */
-/*   Updated: 2026/04/02 21:43:15 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/27 16:59:11 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int prompt(t_shell *shell) //readline basmalı
 int main(int argc, char **argv, char **env)
 {
     t_shell *shell;
+    int exit;
     (void)argv;
     (void)argc;
 
@@ -55,6 +56,7 @@ int main(int argc, char **argv, char **env)
     {
         
     }
+    exit = shell->exit_value;
     free_sh(shell);
-    return(shell->exit_value);
+    return(exit);
 }
