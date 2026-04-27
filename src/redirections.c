@@ -49,7 +49,7 @@ void apply_heredoc(t_redirect *redir, t_shell *shell)
     while (1)
     {
         line = readline("> ");
-        if (line == NULL || str_cmp(line, redir->target_file) == 0)
+        if (line == NULL || ft_strcmp(line, redir->target_file) == 0)
             break;
         write(fd, line, strlen(line));
         write(fd, "\n", 1);

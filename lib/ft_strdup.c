@@ -21,3 +21,10 @@ char	*ft_strdup(const char *s)
 	a[i] = '\0';
 	return (a);
 }
+
+char *safe_strdup(char *s)
+{
+    if (!s)
+        return (NULL);
+    return (ft_strdup(s));
+}

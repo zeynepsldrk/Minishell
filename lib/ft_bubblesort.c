@@ -26,7 +26,7 @@ void bubble_sort(t_env_node **env_list, int swapped)
         temp = *env_list;
         while (temp && temp->next)
         {
-            if (str_cmp(temp->key, temp->next->key) > 0)
+            if (ft_strcmp(temp->key, temp->next->key) > 0)
                 swap(temp, &swapped);
             temp = temp->next;
         }

@@ -93,8 +93,8 @@ void	ft_bzero(void *p, size_t num);
 int ft_isalpha(int c);
 int ft_isalnum(int c);
 char	*ft_strdup(const char *s);
-int		ft_str_cmp(char *s1, char *s2);
-int		ft_str_len(char *str);
+int		ft_strcmp(char *s1, char *s2);
+int		ft_strlen(char *str);
 int		ft_redir_error(int fd);
 
 int		print_with_escapes(char *str, int i);
