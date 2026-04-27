@@ -69,8 +69,3 @@ char *my_little_getenv(t_env_node *env_list, char *key)
     }
     return (NULL); // Bulamazsak NULL dön
 }
-
-int builtin_exit(t_shell *shell);
-int builtin_pwd(t_shell *shell);
-int builtin_unset(t_shell *shell);
-int builtin_env(t_shell *shell);
