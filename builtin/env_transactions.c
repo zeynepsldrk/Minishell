@@ -9,11 +9,11 @@ void	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu g
 	temp = shell->env_list;
 	while (temp)
 	{
-		if (str_cmp(temp->key, key) == 0)
+		if (ft_strcmp(temp->key, key) == 0)
 		{
 			if (temp->value)
 				free(temp->value);
-			temp->value = str_dup(value);
+			temp->value = ft_strdup(value);
             return ;
 		}
 		temp = temp->next;
@@ -27,12 +27,11 @@ void create_new_node(t_shell *shell, char *key, char *value)
     new_node = (t_env_node *)malloc(sizeof(t_env_node));
     if (!new_node)
         return ;
-    new_node->key = str_dup(key);
-    new_node->value = str_dup(value);
+    new_node->key = safe_strdup(key);
+    new_node->value = safe_strdup(value);
     new_node->next = NULL;
-    if (!new_node->key || (value && !new_node->value))
+    if (!new_node->key)  // key her zaman olmalı, value NULL olabilir
     {
-        free(new_node->key);
         free(new_node->value);
         free(new_node);
         return ;
@@ -48,7 +47,7 @@ void delete_env_node(t_env_node **env_list, char *key, char *value)
     i = 0;
     while (*env_list)
     {
-        if (str_cmp((*env_list)->key, key) == 0)
+        if (ft_strcmp((*env_list)->key, key) == 0)
         {
             temp = *env_list;
             *env_list = (*env_list)->next;
