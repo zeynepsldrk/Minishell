@@ -6,12 +6,34 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:38:00 by asay              #+#    #+#             */
-/*   Updated: 2026/04/25 21:39:16 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/27 17:09:07 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
+
+//kontrol edildi.
+//gelen inputta str[*i]'nin ne olduğunu kontrol ediyoruz.
+t_token_type	get_value(char *str, int *i) 
+{
+	if (str[*i] == '>')
+	{
+		if(str[*i+1] == '>')
+			return (APPEND);
+		return (REDIRECT_OUT);
+	}
+	else if (str[*i] == '<')
+	{
+		if(str[*i+1] == '<')
+			return(HEREDOC);
+		return (REDIRECT_IN);
+	}
+	else if(str[*i] == '|')
+		return (PIPE);
+	else
+		return (WORD);
+}
 
 // boşluk görüldüğünde bufferdaki veriyi listeye ekleyip buffer'ı boşaltır. sonra bir sonraki anlamlı ifadeye kadar boşlukları atlar.
 void whitespace_tkn(t_lexer *ptr, char *str) 
@@ -19,6 +41,7 @@ void whitespace_tkn(t_lexer *ptr, char *str)
     if(ptr->buff[0] || ptr->has_quote)
     {
         ptr->curr = new_token(WORD, ptr->buff);
+        is_gonna_expand(ptr, ptr->curr);
         add_token(&ptr->head, ptr->curr);
         ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;
@@ -32,28 +55,29 @@ void redirect_tkn(t_lexer *ptr, char *str)
 {
     // eğer bufferde herhangi bir şey varsa ve boşluksuz yazılmışsa whitespace_tkn çağırılmaz.
     // bu yüzden whitesapce_tkn'nin ekleyemeyeceği WORD token'ları için bir kontrol ekledik.
-    if(ptr->buff[0] || ptr->has_quote)
+    if (ptr->buff[0] || ptr->has_quote)
     {
         ptr->curr = new_token(WORD, ptr->buff);
+        is_gonna_expand(ptr, ptr->curr);
         add_token(&ptr->head, ptr->curr);
         ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;
         ptr->has_quote = 0;
     }
     //redirect > görüldüğü her koşulda eklenecek o yüzden herhangi bir if yok
-    if(ptr->value == APPEND)
+    if (ptr->value == APPEND)
         ptr->curr = new_token(ptr->value, ">>");
-    else if(ptr->value == HEREDOC)
+    else if (ptr->value == HEREDOC)
         ptr->curr = new_token(ptr->value, "<<");
-    else if(ptr->value == REDIRECT_OUT)
+    else if (ptr->value == REDIRECT_OUT)
         ptr->curr = new_token(ptr->value, ">");
     else
         ptr->curr = new_token(ptr->value, "<");
     add_token(&ptr->head, ptr->curr);
-    if(ptr->value == APPEND || ptr->value == HEREDOC)
+    if (ptr->value == APPEND || ptr->value == HEREDOC)
         ptr->i++;
     ptr->i++;
-    while(str[ptr->i] == 32)
+    while (str[ptr->i] == 32)
         ptr->i++;
     ft_memset(ptr->buff, 0, ptr->j);
     ptr->j = 0;
@@ -91,6 +115,7 @@ void pipe_tkn(t_lexer *ptr, char *str)
     if(ptr->buff[0] || ptr->has_quote)
     {
         ptr->curr = new_token(WORD, ptr->buff);
+        is_gonna_expand(ptr, ptr->curr);
         add_token(&ptr->head, ptr->curr);
         ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;
