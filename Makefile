@@ -7,7 +7,7 @@ SRCS = main.c \
 		parser/clean.c \
 		parser/init.c \
 		parser/expand.c \
-		parser/utils2.c \
+		parser/utils2.c 
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -I include

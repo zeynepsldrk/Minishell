@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 17:05:32 by asay              #+#    #+#             */
-/*   Updated: 2026/04/27 20:50:44 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/29 22:00:15 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ void is_gonna_expand(t_lexer *lex, t_token *tkn)
 }
 
 //çağırdığın yerde free'lemeyi unutma!!
-char *get_env_key(char *str,char *key, int i)
+char *get_env_key(char *str, int i)
 {
     int j;
+    char *key;
 
     j = 0;
     key = malloc((ft_strlen(str) + 1));
@@ -52,28 +53,32 @@ char *get_env_key(char *str,char *key, int i)
     return (key);
 }
 
-char *get_env_value(t_shell *sh, char *key, char *value)
+char *get_env_value(t_shell *sh, char *key)
 {
     int i;
     int j;
     int k;
+    char *value;
 
     i = 0;
     j = ft_strlen(key) + 1;
     k = 0;
+    value = NULL;
     while(sh->env[i])
     {
-        if (ft_strncmp(sh->env[i], key, ft_strlen(key)) && sh->env[i][ft_strlen(key)] == '=')
+        if (ft_strncmp(sh->env[i], key, ft_strlen(key)) == 0 && sh->env[i][ft_strlen(key)] == '=')
         {
             value = malloc(ft_strlen(sh->env[i]) + 1);
             if(!value)
                 return NULL;
-            while(sh->env[i][j] || sh->env[i][j] != '\n')
+            while(sh->env[i][j] != '\0')
                 value[k++] = sh->env[i][j++];
+            break ; //kopyalma sonrasi en icinde gezmeyi birakiyroum.
         }
         i++;
     }
-    value[k] = '\0';
+    if(value)
+        value[k] = '\0'; //cagirdigin yerde "eger null döndüyse" kontrolü yapmayı unutma!!
     return (value);
 }
 
@@ -95,8 +100,11 @@ void expander(t_shell *sh)
             if(curr_token->expand == 1 && str[i] == '$')
             {
                 i++;
-                get_env_key(str, key, i);
-                get_env_value(sh, key, value);
+                key = get_env_key(str, i);
+                value = get_env_value(sh, key);
+                if(!key || !value)
+                    return ;
+                ch_value();
                 //gelen value değerini token context'inde key ile değiştirmem gerek. 
                 free(key);
                 free(value);
@@ -107,4 +115,15 @@ void expander(t_shell *sh)
     }
 }
 
-// expand fonksiyonlarini kontrol et, value değiştirme fonk.u sonrasında expand testleri yap.
+void ch_value(t_token *tkn)
+{
+    char *str;
+    int i;
+
+    str = tkn->context;
+    i = 0;
+    while(str[i] != '$')
+        i++;
+    
+}
+

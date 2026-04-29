@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/04/27 20:32:28 by asay             ###   ########.fr       */
+/*   Updated: 2026/04/29 21:07:37 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ void			clean_get_tkns(t_lexer *ptr);
 void			is_gonna_expand(t_lexer *lex, t_token *tkn);
 void			get_token_helper(t_lexer *lex);
 int				ft_isalnum(char c);
-char			*get_env_key(char *str,char *key, int i);
+char			*get_env_key(char *str, int i);
+char			*get_env_value(t_shell *sh, char *key);
+int				ft_strncmp(char *str1, char *str2, int n);
 
 #endif
