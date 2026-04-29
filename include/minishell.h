@@ -13,6 +13,8 @@
 # define MAX_PATH 1024
 # define KEY 1
 # define VALUE 2
+# define ERR_CMD_NOT_FOUND 127
+# define ERR_CANNOT_EXEC 126
 
 # define ERANGE	34
 
