@@ -5,6 +5,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>
+# include <sys/stat.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/readline.h>
