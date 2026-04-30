@@ -11,12 +11,48 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 /*F_OK: Dosya/Yol sistemde mevcut mu? (Sadece varlığını kontrol eder).
 
 X_OK: Çalıştırma (execute) yetkin var mı?*/
 
-#include "minishell.h"
+char *ft_join_and_free(char *s1, char *s2)
+{
+    char *res = ft_strjoin(s1, s2);
+    free(s1);
+    return (res);
+}
+
+void ft_free_split(char **arr)
+{
+    int i = 0;
+    while (arr[i])
+        free(arr[i++]);
+    free(arr);
+}
+
+char *check_the_path(char *path, char *cmd)
+{
+    char **splited_path;
+    char *full_path;
+    int  i;
+
+    splited_path = ft_split(path, ':');
+    i = 0;
+    while (splited_path[i])
+    {
+        full_path = ft_strjoin(splited_path[i], "/");
+        full_path = ft_join_and_free(full_path, cmd);
+        if (access(full_path, F_OK) == 0)
+        {
+            ft_free_split(splited_path);
+            return (full_path);
+        }
+        free(full_path);
+        i++;
+    }
+    ft_free_split(splited_path);
+    return (NULL);
+}
 
 void	handle_error(char *cmd, char *msg, int exit_code)
 {
@@ -34,12 +70,15 @@ void	handle_error(char *cmd, char *msg, int exit_code)
 
 int	is_path_okey(char *path)
 {
+    struct stat st;
+    
 	if (access(path, F_OK)) //dosya disk de var mı?
 	{
 		print_path_error(path, "command not found", 127);
 		return (1);
 	}
-	if (stat()) // Klasör mü, dosya mı?
+    stat(path, &st);
+	if (S_ISDIR(st.st_mode)) // Klasör mü, dosya mı?
 	{
 		print_path_error(path, "is a directory", 126);
 		return (1);
@@ -70,16 +109,19 @@ char	*find_command_path(t_shell *shell)
 {
 	char	*path;
 
-	if (!is_absolute_path(shell->cmds->argv[0]))
+	if (is_absolute_path(shell->cmds->argv[0]) == 0)
 	{
-		if (!is_path_okey(shell->cmds->argv[0]))
-			return (shell->cmds->argv[0]);
-		else
-			return (NULL);
+		if (is_path_okey(shell->cmds->argv[0]) == 0)
+			return (ft_strdup(shell->cmds->argv[0]));
+        return (NULL);
 	}
-	path = my_little_getenv(shell->env_list, shell->env_list->key);
-	if (!is_path_okey(path))
-		return (path);
+	path = my_little_getenv(shell->env_list, "PATH");
+	if (!path)
+        return (NULL);
+    path = check_the_path(path, shell->cmds->argv[0]);
+    if (path && (is_path_okey(path) == 0))
+        return (path);
+    free(path);
 	return (NULL);
 }
 
@@ -97,23 +139,28 @@ void	execute_external(t_shell *shell)
 	pid_t	pid;
 
 	how_died = 0;
+    path = find_command_path(shell);
+    if (!path)
+        return ;
 	pid = fork();
-	path = find_command_path(shell);
 	if (pid < 0)
 	{
 		perror("fork fail");
 		exit(1);
 	}
-	if (pid == 0 && (path != NULL))
+	if (pid == 0)
 	{
 		if (execve(path, shell->cmds->argv, shell->env))
 		{
+            free(path);
 			perror("execve fail");
 			exit(1);
 		}
+        free(path);
 	}
 	else
 	{
+        free(path);
 		if (wait(&how_died) == -1)
 		{
 			perror("wait fail");
