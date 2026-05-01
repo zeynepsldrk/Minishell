@@ -34,6 +34,8 @@ void	init_builtins(t_builtin *builtins)
 
 t_shell	*init_shell(t_shell *shell, char **envp)
 {
+    shell->pipes.pipe_count = shell->cmds->argc - 1;
+    shell->pipes.command_count = shell->cmds->argc;
 	shell->env_list = NULL;
 	shell->env = envp;
 	shell->exit_value = 0;
