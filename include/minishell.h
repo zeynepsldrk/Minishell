@@ -67,8 +67,16 @@ typedef struct s_env_node
     struct s_env_node *next;
 } t_env_node;
 
+typedef struct s_pipe
+{
+    int pipe_count;
+    int command_count;
+    int **fd;
+} t_pipe;
+
 typedef struct s_minishell
 {
+    t_pipe pipes;
 	t_env_node	*env_list;
 	char		**env;
 	char		*input;
