@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 17:05:32 by asay              #+#    #+#             */
-/*   Updated: 2026/05/02 16:16:29 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/02 22:30:17 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void expander_helper(t_shell *sh, t_expander *exp)
         if (!exp->key || !exp->value)
         {
             free(exp->key);
-            free(exp->value);
             return ;
         }
         exp->old = exp->curr_token->context;
