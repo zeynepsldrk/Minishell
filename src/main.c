@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/25 15:15:56 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/02 18:25:30 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,17 @@ void start_execute(t_shell *shell)
     olarak çalıştırılması, ek olarak içeride redirect işlemleri kontrolü de yapılmalıdır.*/
     if (cmd->next != NULL) //birden fazla cmd varsa pipe var demektir
         pipe_working(shell); //cmd listesini dolaşarak pipe işlemlerini yapar
+		//en son child içinde en son child in exit kodunu shell->exit_status a yazmak lazım
+		//Bu pipe'ta 3 komut var. Bash'in kuralı: en sondaki komutun exit kodu önemli. ls hata verse bile, wc -l başarılıysa $? = 0 olur.
     else if (is_builtin(cmd->argv[0], shell)) //cmd tek ise builtin mi diye kontrol eder
         execute_builtin(cmd->argv[0], shell, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+		//builtinler doğru ise 0 dönmeli hatalı ise 1 dönmeli
     else
         execute_external(shell); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
     //!!sondaki else bir şekilde azaltılabilir mi diye düşünüyorum, çünkü cmd tek ise ve builtin değilse zaten external komut oluyor, yani tek if ile de halledilebilir gibi geliyor bana.!!
     //externallerin nasıl çalıştırıldığını anlayınca tekrar değerlendirilecektir bu durum.!!
+	//execute_external içinde waitpid'den gelen kodu
+    //shell->exit_status'a yazman lazım
 }
 
 void lets_start_shell(t_shell *shell)
