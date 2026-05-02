@@ -115,7 +115,11 @@ int		ft_redir_error(int fd);
 int		print_with_escapes(char *str, int i);
 int		info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);
 void	*execute_builtin(char *cmd, t_shell *shell, int i);
-void	apply_redir(t_redirect *redirects, t_shell *shell);
+int		apply_redir(t_redirect *redirects, t_shell *shell);
+int apply_redirect_out(t_redirect *redir, t_shell *shell);
+int apply_redirect_in(t_redirect *redir, t_shell *shell);
+int apply_heredoc(t_redirect *redir, t_shell *shell);
+int apply_append(t_redirect *redir, t_shell *shell);
 
 void pipe_working(t_shell *shell);
 void execute_external(t_shell *shell);
