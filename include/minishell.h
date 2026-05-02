@@ -2,9 +2,11 @@
 # define MINISHELL_H
 
 # include <unistd.h>
+# include <signal.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>
+# include <sys/wait.h>
 # include <sys/stat.h>
 # include <errno.h>
 # include <fcntl.h>
