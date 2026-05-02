@@ -150,6 +150,13 @@ void	execute_external(t_shell *shell)
 	}
 	if (pid == 0)
 	{
+        //redirler de hata varsa execve çalışmamalı, o yüzden redirler de hata var mı diye kontrol etmek lazım
+        if (apply_redir(shell->cmds->redirects, shell))
+        {
+            free(path);
+            exit(1);
+        }
+        update_env_nodes(shell);
 		if (execve(path, shell->cmds->argv, shell->env))
 		{
             free(path);
