@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/04/29 21:07:37 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/02 15:48:38 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,16 @@ typedef struct s_lexer
 	int in_double;
 	int has_quote;
 } t_lexer;
+
+typedef struct s_expander
+{
+	int 	i;
+	char 	*str;
+	char 	*key;
+	char 	*value;
+	char 	*old;
+	t_token *curr_token;
+} t_expander;
 
 t_token			*new_token(t_token_type type, char *context);
 t_token_type	get_value(char *str, int *i);
