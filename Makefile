@@ -1,14 +1,14 @@
 NAME = minishell
 
 SRCS = main.c \
-		parser/lexer_utils.c \
-		parser/lexer.c \
-		parser/utils.c \
-		parser/clean.c \
-		parser/init.c \
-		parser/expand.c \
-		parser/utils2.c \
-		parser/expand_utils.c
+		lexer/lexer_utils.c \
+		lexer/lexer.c \
+		lexer/utils.c \
+		lexer/clean.c \
+		lexer/init.c \
+		lexer/expand.c \
+		lexer/utils2.c \
+		lexer/expand_utils.c
 OBJS = $(SRCS:.c=.o)
 
 
