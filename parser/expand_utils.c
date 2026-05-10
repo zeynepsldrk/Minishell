@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 15:24:47 by asay              #+#    #+#             */
-/*   Updated: 2026/05/02 20:57:29 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/10 16:01:28 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char *get_env_value(t_shell *sh, char *key)
                 return NULL;
             while(sh->env[i][j] != '\0')
                 value[k++] = sh->env[i][j++];
-            break ; //kopyalma sonrasi en icinde gezmeyi birakiyroum.
+            break ; //kopyalma sonrasi env icinde gezmeyi birakiyroum.
         }
         i++;
     }
@@ -61,7 +61,7 @@ char *get_env_value(t_shell *sh, char *key)
     return (value);
 }
 
-char *ch_value(char *str, char *key, char *value)
+char *ch_value(t_expander *exp)
 {
     char *new_context;
     int i;
@@ -71,21 +71,27 @@ char *ch_value(char *str, char *key, char *value)
     i = 0;
     j = 0;
     k = 0;
-    new_context = malloc(ft_strlen(str) + ft_strlen(value) + 1);
+    printf("str: '%s', key: '%s'\n", exp->str, exp->key);
+    if(exp->value)
+        new_context = malloc(ft_strlen(exp->str) + ft_strlen(exp->value) + 1);
+    else
+        new_context = malloc(ft_strlen(exp->str) + 1);
     if(!new_context)
         return NULL;
-    while(str[i] != '$')
+    while(exp->str[i] != '$')
     {
-        new_context[j++] = str[i];
+        new_context[j++] = exp->str[i];
         i++;
     }
     i++;
-    while(value[k])
-        new_context[j++] = value[k++];
-    i += ft_strlen(key);
-    k = 0;
-    while(str[i])
-        new_context[j++] = str[i++];
+    if(exp->value != NULL)
+    {
+        while(exp->value[k])
+            new_context[j++] = exp->value[k++];
+    }
+    i += ft_strlen(exp->key);
+    while(exp->str[i])
+        new_context[j++] = exp->str[i++];
     new_context[j] = '\0';
     return new_context;
 }

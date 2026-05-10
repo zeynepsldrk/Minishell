@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 17:05:32 by asay              #+#    #+#             */
-/*   Updated: 2026/05/02 22:30:17 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/10 17:47:35 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ void expander_helper(t_shell *sh, t_expander *exp)
         exp->i++;
         exp->key = get_env_key(exp->str, exp->i);
         exp->value = get_env_value(sh, exp->key);
-        if (!exp->key || !exp->value)
+        if (!exp->key || exp->key[0] == '\0')
         {
             free(exp->key);
             return ;
         }
         exp->old = exp->curr_token->context;
-        exp->curr_token->context = ch_value(exp->str, exp->key, exp->value); 
+        exp->curr_token->context = ch_value(exp); 
         exp->str = exp->curr_token->context; //bir sonraki döngü için curr_token güncellenmeli
         exp->i = -1; // 0 yapsaydık while sonundaki i++ ile str[0] atlanırdı.
         free(exp->old);

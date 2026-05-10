@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:03:29 by asay              #+#    #+#             */
-/*   Updated: 2026/05/02 22:32:17 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/10 16:14:16 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ int prompt(t_shell *shell) //readline basmalı
         return (1);
     }
     lexer(shell, trimmed);
+    expander(shell);
+    //test basladi
+    t_token *temp = shell->tokens;
+    while(temp)
+    {
+        printf("Type: %d, Context: '%s'\n", temp->type, temp->context);
+        printf("Expand Situation: %d\n", temp->expand);
+        temp = temp->next;
+    }	
+    // test bitti
     free_tokens(shell->tokens);
     shell->tokens = NULL;
     free(trimmed);

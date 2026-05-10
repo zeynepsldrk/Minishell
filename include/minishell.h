@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/05/02 17:28:13 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/10 15:45:49 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ int				ft_isalnum(char c);
 char			*get_env_key(char *str, int i);
 char			*get_env_value(t_shell *sh, char *key);
 int				ft_strncmp(char *str1, char *str2, int n);
-void expander_helper(t_shell *sh, t_expander *exp);
-char *ch_value(char *str, char *key, char *value);
+void 			expander_helper(t_shell *sh, t_expander *exp);
+char 			*ch_value(t_expander *exp);
 void expander(t_shell *sh);
 
 #endif
