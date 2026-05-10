@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:37:52 by asay              #+#    #+#             */
-/*   Updated: 2026/04/27 17:08:57 by asay             ###   ########.fr       */
+/*   Updated: 2026/05/10 16:12:12 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int lexer(t_shell *shell, char *str)
     t_token *temp = tokens;
     while(temp)
     {
-        printf("Type: %d, Context: '%s'\n", temp->type, temp->context);
-		printf("Expand Situation: %d\n", temp->expand);		
         temp = temp->next;
     }
     //test bitti.
