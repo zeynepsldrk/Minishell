@@ -54,7 +54,7 @@ char *check_the_path(char *path, char *cmd)
     return (NULL);
 }
 
-void	handle_error(char *cmd, char *msg, int exit_code)
+void	print_path_error(char *cmd, char *msg, int exit_code)
 {
     write(2, "minishell: ", 11);
 	if (cmd && *cmd)
@@ -94,15 +94,15 @@ int	is_path_okey(char *path)
 int	is_absolute_path(char *path)
 {
 	if (!path || !path[0])
-        return (0);
+        return (1);
 	if (path[0] == '/')
-		return (1);
+		return (0);
 	if (path[0] == '.')
 	{
 		if (path[1] == '/' || (path[1] == '.' && path[2] == '/'))
-			return (1);
+			return (0);
 	}
-	return (0);
+	return (1);
 }
 
 char	*find_command_path(t_shell *shell)
@@ -150,6 +150,8 @@ void	execute_external(t_shell *shell)
 	}
 	if (pid == 0)
 	{
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
         //redirler de hata varsa execve çalışmamalı, o yüzden redirler de hata var mı diye kontrol etmek lazım
         if (apply_redir(shell->cmds->redirects, shell))
         {
@@ -159,11 +161,9 @@ void	execute_external(t_shell *shell)
         update_env_nodes(shell);
 		if (execve(path, shell->cmds->argv, shell->env))
 		{
-            free(path);
 			perror("execve fail");
 			exit(1);
 		}
-        free(path);
 	}
 	else
 	{
@@ -173,6 +173,12 @@ void	execute_external(t_shell *shell)
 			perror("wait fail");
 			exit(1);
 		}
+        signal(SIGINT, works_crtl_c);
+        signal(SIGQUIT, SIG_IGN);
+        if (WIFEXITED(how_died))
+		    shell->exit_status = WEXITSTATUS(how_died);
+	    else if (WIFSIGNALED(how_died))
+		    shell->exit_status = 128 + WTERMSIG(how_died);
 		 /*wait() kullanmazsak child process zombie process olarak öylece kalır. Arka planda
 		boş yere yer kaplayan processler olur. İşletim sisteminin de belirli sayıda child
 		process açma hakkı olduğu için ileride sıkıntı oluşturur.*/

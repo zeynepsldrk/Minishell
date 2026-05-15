@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu günceller
+int	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu günceller
 {
 	int			i;//shell içinde ki env_list in içerisinde gezineceğim ve key olarak verilen değeri gödüğümüzde onu value ile değiştireceğiz.
 	t_env_node	*temp;
@@ -14,19 +14,20 @@ void	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu g
 			if (temp->value)
 				free(temp->value);
 			temp->value = ft_strdup(value);
-            return ;
+            return (0);
 		}
 		temp = temp->next;
 	}
+    return (1);
 }
 
-void create_new_node(t_shell *shell, char *key, char *value)
+int create_new_node(t_shell *shell, char *key, char *value)
 {
     t_env_node *new_node;
 
     new_node = (t_env_node *)malloc(sizeof(t_env_node));
     if (!new_node)
-        return ;
+        return (1);
     new_node->key = safe_strdup(key);
     new_node->value = safe_strdup(value);
     new_node->next = NULL;
@@ -34,12 +35,13 @@ void create_new_node(t_shell *shell, char *key, char *value)
     {
         free(new_node->value);
         free(new_node);
-        return ;
+        return (1);
     }
     add_env_node(&shell->env_list, new_node);
+    return (0);
 }
 
-void delete_env_node(t_env_node **env_list, char *key, char *value)
+int delete_env_node(t_env_node **env_list, char *key)
 {
     t_env_node *temp;
 
@@ -52,13 +54,14 @@ void delete_env_node(t_env_node **env_list, char *key, char *value)
             free(temp->key);
             free(temp->value);
             free(temp);
-            return ;
+            return (0);
         }
         env_list = &(*env_list)->next;
     }
+    return (1);
 }
 
-void print_env_list(t_env_node *env_list)
+int print_env_list(t_env_node *env_list)
 {
     while (env_list)
     {
@@ -66,4 +69,5 @@ void print_env_list(t_env_node *env_list)
             printf("%s=%s\n", env_list->key, env_list->value);
         env_list = env_list->next;
     }
+    return (0);
 }
