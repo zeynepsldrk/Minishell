@@ -41,19 +41,23 @@ int **create_pipes(int pipe_count)
 void	wait_for_children(t_shell *shell, int *how_died, pid_t *pid)
 {
 	int	i;
+    int status;
 
 	i = 0;
+    status = 0;
 	while (i < shell->pipes.command_count)
 	{
 		waitpid(pid[i], how_died, 0);
+        if (i == shell->pipes.command_count - 1) //son komutun çıkış durumunu alırız çünkü exit statusu o belirler
+            status = *how_died;
 		i++;
 	}
 	/*how_died değerini direkt çıkış durumu olarak kullanamıyoruz çünkü waitpid içinde çıkış kodu dışında
 	farklı değerler de tutuyor. MAkro kullanarak doğru değerleri görmeyi sağlar.*/
-	if (WIFEXITED(*how_died)) //Normal mi çıktı 1 veya 0
-		shell->exit_status = WEXITSTATUS(*how_died); //normalse kaçla çıkış yaptı
-	else if (WIFSIGNALED(*how_died)) //Sinyalle mi öldü 1 veya 0
-		shell->exit_status = 128 + WTERMSIG(*how_died); //sinyal kaçla çıktı
+	if (WIFEXITED(status)) //Normal mi çıktı 1 veya 0
+		shell->exit_status = WEXITSTATUS(status); //normalse kaçla çıkış yaptı
+	else if (WIFSIGNALED(status)) //Sinyalle mi öldü 1 veya 0
+		shell->exit_status = 128 + WTERMSIG(status); //sinyal kaçla çıktı
 	free(pid);
 }
 
@@ -77,5 +81,10 @@ void pipe_working(t_shell *shell)
     pid = malloc(sizeof(pid_t) * shell->pipes.command_count); //child process sayısı kadar pid tutacak bir dizi
     spawn_commands(shell, pid, 0);
     close_all_pipes(shell->pipes.fd, shell->pipes.pipe_count, 0); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
+    signal(SIGINT, SIG_IGN); //güvenli olması için child processler için bekleme yaaprken sinyal gelmesi durumunu engellemek için kısa bir süreliğine 
+    //tanımsız davranış olmaması adına sinyalleri görmezden geliyoruz olmasa da olur ama olması daha iyi
+    signal(SIGQUIT, SIG_IGN);
     wait_for_children(shell, &how_died, pid); //parent process tüm child processlerin bitmesini bekler
+    signal(SIGINT, works_crtl_c);
+    signal(SIGQUIT, SIG_IGN);
 }
