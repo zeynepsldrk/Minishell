@@ -67,7 +67,7 @@ int	builtin_echo(t_shell *shell)
 	int	e_flag;
 
 	i = 1;
-	while (info_flags(shell->cmds->argv[1], &n_flag, &e_flag) && shell->cmds->argv[i]) //flagleri kontrol ediyoruz, varsa onları atlayarak sonraki argümanlara geçiyoruz.
+	while (info_flags(shell->cmds->argv[i], &n_flag, &e_flag) && shell->cmds->argv[i]) //flagleri kontrol ediyoruz, varsa onları atlayarak sonraki argümanlara geçiyoruz.
 		i++;
 	while (shell->cmds->argv[i])
 	{

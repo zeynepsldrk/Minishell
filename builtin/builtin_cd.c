@@ -12,16 +12,19 @@
 
 #include "minishell.h"
 
-char	*cd_special_control(t_shell *shell, char *new_path)
+char	*cd_special_control(t_shell *shell)
 {
-	if (!shell->cmds->argv[1] || ft_strcmp(shell->cmds->argv[1], '~'))
+	char *new_path;
+
+    new_path = NULL;
+	if (!shell->cmds->argv[1] || (ft_strcmp(shell->cmds->argv[1], "~") == 0))
 	{
 		new_path = my_little_getenv(shell->env_list, "HOME");
 		if (!new_path)
 			write(2, "cd: HOME not set\n", 18), 1;
         return (new_path);
 	}
-	else if (ft_strcmp(shell->cmds->argv[1], '-') == 0)
+	else if (ft_strcmp(shell->cmds->argv[1], "-") == 0)
 	{
 		new_path = my_little_getenv(shell->env_list, "OLDPWD");
 		if (!new_path)
@@ -38,17 +41,20 @@ int	builtin_cd(t_shell *shell)
 
 	if (!getcwd(buf, sizeof(buf)))
 		return (perror("minishell: getcwd"), 1);
-	new_path = cd_special_control(shell, new_path);
+	new_path = cd_special_control(shell);
+    if (!new_path)
+        return (1);
 	if (chdir(new_path) == -1)
 	{
 		perror("cd:");
 		return (1);
 	}
-    if (shell->cmds->argv[1] && (shell->cmds->argv[1], '-') == 0)
+    if (shell->cmds->argv[1] && (ft_strcmp(shell->cmds->argv[1], "-") == 0))
         printf("%s\n", new_path);
-	update_env_node("OLDPWD", buf, shell);
+	if (getcwd(buf, sizeof(buf)))
+		update_env_node("OLDPWD", buf, shell);
 	my_bzero(buf, MAX_PATH);
 	if (getcwd(buf, sizeof(buf)))
-		update_env_node("PWD", new_path, shell);
+		update_env_node("PWD", buf, shell);
 	return (0);
 }

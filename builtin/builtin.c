@@ -20,12 +20,22 @@ void *execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem d
     backup_stdout = dup(STDOUT_FILENO); //standart girdi/çıktıları önceden kaydediyoruz çünkü redirlere göre değerleri kaybolacak
     backup_stdin = dup(STDIN_FILENO);
     if(shell->cmds->redirects != NULL) //redir uygula -varsa tabii-
-        apply_redir(shell->cmds->redirects, shell);
+    {
+        if (apply_redir(shell->cmds->redirects, shell))
+        {
+            shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
+            dup2(backup_stdout, STDOUT_FILENO);
+            dup2(backup_stdin, STDIN_FILENO);
+            close(backup_stdout);
+            close(backup_stdin);
+            return;
+        }
+    }
     while (shell->list_builtin[i].name) //komutu çalıştır
     {
         if (ft_strcmp(cmd, shell->list_builtin[i].name) == 0)
         {
-            shell->list_builtin[i].func(shell);
+            shell->exit_value = shell->list_builtin[i].func(shell);
             break ;
         }
         i++;
