@@ -63,12 +63,23 @@ void lets_start_shell(t_shell *shell)
     }
 }
 
+void works_crtl_c(int signal)
+{
+    (void)signal;
+    write(1, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+}
+
 int main(int argc, char **argv, char **envp)
 {
     t_shell *shell;
     (void)argc;
     (void)argv;
 
+    signal(SIGINT, works_crtl_c);
+    signal(SIGQUIT, SIG_IGN);
     shell = malloc(sizeof(t_shell));
     if (!shell)
         return (1); 

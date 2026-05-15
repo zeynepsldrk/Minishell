@@ -59,7 +59,11 @@ void spawn_commands(t_shell *shell, pid_t *pid, int i)
             exit(1);
         }
         if (pid[i] == 0) //child process
-			execute_child_logic(shell, cmd, i);
+        {
+            signal(SIGINT, SIG_DFL);
+            signal(SIGQUIT, SIG_DFL);
+            execute_child_logic(shell, cmd, i);
+        }
         cmd = cmd->next; //her fork da parent bir sonraki node a geçer child o anki cmd ile çalışır
         i++;
     }
