@@ -94,5 +94,5 @@ int apply_redir(t_redirect *redir, t_shell *shell)
             return (apply_append(redir, shell));
         redir = redir->next;
     }
-    return (0);
+    return (1);
 }
