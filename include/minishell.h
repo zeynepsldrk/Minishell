@@ -133,7 +133,7 @@ int is_key_inside(char *key, t_env_node *env_list);
 
 void	update_env_node(char *key, char *value, t_shell *shell);
 void add_env_node(t_env_node **env_list, t_env_node *new_node);
-void delete_env_node(t_env_node **env_list, char *key, char *value);
+void delete_env_node(t_env_node **env_list, char *key);
 void print_env_list(t_env_node *env_list);
 void create_new_node(t_shell *shell, char *key, char *value);
 
