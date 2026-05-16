@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:13 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:08:47 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 19:02:09 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,29 @@ int apply_redirect_in(t_redirect *redir, t_shell *shell)
 int apply_heredoc(t_redirect *redir, t_shell *shell)
 {
 	//şimdii burada stdin (0) e yazdıklarım yeni bir dosyaya birikecek EOF kadar sonra o dosyadan stdout (1) a yönlendirilecek
-	int fd;
-	char *temp_file;
 	char *line;
 
-	fd = open(temp_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (redir_error(fd))
+	if (pipe(redir->heredoc_fd) == -1)
 		return (1);
 	while (1)
 	{
+		if (g_signal == SIGINT)
+			break;
 		line = readline("> ");
 		if (line == NULL || ft_strcmp(line, redir->target_file) == 0)
+		{
+			free(line);
 			break;
-		write(fd, line, strlen(line));
-		write(fd, "\n", 1);
+		}
+		write(redir->heredoc_fd[1], line, ft_strlen(line));
+		write(redir->heredoc_fd[1], "\n", 1);
 		free(line);
 	}
-	free(line);
-	close(fd); //geçici dosyama write ile yazdırdım artık işim bitiyor tekrar açmalıyım
-	//ama yanlızca okumak için terminalden okumasın da geçici dosyadan okusun diye dup2 ile stdin de geçici dosya da aynı yöne yönlendirildi
-	fd = open(temp_file, O_RDONLY);
-	if (redir_error(fd))
-		return (1);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
+	close(redir->heredoc_fd[1]);
+	dup2(redir->heredoc_fd[0], STDIN_FILENO);
+	close(redir->heredoc_fd[0]);
 	return (0);
+	//pipe kullandım fd nin 1 i yazma ucudur. fd nin 0 ı standart girdiyi buraya bağladım ki okumayı pipe dan yapsın
 }
 
 int apply_append(t_redirect *redir, t_shell *shell)
@@ -85,14 +83,26 @@ int apply_redir(t_redirect *redir, t_shell *shell)
 	while (redir)
 	{
 		if(redir->type == REDIRECT_IN)
-			return (apply_redirect_in(redir, shell));
+		{
+			if (apply_redirect_in(redir, shell))
+				return (1);
+		}
 		else if(redir->type == REDIRECT_OUT)
-			return (apply_redirect_out(redir, shell));
+		{
+			if (apply_redirect_out(redir, shell))
+				return (1);
+		}
 		else if(redir->type == HEREDOC)
-			return (apply_heredoc(redir, shell));
+		{
+			if (apply_heredoc(redir, shell))
+				return (1);
+		}
 		else if(redir->type == APPEND)
-			return (apply_append(redir, shell));
+		{
+			if (apply_append(redir, shell))
+				return (1);
+		}
 		redir = redir->next;
 	}
-	return (1);
+	return (0);
 }
