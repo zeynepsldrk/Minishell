@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:48:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:56:10 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 19:06:42 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,11 @@ void	execute_external(t_shell *shell)
 		{
 			perror("wait fail");
 			exit(1);
+		}
+		if (g_signal == SIGINT)
+		{
+			shell->exit_value = 130;
+			g_signal = 0;
 		}
 		signal(SIGINT, works_ctrl_c);
 		signal(SIGQUIT, SIG_IGN);

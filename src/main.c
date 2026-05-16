@@ -6,11 +6,13 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:58:30 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 19:04:17 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_signal;
 
 t_cmd *start_parser(char *input, t_shell *shell)
 {
@@ -47,6 +49,14 @@ void lets_start_shell(t_shell *shell)
 {
 	while (1)
 	{
+		if (g_signal == SIGINT)  // ← sinyal geldi mi kontrol et
+        {
+			shell->exit_value = 130;
+            rl_on_new_line();
+            rl_replace_line("", 0);
+            rl_redisplay();
+            g_signal = 0;
+        }
 		shell->input = readline("minishell> ");
 		if(shell->input == NULL) //crtl+d de readline NULL döner
 		{
@@ -56,20 +66,21 @@ void lets_start_shell(t_shell *shell)
 		}
 		if (*shell->input != '\0') //bash de enter a basınca boş inputu kaydetmiyor soo biz de kaydetmiyoruz
 			add_history(shell->input);
-		shell->cmds = start_parser(shell->input, shell); 
+		shell->cmds = start_parser(shell->input, shell);
 		if (shell->cmds)
+		{
+			shell->pipes.command_count = ft_command_count(shell->cmds);
+			shell->pipes.pipe_count = shell->pipes.command_count - 1;
 			start_execute(shell);
+		}
 		free(shell->input);
 	}
 }
 
 void works_ctrl_c(int signal)
 {
-	(void)signal;
+	g_signal = signal;
 	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 int main(int argc, char **argv, char **envp)
