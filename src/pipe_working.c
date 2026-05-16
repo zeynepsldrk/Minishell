@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/02 14:11:39 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/02 22:09:07 by zedurak          ###   ########.fr       */
+/*   Created: 2026/05/02 14:50:44 by zedurak           #+#    #+#             */
+/*   Updated: 2026/05/16 13:58:09 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,73 +18,73 @@
 
 int **create_pipes(int pipe_count)
 {
-    int **fd;
-    int i;
+	int **fd;
+	int i;
 
-    fd = malloc(sizeof(int *) * pipe_count);
-    if (!fd)
-        return (NULL);
-    i = 0;
-    while (i < pipe_count)
-    {
-        fd[i] = malloc(sizeof(int) * 2);
-        if (!fd[i] || pipe(fd[i]) == -1)
-        {
-            perror("pipe");
-            exit(1);
-        }
-        i++;
-    }
-    return (fd);
+	fd = malloc(sizeof(int *) * pipe_count);
+	if (!fd)
+		return (NULL);
+	i = 0;
+	while (i < pipe_count)
+	{
+		fd[i] = malloc(sizeof(int) * 2);
+		if (!fd[i] || pipe(fd[i]) == -1)
+		{
+			perror("pipe");
+			exit(1);
+		}
+		i++;
+	}
+	return (fd);
 }
 
 void	wait_for_children(t_shell *shell, int *how_died, pid_t *pid)
 {
 	int	i;
-    int status;
+	int status;
 
 	i = 0;
-    status = 0;
+	status = 0;
 	while (i < shell->pipes.command_count)
 	{
 		waitpid(pid[i], how_died, 0);
-        if (i == shell->pipes.command_count - 1) //son komutun çıkış durumunu alırız çünkü exit statusu o belirler
-            status = *how_died;
+		if (i == shell->pipes.command_count - 1) //son komutun çıkış durumunu alırız çünkü exit statusu o belirler
+			status = *how_died;
 		i++;
 	}
 	/*how_died değerini direkt çıkış durumu olarak kullanamıyoruz çünkü waitpid içinde çıkış kodu dışında
 	farklı değerler de tutuyor. MAkro kullanarak doğru değerleri görmeyi sağlar.*/
 	if (WIFEXITED(status)) //Normal mi çıktı 1 veya 0
-		shell->exit_status = WEXITSTATUS(status); //normalse kaçla çıkış yaptı
+		shell->exit_value = WEXITSTATUS(status); //normalse kaçla çıkış yaptı
 	else if (WIFSIGNALED(status)) //Sinyalle mi öldü 1 veya 0
-		shell->exit_status = 128 + WTERMSIG(status); //sinyal kaçla çıktı
+		shell->exit_value = 128 + WTERMSIG(status); //sinyal kaçla çıktı
 	free(pid);
 }
 
 void close_all_pipes(int **fd, int pipe_count, int i)
 {
-    while (i < pipe_count)
-    {
-        close(fd[i][0]);
-        close(fd[i][1]);
-        i++;
-    }
+	while (i < pipe_count)
+	{
+		close(fd[i][0]);
+		close(fd[i][1]);
+		i++;
+	}
 }
 
 void pipe_working(t_shell *shell)
 {
-    pid_t *pid;
-    int how_died;
+	pid_t *pid;
+	int how_died;
 
-    how_died = 0;
-    shell->pipes.fd = create_pipes(shell->pipes.pipe_count);
-    pid = malloc(sizeof(pid_t) * shell->pipes.command_count); //child process sayısı kadar pid tutacak bir dizi
-    spawn_commands(shell, pid, 0);
-    close_all_pipes(shell->pipes.fd, shell->pipes.pipe_count, 0); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
-    signal(SIGINT, SIG_IGN); //güvenli olması için child processler için bekleme yaaprken sinyal gelmesi durumunu engellemek için kısa bir süreliğine 
-    //tanımsız davranış olmaması adına sinyalleri görmezden geliyoruz olmasa da olur ama olması daha iyi
-    signal(SIGQUIT, SIG_IGN);
-    wait_for_children(shell, &how_died, pid); //parent process tüm child processlerin bitmesini bekler
-    signal(SIGINT, works_crtl_c);
-    signal(SIGQUIT, SIG_IGN);
+	how_died = 0;
+	shell->pipes.fd = create_pipes(shell->pipes.pipe_count);
+	pid = malloc(sizeof(pid_t) * shell->pipes.command_count); //child process sayısı kadar pid tutacak bir dizi
+	spawn_commands(shell, pid, 0);
+	close_all_pipes(shell->pipes.fd, shell->pipes.pipe_count, 0); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
+	signal(SIGINT, SIG_IGN); //güvenli olması için child processler için bekleme yaaprken sinyal gelmesi durumunu engellemek için kısa bir süreliğine 
+	//tanımsız davranış olmaması adına sinyalleri görmezden geliyoruz olmasa da olur ama olması daha iyi
+	signal(SIGQUIT, SIG_IGN);
+	wait_for_children(shell, &how_died, pid); //parent process tüm child processlerin bitmesini bekler
+	signal(SIGINT, works_ctrl_c);
+	signal(SIGQUIT, SIG_IGN);
 }

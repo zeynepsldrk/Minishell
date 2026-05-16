@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:04:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/25 20:08:10 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 13:01:46 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	info_flags(char *arg, int *n_flag, int *e_flag)
 			*e_flag = 0;
 		else
 			return (0);
-		i++;    
+		i++;
 	}
 	return (1);
 }

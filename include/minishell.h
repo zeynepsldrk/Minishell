@@ -131,6 +131,8 @@ int is_valid_identifier(char *arg);
 int is_key_inside(char *key, t_env_node *env_list);
 
 
+void works_ctrl_c(int signal);
+
 void	update_env_node(char *key, char *value, t_shell *shell);
 void add_env_node(t_env_node **env_list, t_env_node *new_node);
 void delete_env_node(t_env_node **env_list, char *key);

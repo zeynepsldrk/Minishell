@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:05 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/25 14:17:57 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 13:07:58 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ void	init_builtins(t_builtin *builtins)
 
 t_shell	*init_shell(t_shell *shell, char **envp)
 {
-    shell->pipes.pipe_count = shell->cmds->argc - 1;
-    shell->pipes.command_count = shell->cmds->argc;
+	shell->pipes.pipe_count = shell->cmds->argc - 1;
+	shell->pipes.command_count = shell->cmds->argc;
 	shell->env_list = NULL;
 	shell->env = envp;
 	shell->exit_value = 0;
 	shell->tokens = NULL;
 	shell->cmds = NULL;
 	init_builtins(shell->list_builtin); //header dosyasına eklediğim struct ın 
-    //içini builtin fonksiyonlarının adları ve çalıştıracağı fonk. atadım. İndex kullanarak fonksiyonları çağırmak istediğimde kolaylık sağlayacak.
+	//içini builtin fonksiyonlarının adları ve çalıştıracağı fonk. atadım. İndex kullanarak fonksiyonları çağırmak istediğimde kolaylık sağlayacak.
 	return (shell);
 }
