@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:05 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:07:58 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 14:54:27 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void	init_builtins(t_builtin *builtins)
 
 t_shell	*init_shell(t_shell *shell, char **envp)
 {
-	shell->pipes.pipe_count = shell->cmds->argc - 1;
-	shell->pipes.command_count = shell->cmds->argc;
+	shell->pipes.pipe_count = 0;
+	shell->pipes.command_count = 0;
 	shell->env_list = NULL;
-	shell->env = envp;
+	shell->env = NULL;
 	shell->exit_value = 0;
 	shell->tokens = NULL;
 	shell->cmds = NULL;
