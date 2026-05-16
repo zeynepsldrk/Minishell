@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/02 18:25:30 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 13:58:30 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,82 +14,82 @@
 
 t_cmd *start_parser(char *input, t_shell *shell)
 {
-    (void)input;
-    (void)shell;
-    return (NULL);
+	(void)input;
+	(void)shell;
+	return (NULL);
 }
 
 void start_execute(t_shell *shell)
 {
-    t_cmd *cmd;
+	t_cmd *cmd;
 
-    cmd = shell->cmds;
-    if (!cmd || !cmd->argv)
-        return ;
-    /*Burada yapmaya çalıştığım pipe kullanımına göre ayırmak ve kullanılmadığı takdirde builtin ya da external
-    olarak çalıştırılması, ek olarak içeride redirect işlemleri kontrolü de yapılmalıdır.*/
-    if (cmd->next != NULL) //birden fazla cmd varsa pipe var demektir
-        pipe_working(shell); //cmd listesini dolaşarak pipe işlemlerini yapar
-		//en son child içinde en son child in exit kodunu shell->exit_status a yazmak lazım
+	cmd = shell->cmds;
+	if (!cmd || !cmd->argv)
+		return ;
+	/*Burada yapmaya çalıştığım pipe kullanımına göre ayırmak ve kullanılmadığı takdirde builtin ya da external
+	olarak çalıştırılması, ek olarak içeride redirect işlemleri kontrolü de yapılmalıdır.*/
+	if (cmd->next != NULL) //birden fazla cmd varsa pipe var demektir
+		pipe_working(shell); //cmd listesini dolaşarak pipe işlemlerini yapar
+		//en son child içinde en son child in exit kodunu shell->exit_value a yazmak lazım
 		//Bu pipe'ta 3 komut var. Bash'in kuralı: en sondaki komutun exit kodu önemli. ls hata verse bile, wc -l başarılıysa $? = 0 olur.
-    else if (is_builtin(cmd->argv[0], shell)) //cmd tek ise builtin mi diye kontrol eder
-        execute_builtin(cmd->argv[0], shell, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+	else if (is_builtin(cmd->argv[0], shell)) //cmd tek ise builtin mi diye kontrol eder
+		execute_builtin(cmd->argv[0], shell, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
 		//builtinler doğru ise 0 dönmeli hatalı ise 1 dönmeli
-    else
-        execute_external(shell); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
-    //!!sondaki else bir şekilde azaltılabilir mi diye düşünüyorum, çünkü cmd tek ise ve builtin değilse zaten external komut oluyor, yani tek if ile de halledilebilir gibi geliyor bana.!!
-    //externallerin nasıl çalıştırıldığını anlayınca tekrar değerlendirilecektir bu durum.!!
+	else
+		execute_external(shell); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+	//!!sondaki else bir şekilde azaltılabilir mi diye düşünüyorum, çünkü cmd tek ise ve builtin değilse zaten external komut oluyor, yani tek if ile de halledilebilir gibi geliyor bana.!!
+	//externallerin nasıl çalıştırıldığını anlayınca tekrar değerlendirilecektir bu durum.!!
 	//execute_external içinde waitpid'den gelen kodu
-    //shell->exit_status'a yazman lazım
+	//shell->exit_value'a yazman lazım
 }
 
 void lets_start_shell(t_shell *shell)
 {
-    while (1)
-    {
-        shell->input = readline("minishell> ");
-        if(shell->input == NULL) //crtl+d de readline NULL döner
-        {
-            write(2, "exit\n", 5);
-            rl_clear_history();
-            break ;
-        }
-        if (*shell->input != '\0') //bash de enter a basınca boş inputu kaydetmiyor soo biz de kaydetmiyoruz
-            add_history(shell->input);
-        shell->cmds = start_parser(shell->input, shell); 
-        if (shell->cmds)
-            start_execute(shell);
-        free(shell->input);
-    }
+	while (1)
+	{
+		shell->input = readline("minishell> ");
+		if(shell->input == NULL) //crtl+d de readline NULL döner
+		{
+			write(2, "exit\n", 5);
+			rl_clear_history();
+			break ;
+		}
+		if (*shell->input != '\0') //bash de enter a basınca boş inputu kaydetmiyor soo biz de kaydetmiyoruz
+			add_history(shell->input);
+		shell->cmds = start_parser(shell->input, shell); 
+		if (shell->cmds)
+			start_execute(shell);
+		free(shell->input);
+	}
 }
 
-void works_crtl_c(int signal)
+void works_ctrl_c(int signal)
 {
-    (void)signal;
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+	(void)signal;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 int main(int argc, char **argv, char **envp)
 {
-    t_shell *shell;
-    (void)argc;
-    (void)argv;
+	t_shell *shell;
+	(void)argc;
+	(void)argv;
 
-    signal(SIGINT, works_crtl_c);
-    signal(SIGQUIT, SIG_IGN);
-    shell = malloc(sizeof(t_shell));
-    if (!shell)
-        return (1); 
-    if (!init_shell(shell, envp)) //default değerlerle dolduruldu
-    {
-        write(2, "Initialization failed\n", 22);
-        free(shell);
-        return (1);
-    }
-    lets_start_shell(shell); //repl döngüsü başlatıldı
-    free(shell);
-    return (0);
+	signal(SIGINT, works_ctrl_c);
+	signal(SIGQUIT, SIG_IGN);
+	shell = malloc(sizeof(t_shell));
+	if (!shell)
+		return (1); 
+	if (!init_shell(shell, envp)) //default değerlerle dolduruldu
+	{
+		write(2, "Initialization failed\n", 22);
+		free(shell);
+		return (1);
+	}
+	lets_start_shell(shell); //repl döngüsü başlatıldı
+	free(shell);
+	return (0);
 }
