@@ -21,6 +21,8 @@
 
 # define ERANGE	34
 
+extern int g_signal; // diğer dosyalrdan okunabilmesi için 
+
 typedef struct s_minishell t_shell;
 typedef struct s_builtin t_builtin;
 
@@ -42,6 +44,7 @@ typedef struct s_token
 	
 typedef struct s_redirect
 {
+	int	heredoc_fd[2];
 	t_token_type type;
 	char *target_file;
 	struct s_redirect *next;
@@ -113,6 +116,7 @@ char	*ft_strdup(const char *s);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int		ft_redir_error(int fd);
+int	count_cmds(t_cmd *cmd);
 
 int		print_with_escapes(char *str, int i);
 int		info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);

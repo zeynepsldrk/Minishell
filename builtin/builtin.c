@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:12:21 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:02:27 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/05/16 18:42:07 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void *execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem d
 	backup_stdin = dup(STDIN_FILENO);
 	if(shell->cmds->redirects != NULL) //redir uygula -varsa tabii-
 	{
-		if (apply_redir(shell->cmds->redirects, shell))
+		if (!apply_redir(shell->cmds->redirects, shell))
 		{
 			shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
 			dup2(backup_stdout, STDOUT_FILENO);
