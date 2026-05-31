@@ -37,7 +37,7 @@ t_shell	*init_shell(t_shell *shell, char **envp)
 	shell->pipes.pipe_count = 0;
 	shell->pipes.command_count = 0;
 	shell->env_list = NULL;
-	shell->env = NULL;
+	shell->env = envp;
 	shell->exit_value = 0;
 	shell->tokens = NULL;
 	shell->cmds = NULL;
