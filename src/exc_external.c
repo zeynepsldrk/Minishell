@@ -117,21 +117,15 @@ char	*find_command_path(t_shell *shell)
 	}
 	path = my_little_getenv(shell->env_list, "PATH");
 	if (!path)
-		return (NULL);
+    {
+        print_path_error(shell->cmds->argv[0], "command not found", 127);
+        return (NULL);
+    }
 	path = check_the_path(path, shell->cmds->argv[0]);
 	if (path && (is_path_okey(path) == 0))
 		return (path);
 	free(path);
 	return (NULL);
-}
-
-void	works_ctrl_c(int signal)
-{
-	(void)signal;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
 void	execute_external(t_shell *shell)
@@ -150,7 +144,10 @@ void	execute_external(t_shell *shell)
 	how_died = 0;
 	path = find_command_path(shell);
 	if (!path)
-		return ;
+    {
+        print_path_error(shell->cmds->argv[0], "command not found", 127);
+        return ;
+    }
 	pid = fork();
 	if (pid < 0)
 	{
