@@ -14,22 +14,37 @@
 
 void execute_command(t_shell *shell)
 {
-	if (is_builtin(shell->cmds->argv[0], shell->list_builtin))
+    if (!shell->cmds->argv || !shell->cmds->argv[0])
+        exit(1);
+	if (is_builtin(shell->cmds->argv[0], shell))
+    {
 		execute_builtin(shell->cmds, shell, 0);
+        exit(shell->exit_value);
+    }
 	else
 		execute_external(shell);
 }
 
 void connect_child_fds(int i, int cmd_count, int **fd)
 {
+    if ((cmd_count - 1) == 0)
+        return;
 	if (i == 0) //ilk komut
-		dup2(fd[i][1], STDOUT_FILENO); //stdout'u pipe'ın yazma ucuna yönlendir
+    {
+        if(ft_safe_dup2(fd[i][1], STDOUT_FILENO) == -1) //stdout'u pipe'ın yazma ucuna yönlendir
+            exit(1);
+    }
 	else if (i == cmd_count - 1) //son komut
-		dup2(fd[i - 1][0], STDIN_FILENO); //stdin'i önceki pipe'ın okuma ucuna yönlendir
+    {
+        if(ft_safe_dup2(fd[i - 1][0], STDIN_FILENO) == -1) //stdin'i önceki pipe'ın okuma ucuna yönlendir
+            exit(1);
+    }
 	else //ortadaki komutlar
 	{
-		dup2(fd[i - 1][0], STDIN_FILENO); //stdin'i önceki pipe'ın okuma ucuna yönlendir
-		dup2(fd[i][1], STDOUT_FILENO); //stdout'u pipe'ın yazma ucuna yönlendir
+		if(ft_safe_dup2(fd[i - 1][0], STDIN_FILENO) == -1) //stdin'i önceki pipe'ın okuma ucuna yönlendir
+			exit(1);
+		if(ft_safe_dup2(fd[i][1], STDOUT_FILENO) == -1) //stdout'u pipe'ın yazma ucuna yönlendir
+			exit(1);
 	}
 	close_all_pipes(fd, cmd_count - 1, 0); //child process tüm pipe'ları kapatır çünkü artık yönlendirme yapılmıştır
 }
