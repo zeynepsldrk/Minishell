@@ -21,14 +21,20 @@ char	*cd_special_control(t_shell *shell)
 	{
 		new_path = my_little_getenv(shell->env_list, "HOME");
 		if (!new_path)
-			return (write(2, "cd: HOME not set\n", 17), 1);
+        {
+            write(2, "cd: HOME not set\n", 17);
+            return (NULL);
+        }
 		return (new_path);
 	}
 	else if (ft_strcmp(shell->cmds->argv[1], "-") == 0)
 	{
 		new_path = my_little_getenv(shell->env_list, "OLDPWD");
 		if (!new_path)
-			return (write(2, "cd: OLDPWD not set\n", 20), 1);
+        {
+            write(2, "cd: OLDPWD not set\n", 20);
+            return (NULL);
+        }
 		return (new_path);
 	}
 	return (shell->cmds->argv[1]);
