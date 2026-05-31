@@ -19,7 +19,8 @@ int apply_redirect_out(t_redirect *redir, t_shell *shell)
 	fd = open(redir->target_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (redir_error(fd))
 		return (1);
-	dup2(fd, STDOUT_FILENO); //standart çıktıya gidecekler artık fd ye gitsin
+	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1) //stadart çıktıya değil fd ye gitsin
+        return (1);
 	close(fd); //fd yi kapatıyoruz çünkü artık standart çıktı yönlendirilmiş durumda
 	//hedef dosyayı bir tane dosya açarak yönlendirmesini yaptıktan sonra artık kullanılması bitmiş oluyor.
 	return (0);
@@ -33,7 +34,8 @@ int apply_redirect_in(t_redirect *redir, t_shell *shell)
 	fd = open(redir->target_file, O_RDONLY);
 	if (redir_error(fd))
 		return (1);
-	dup2(fd, STDIN_FILENO);
+	if (ft_safe_dup2(fd, STDIN_FILENO) == -1)
+		return (1);
 	close(fd); //hedef dosyayı yöneldirdik bitti kapat gari
 	return (0);
 }
@@ -60,7 +62,8 @@ int apply_heredoc(t_redirect *redir, t_shell *shell)
 		free(line);
 	}
 	close(redir->heredoc_fd[1]);
-	dup2(redir->heredoc_fd[0], STDIN_FILENO);
+	if (ft_safe_dup2(redir->heredoc_fd[0], STDIN_FILENO) == -1)
+		return (1);
 	close(redir->heredoc_fd[0]);
 	return (0);
 	//pipe kullandım fd nin 1 i yazma ucudur. fd nin 0 ı standart girdiyi buraya bağladım ki okumayı pipe dan yapsın
@@ -73,7 +76,8 @@ int apply_append(t_redirect *redir, t_shell *shell)
 	fd = open(redir->target_file, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (redir_error(fd))
 		return (1);
-	dup2(fd, STDOUT_FILENO); //artık hem stdout hem de fd aynı yere bakıyor yani hedef dosyaya yönlendirilmiş durumda yalnız bu sefer truncate yapmadık
+	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1) //artık hem stdout hem de fd aynı yere bakıyor yani hedef dosyaya yönlendirilmiş durumda yalnız bu sefer truncate yapmadık
+		return (1);
 	close(fd); //yani hedef dosyanın içeriği silinmediği için append modunda açtık
 	return (0);
 }

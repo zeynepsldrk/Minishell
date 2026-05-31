@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void *execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
+void execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
 {										  //Burada redir olup olmaması fark etmeksizin
 	int backup_stdout;
 	int backup_stdin;
@@ -24,11 +24,13 @@ void *execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem d
 		if (!apply_redir(shell->cmds->redirects, shell))
 		{
 			shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
-			dup2(backup_stdout, STDOUT_FILENO);
-			dup2(backup_stdin, STDIN_FILENO);
+			if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
+				exit(1);
+			if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
+				exit(1);
 			close(backup_stdout);
 			close(backup_stdin);
-			return;
+            return ; //redir uygularken hata olursa fonksiyondan çık
 		}
 	}
 	while (shell->list_builtin[i].name) //komutu çalıştır
@@ -40,8 +42,10 @@ void *execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem d
 		}
 		i++;
 	}
-	dup2(backup_stdout, STDOUT_FILENO); //fd leri eski haline getir
-	dup2(backup_stdin, STDIN_FILENO);
+	if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
+		exit(1);
+	if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
+		exit(1);
 	close(backup_stdout); // eski fdleri kapatma sebebimiz: hem eski fd nin hemde yeni fd nin
 	close(backup_stdin);  //aynı anda açık kalması, sınırlı fd sayısına sahip olmamızdan kaynaklı boş yere çalışan fdlerin bulunmasına
 	//ve iki fd nin de aynı yeri yönlendirmesine neden olur. Bunlardan kaynaklı ileride problemler çıkabilir.
