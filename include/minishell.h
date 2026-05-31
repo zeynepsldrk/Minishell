@@ -120,7 +120,7 @@ int	count_cmds(t_cmd *cmd);
 
 int		print_with_escapes(char *str, int i);
 int		info_flags(char *arg, int *n_flag, int *e_flag, int *any_flag_here);
-void	*execute_builtin(char *cmd, t_shell *shell, int i);
+void	execute_builtin(char *cmd, t_shell *shell, int i);
 int		apply_redir(t_redirect *redirects, t_shell *shell);
 int apply_redirect_out(t_redirect *redir, t_shell *shell);
 int apply_redirect_in(t_redirect *redir, t_shell *shell);
