@@ -52,14 +52,18 @@ void execute_export(t_shell *shell, char *key, char *value, int i)
 
 void only_export_command(t_env_node *env_list)
 {
-	ft_bubble_sort(&env_list, 1);
-	while (env_list)
+	t_env_node	*printable_copy;
+
+
+	printable_copy = ft_copy_env_list(env_list);
+	ft_bubble_sort(&printable_copy, 1);
+	while (printable_copy)
 	{
-		printf("declare -x %s", env_list->key);
-		if (env_list->value) //env de görünmeyen value değerleri NULL olan değişkenleri de export ile yazdırabilmek için(= olmadan yazılıyorlar)
-			printf("=\"%s\"", env_list->value); //value tırnak içinde yazılmalı
+		printf("declare -x %s", printable_copy->key);
+		if (printable_copy->value) //env de görünmeyen value değerleri NULL olan değişkenleri de export ile yazdırabilmek için(= olmadan yazılıyorlar)
+			printf("=\"%s\"", printable_copy->value); //value tırnak içinde yazılmalı
 		printf("\n");
-		env_list = env_list->next;
+		printable_copy = printable_copy->next;
 	}
 }
 
