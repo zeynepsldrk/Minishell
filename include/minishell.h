@@ -128,12 +128,13 @@ int apply_heredoc(t_redirect *redir, t_shell *shell);
 int apply_append(t_redirect *redir, t_shell *shell);
 
 void pipe_working(t_shell *shell);
-void execute_external(t_shell *shell);
+void execute_external(t_shell *shell, int in_pipe);
 
 char *find_key_or_value(char *arg, int i, int which_one);
 int is_valid_identifier(char *arg);
 int is_key_inside(char *key, t_env_node *env_list);
 
+void	free_pipes(int **fd, int count);
 
 void works_ctrl_c(int signal);
 
