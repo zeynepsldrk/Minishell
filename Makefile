@@ -8,7 +8,9 @@ SRCS = main.c \
 		lexer/init.c \
 		lexer/expand.c \
 		lexer/utils2.c \
-		lexer/expand_utils.c
+		lexer/expand_utils.c \
+		parser/parser.c \
+		parser/parser_utils.c 
 OBJS = $(SRCS:.c=.o)
 
 

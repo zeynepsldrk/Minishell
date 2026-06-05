@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/05/10 15:45:49 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/05 17:05:41 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ char			*get_env_value(t_shell *sh, char *key);
 int				ft_strncmp(char *str1, char *str2, int n);
 void 			expander_helper(t_shell *sh, t_expander *exp);
 char 			*ch_value(t_expander *exp);
+int				word_count(t_token *token);
 void expander(t_shell *sh);
 
 #endif

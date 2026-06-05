@@ -29,6 +29,7 @@ char *get_env_key(char *str, int i)
         j++; 
     }
     key[j] = '\0';
+     printf("DEBUG get_env_key -> str: '%s', i_start: %d, key: '%s'\n", str, i - j, key); // geçici
     return (key);
 }
 
