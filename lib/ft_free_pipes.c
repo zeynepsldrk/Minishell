@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	free_pipes(int **fd, int count)
+void	ft_free_pipes(int **fd, int count)
 {
 	while (--count >= 0)
 	{

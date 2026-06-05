@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	count_cmds(t_cmd *cmd)
+int	ft_command_count(t_cmd *cmd)
 {
 	int i;
 

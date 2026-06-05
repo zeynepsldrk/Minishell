@@ -34,7 +34,7 @@ char	*ft_strdup(const char *s)
 	return (a);
 }
 
-char *safe_strdup(char *s)
+char *ft_safe_strdup(char *s)
 {
     if (!s)
         return (NULL);

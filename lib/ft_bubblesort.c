@@ -26,7 +26,7 @@ void swap(t_env_node *temp, int *swapped)
     *swapped = 1;
 }
 
-void bubble_sort(t_env_node **env_list, int swapped)
+void ft_bubble_sort(t_env_node **env_list, int swapped)
 {
     t_env_node *temp;
 

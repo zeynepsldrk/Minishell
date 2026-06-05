@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void safe_transform(char *str, int *i, long *result, int *sign)
+static void safe_transform(const char *str, int *i, long *result)
 {
     while (str[*i] >= '0' && str[*i] <= '9')
     {
@@ -48,6 +48,6 @@ long	ft_atol(const char *str)
 	}
     errno = 0; // errno'yu sıfırla, safe_transform sırasında sayısal olmayan karakterler varsa errno'yu ERANGE yapacak
     //errno zaten kütüphane içinde tanımlı geliyor
-    safe_transform(str, &i, &result, &sign); // sayısal olmayan karakterler varsa errno'yu ERANGE yapar
+    safe_transform(str, &i, &result); // sayısal olmayan karakterler varsa errno'yu ERANGE yapar
 	return (sign * result);
 }

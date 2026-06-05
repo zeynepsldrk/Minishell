@@ -14,9 +14,7 @@
 
 int is_valid_exit_arg(const char *str)
 {
-    long    num;
     int     i;
-    int     errno;
 
     i = 0;
     if (str[i] == '+' || str[i] == '-')
