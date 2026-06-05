@@ -39,7 +39,7 @@ void handle_append(t_shell *shell, char *key, char *new_val)
 
 void execute_export(t_shell *shell, char *key, char *value, int i)
 {
-	if (is_append(shell->cmds->argv[i]))
+	if (ft_isappend(shell->cmds->argv[i]))
 		handle_append(shell, key, value);   // += durumu
 	else
 	{

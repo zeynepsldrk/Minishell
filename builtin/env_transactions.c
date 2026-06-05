@@ -14,10 +14,9 @@
 
 int	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu günceller
 {
-	int			i;//shell içinde ki env_list in içerisinde gezineceğim ve key olarak verilen değeri gödüğümüzde onu value ile değiştireceğiz.
+	//shell içinde ki env_list in içerisinde gezineceğim ve key olarak verilen değeri gödüğümüzde onu value ile değiştireceğiz.
 	t_env_node	*temp;
 
-	i = 0;
 	temp = shell->env_list;
 	while (temp)
 	{
@@ -40,8 +39,8 @@ int create_new_node(t_shell *shell, char *key, char *value)
 	new_node = (t_env_node *)malloc(sizeof(t_env_node));
 	if (!new_node)
 		return (1);
-	new_node->key = safe_strdup(key);
-	new_node->value = safe_strdup(value);
+	new_node->key = ft_safe_strdup(key);
+	new_node->value = ft_safe_strdup(value);
 	new_node->next = NULL;
 	if (!new_node->key)  // key her zaman olmalı, value NULL olabilir
 	{

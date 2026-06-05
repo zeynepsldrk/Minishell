@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int builtin_pwd(void)
+int builtin_pwd(t_shell *shell)
 {
 	/*Fonksiyona **NULL ve 0** değerlerini vermek, bellek boyutu hesaplama ve ayırma işini
 	tamamen C standart kütüphanesine (glibc) bırakmanızı sağlar. Arka planda kütüphane
@@ -20,6 +20,7 @@ int builtin_pwd(void)
 	dizinin inode numarasından başlayıp kök dizine kadar ağaç tırmanışı yaparak tam
 	dosya yolunu adım adım tespit eder.*/
 	char *pwd;
+    (void)shell;
 
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
@@ -67,7 +68,7 @@ int builtin_exit(t_shell *shell)
 		shell->exit_value = 1;
 		return 1;
 	}
-	if (!is_valid_exit_args(shell->cmds->argv[1])) //exit code nin sayısal olması gerekir
+	if (!is_valid_exit_arg(shell->cmds->argv[1])) //exit code nin sayısal olması gerekir
 	{
 		write(2, "exit\n", 5);
 		write(2, "minishell: exit: numeric argument required\n", 43);

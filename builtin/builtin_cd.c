@@ -59,7 +59,7 @@ int	builtin_cd(t_shell *shell)
 		printf("%s\n", new_path);
 	if (getcwd(buf, sizeof(buf)))
 		update_env_node("OLDPWD", buf, shell);
-	my_bzero(buf, MAX_PATH);
+	ft_bzero(buf, MAX_PATH);
 	if (getcwd(buf, sizeof(buf)))
 		update_env_node("PWD", buf, shell);
 	return (0);

@@ -21,7 +21,7 @@ void execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem de
 	backup_stdin = dup(STDIN_FILENO);
 	if(shell->cmds->redirects != NULL) //redir uygula -varsa tabii-
 	{
-		if (!apply_redir(shell->cmds->redirects, shell))
+		if (apply_redir(shell->cmds->redirects))
 		{
 			shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
 			if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
