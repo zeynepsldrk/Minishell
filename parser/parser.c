@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:16:13 by asay              #+#    #+#             */
-/*   Updated: 2026/05/16 18:49:17 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/06 01:43:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ t_cmd *get_cmds (t_shell *sh) // parserda kaullanacagimiz icin tum cmd'leri alma
     cmd = malloc(sizeof(t_cmd)); // her cmd icin yer acmamiz gerektigi icin while'ın icinde
     if (!cmd)
         return NULL;
+    cmd->argv = get_argv(token); // cmd'nin argv'sini dolduruyoruz
+    cmd->redirects = get_redirs(token); // cmd'nin redirectlerini dolduruyoruz
     head = cmd; // cmd yapisinin basini kaybetmemek icin
     while (token != NULL) // token listesinde dolasarak pipe gorene kadar cmd'leri alacagiz
     {
@@ -72,9 +74,11 @@ t_redirect *get_redirs(t_token *token)
 {
     t_redirect *rdr;
     t_redirect *head;
+    t_redirect *pre;
 
     head = NULL;
     rdr = NULL;
+    pre = NULL;
     while (token != NULL && token->type != PIPE)
     {
         if (token->type == REDIRECT_IN || token->type == REDIRECT_OUT || token->type == HEREDOC || token->type == APPEND)
@@ -84,6 +88,12 @@ t_redirect *get_redirs(t_token *token)
                 return NULL;
             rdr->type = token->type;
             rdr->target = ft_strdup(token->next->context);
+            rdr->next = NULL;
+            if (pre)
+                pre->next = rdr;
+            else
+                head = rdr;
+            pre = rdr;
         }
         token = token->next;
     }
@@ -96,6 +106,8 @@ void parser (t_shell *sh)
     t_token *token;
 
     curr =sh->tokens;
+    (void)curr;
+    (void)token;
     sh->cmds = get_cmds(sh); //shell icerisindeki cmd'ye ayırdıgımız token listesinden cmd'leri eklicez.
     sh->cmds->argv = get_argv(token);
 }
