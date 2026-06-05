@@ -15,10 +15,12 @@
 void execute_command(t_shell *shell)
 {
     if (!shell->cmds->argv || !shell->cmds->argv[0])
+    {
         exit(1);
+    }
 	if (is_builtin(shell->cmds->argv[0], shell))
     {
-		execute_builtin(shell->cmds, shell, 0);
+		execute_builtin(shell->cmds->argv[0], shell, 0);
         exit(shell->exit_value);
     }
 	else
@@ -37,7 +39,9 @@ static void dup2_with_check(int i, int newfd, int **fd, int pipe_count)
 void connect_child_fds(int i, int cmd_count, int **fd)
 {
     if ((cmd_count - 1) == 0)
+    {
         return;
+    }
 	if (i == 0) //ilk komut
         dup2_with_check(i, STDOUT_FILENO, fd, cmd_count - 1); //stdout'u pipe'ın yazma ucuna yönlendir
 	else if (i == cmd_count - 1) //son komut
@@ -47,7 +51,7 @@ void connect_child_fds(int i, int cmd_count, int **fd)
         dup2_with_check(i - 1, STDIN_FILENO, fd, cmd_count - 1); //stdin'i önceki pipe'ın okuma ucuna yönlendir
 		dup2_with_check(i, STDOUT_FILENO, fd, cmd_count - 1); //stdout'u pipe'ın yazma ucuna yönlendir
 	}
-	ft_free_pipes(fd, cmd_count); //child process tüm pipe'ları kapatır çünkü artık yönlendirme yapılmıştır
+	ft_free_pipes(fd, cmd_count - 1); //child process tüm pipe'ları kapatır çünkü artık yönlendirme yapılmıştır
 }
 
 void execute_child_logic(t_shell *shell, t_cmd *cmd, int i)
@@ -56,7 +60,6 @@ void execute_child_logic(t_shell *shell, t_cmd *cmd, int i)
 	connect_child_fds(i, shell->pipes.command_count, shell->pipes.fd);
 	if (apply_redir(shell->cmds->redirects, shell))
 		exit(1);
-	update_env_nodes(shell);
 	execute_command(shell);
 	exit(127); //execve başarısızsa buradayız
 }

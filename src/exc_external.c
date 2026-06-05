@@ -157,7 +157,7 @@ void	execute_external(t_shell *shell, int in_pipe)
 			free(path);
 			exit(1);
 		}
-		update_env_nodes(shell);
+		ft_check_env(shell);
         execve(path, shell->cmds->argv, shell->env);
         perror("execve fail");
         free(path);
@@ -179,7 +179,7 @@ void	execute_external(t_shell *shell, int in_pipe)
 			free(path);
 			exit(1);
 		}
-		update_env_nodes(shell);
+		ft_check_env(shell);
 		if (execve(path, shell->cmds->argv, shell->env))
 		{
 			perror("execve fail");

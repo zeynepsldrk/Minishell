@@ -29,11 +29,11 @@ int **create_pipes(int pipe_count)
 	{
 		fd[i] = malloc(sizeof(int) * 2);
 		if (!fd[i])
-			return (free_pipes(fd, i), NULL);
+			return (ft_free_pipes(fd, i), NULL);
 		if (pipe(fd[i]) == -1)
 		{
 			free(fd[i]);
-			return (free_pipes(fd, i), NULL);
+			return (ft_free_pipes(fd, i), NULL);
 		}
 		i++;
 	}
@@ -70,7 +70,9 @@ void pipe_working(t_shell *shell)
 
 	how_died = 0;
     if (shell->pipes.command_count <= 1) // tek komut pipe_working'e gelmemeli
-        return;
+    {
+        return ;
+    }
 	shell->pipes.fd = create_pipes(shell->pipes.pipe_count);
 	if (!shell->pipes.fd)
 		return;
