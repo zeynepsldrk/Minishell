@@ -128,7 +128,7 @@ char	*find_command_path(t_shell *shell)
 	return (NULL);
 }
 
-void	execute_external(t_shell *shell)
+void	execute_external(t_shell *shell, int in_pipe)
 {
 	//externallerin çalıştırılması için child process açılmalıdır.
 	/*fork() bir pid döner ve bu pid == 0 ise child process
@@ -146,7 +146,22 @@ void	execute_external(t_shell *shell)
 	if (!path)
     {
         print_path_error(shell->cmds->argv[0], "command not found", 127);
+        if (in_pipe)
+            exit(127);
         return ;
+    }
+    if (in_pipe) //buradaki sinyal işini spawn içinde yapıyorum zaten
+    {
+        if (apply_redir(shell->cmds->redirects, shell))
+		{
+			free(path);
+			exit(1);
+		}
+		update_env_nodes(shell);
+        execve(path, shell->cmds->argv, shell->env);
+        perror("execve fail");
+        free(path);
+        exit(127);
     }
 	pid = fork();
 	if (pid < 0)

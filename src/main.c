@@ -38,7 +38,7 @@ void start_execute(t_shell *shell)
 		execute_builtin(cmd->argv[0], shell, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
 		//builtinler doğru ise 0 dönmeli hatalı ise 1 dönmeli
 	else
-		execute_external(shell); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+		execute_external(shell, 0); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
 	//!!sondaki else bir şekilde azaltılabilir mi diye düşünüyorum, çünkü cmd tek ise ve builtin değilse zaten external komut oluyor, yani tek if ile de halledilebilir gibi geliyor bana.!!
 	//externallerin nasıl çalıştırıldığını anlayınca tekrar değerlendirilecektir bu durum.!!
 	//execute_external içinde waitpid'den gelen kodu
