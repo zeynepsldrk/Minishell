@@ -22,7 +22,16 @@ void execute_command(t_shell *shell)
         exit(shell->exit_value);
     }
 	else
-		execute_external(shell);
+		execute_external(shell, 1); //child içinde ise 1 olacak
+}
+
+static void dup2_with_check(int i, int newfd, int **fd, int pipe_count)
+{
+    if(ft_safe_dup2(fd[i][1], newfd) == -1)
+    {
+        ft_free_pipes(fd, pipe_count);
+        exit(1);
+    }
 }
 
 void connect_child_fds(int i, int cmd_count, int **fd)
@@ -30,23 +39,15 @@ void connect_child_fds(int i, int cmd_count, int **fd)
     if ((cmd_count - 1) == 0)
         return;
 	if (i == 0) //ilk komut
-    {
-        if(ft_safe_dup2(fd[i][1], STDOUT_FILENO) == -1) //stdout'u pipe'ın yazma ucuna yönlendir
-            exit(1);
-    }
+        dup2_with_check(i, STDOUT_FILENO, fd, cmd_count - 1); //stdout'u pipe'ın yazma ucuna yönlendir
 	else if (i == cmd_count - 1) //son komut
-    {
-        if(ft_safe_dup2(fd[i - 1][0], STDIN_FILENO) == -1) //stdin'i önceki pipe'ın okuma ucuna yönlendir
-            exit(1);
-    }
+        dup2_with_check(i - 1, STDIN_FILENO, fd, cmd_count - 1); //stdin'i önceki pipe'ın okuma ucuna yönlendir
 	else //ortadaki komutlar
 	{
-		if(ft_safe_dup2(fd[i - 1][0], STDIN_FILENO) == -1) //stdin'i önceki pipe'ın okuma ucuna yönlendir
-			exit(1);
-		if(ft_safe_dup2(fd[i][1], STDOUT_FILENO) == -1) //stdout'u pipe'ın yazma ucuna yönlendir
-			exit(1);
+        dup2_with_check(i - 1, STDIN_FILENO, fd, cmd_count - 1); //stdin'i önceki pipe'ın okuma ucuna yönlendir
+		dup2_with_check(i, STDOUT_FILENO, fd, cmd_count - 1); //stdout'u pipe'ın yazma ucuna yönlendir
 	}
-	close_all_pipes(fd, cmd_count - 1, 0); //child process tüm pipe'ları kapatır çünkü artık yönlendirme yapılmıştır
+	ft_free_pipes(fd, cmd_count); //child process tüm pipe'ları kapatır çünkü artık yönlendirme yapılmıştır
 }
 
 void execute_child_logic(t_shell *shell, t_cmd *cmd, int i)
@@ -71,6 +72,8 @@ void spawn_commands(t_shell *shell, pid_t *pid, int i)
 		if (pid[i] == -1)
 		{
 			perror("fork");
+            ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count);
+            free(pid);
 			exit(1);
 		}
 		if (pid[i] == 0) //child process

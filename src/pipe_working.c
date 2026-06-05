@@ -63,16 +63,6 @@ void	wait_for_children(t_shell *shell, int *how_died, pid_t *pid)
 	free(pid);
 }
 
-void close_all_pipes(int **fd, int pipe_count, int i)
-{
-	while (i < pipe_count)
-	{
-		close(fd[i][0]);
-		close(fd[i][1]);
-		i++;
-	}
-}
-
 void pipe_working(t_shell *shell)
 {
 	pid_t *pid;
@@ -82,9 +72,16 @@ void pipe_working(t_shell *shell)
     if (shell->pipes.command_count <= 1) // tek komut pipe_working'e gelmemeli
         return;
 	shell->pipes.fd = create_pipes(shell->pipes.pipe_count);
+	if (!shell->pipes.fd)
+		return;
 	pid = malloc(sizeof(pid_t) * shell->pipes.command_count); //child process sayısı kadar pid tutacak bir dizi
+	if (!pid)
+	{
+		ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count);
+		return;
+	}
 	spawn_commands(shell, pid, 0);
-	close_all_pipes(shell->pipes.fd, shell->pipes.pipe_count, 0); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
+    ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
 	signal(SIGINT, SIG_IGN); //güvenli olması için child processler için bekleme yaaprken sinyal gelmesi durumunu engellemek için kısa bir süreliğine 
 	//tanımsız davranış olmaması adına sinyalleri görmezden geliyoruz olmasa da olur ama olması daha iyi
 	signal(SIGQUIT, SIG_IGN);
