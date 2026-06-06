@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:05 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 14:54:27 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/06 20:34:19 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,20 @@ void	init_builtins(t_builtin *builtins)
 	builtins[7].func = NULL;
 }
 
+static	int ft_mini_free(char *key, char *value)
+{
+	if (!key || !value)
+	{
+		free(key);
+		free(value);
+		return (1);
+	}
+	return (0);
+}
+
 static int	add_envp_node(t_shell *shell, char *envp)
 {
-	int	i;
+	int		i;
 	char	*key;
 	char	*value;
 
@@ -45,12 +56,8 @@ static int	add_envp_node(t_shell *shell, char *envp)
 		return (1);
 	key = ft_substr(envp, 0, i);
 	value = ft_substr(envp, i + 1, ft_strlen(envp) - i - 1);
-	if (!key || !value)
-	{
-		free(key);
-		free(value);
+	if (ft_mini_free(key, value))
 		return (1);
-	}
 	if (create_new_node(shell, key, value))
 	{
 		free(key);
@@ -62,9 +69,9 @@ static int	add_envp_node(t_shell *shell, char *envp)
 	return (0);
 }
 
-static void	init_env_list(t_shell *shell, char **envp)
+static	void	init_env_list(t_shell *shell, char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (envp && envp[i])
