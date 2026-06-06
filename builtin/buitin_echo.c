@@ -28,10 +28,13 @@ int	print_with_escapes(char *str, int i)
 				return (1);
 			else
 				printf("\\%c", str[i + 1]);
+			i += 2;
 		}
 		else
+		{
 			printf("%c", str[i]);
-		i++;
+			i++;
+		}
 	}
 	return (0);
 }
@@ -67,7 +70,7 @@ int	builtin_echo(t_shell *shell)
 	int	e_flag;
 
 	i = 1;
-	while (info_flags(shell->cmds->argv[i], &n_flag, &e_flag) && shell->cmds->argv[i]) //flagleri kontrol ediyoruz, varsa onları atlayarak sonraki argümanlara geçiyoruz.
+	while (shell->cmds->argv[i] && info_flags(shell->cmds->argv[i], &n_flag, &e_flag))
 		i++;
 	while (shell->cmds->argv[i])
 	{
