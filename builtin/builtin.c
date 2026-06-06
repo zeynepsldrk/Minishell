@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
+void execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
 {										  //Burada redir olup olmaması fark etmeksizin
 	int backup_stdout;
 	int backup_stdin;
@@ -23,7 +23,10 @@ void execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem de
 	{
 		if (apply_redir(shell->cmds->redirects))
 		{
-			shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
+			if (g_signal == SIGINT)
+				shell->exit_value = 130;
+			else
+				shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
 			if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
 				exit(1);
 			if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
@@ -37,7 +40,7 @@ void execute_builtin(char *cmd, t_shell *shell, int i) //cmd hem tek node hem de
 	{
 		if (ft_strcmp(cmd, shell->list_builtin[i].name) == 0)
 		{
-			shell->exit_value = shell->list_builtin[i].func(shell);
+			shell->exit_value = shell->list_builtin[i].func(shell, in_pipe);
 			break ;
 		}
 		i++;
