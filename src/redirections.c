@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:13 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 19:02:09 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/06 20:19:49 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,52 +43,6 @@ int apply_redirect_in(t_redirect *redir)
 		return (1);
 	}
 	close(fd); //hedef dosyayı yöneldirdik bitti kapat gari
-	return (0);
-}
-
-int apply_heredoc(t_redirect *redir)
-{
-	int pid;
-	int status;
-	char *line;
-
-	if (pipe(redir->heredoc_fd) == -1)
-		return (1);
-	pid = fork();
-	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
-		while (1)
-		{
-			line = readline("> ");
-			if (line == NULL || ft_strcmp(line, redir->target_file) == 0)
-			{
-				free(line);
-				break;
-			}
-			write(redir->heredoc_fd[1], line, ft_strlen(line));
-			write(redir->heredoc_fd[1], "\n", 1);
-			free(line);
-		}
-		close(redir->heredoc_fd[0]);
-		close(redir->heredoc_fd[1]);
-		exit(0);
-	}
-	close(redir->heredoc_fd[1]);
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		g_signal = SIGINT;
-		close(redir->heredoc_fd[0]);
-		return (1);
-	}
-	if (ft_safe_dup2(redir->heredoc_fd[0], STDIN_FILENO) == -1)
-	{
-		close(redir->heredoc_fd[0]);
-		return (1);
-	}
-	close(redir->heredoc_fd[0]);
 	return (0);
 }
 
