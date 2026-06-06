@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int builtin_pwd(t_shell *shell)
+int builtin_pwd(t_shell *shell, int in_pipe)
 {
 	/*Fonksiyona **NULL ve 0** değerlerini vermek, bellek boyutu hesaplama ve ayırma işini
 	tamamen C standart kütüphanesine (glibc) bırakmanızı sağlar. Arka planda kütüphane
@@ -21,6 +21,7 @@ int builtin_pwd(t_shell *shell)
 	dosya yolunu adım adım tespit eder.*/
 	char *pwd;
     (void)shell;
+    (void)in_pipe;
 
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
@@ -33,15 +34,17 @@ int builtin_pwd(t_shell *shell)
 	return (0);
 }
 
-int builtin_env(t_shell *shell)
+int builtin_env(t_shell *shell, int in_pipe)
 {
+	(void)in_pipe;
 	print_env_list(shell->env_list);
 	return (0);
 }
 
-int builtin_unset(t_shell *shell)
+int builtin_unset(t_shell *shell, int in_pipe)
 {
 	int i;
+    (void)in_pipe;
 
 	i = 1;
 	if (!shell->cmds->argv[1])

@@ -63,12 +63,13 @@ int	info_flags(char *arg, int *n_flag, int *e_flag)
 	return (1);
 }
 
-int	builtin_echo(t_shell *shell)
+int	builtin_echo(t_shell *shell, int in_pipe)
 {
 	int	i;
 	int	n_flag;
 	int	e_flag;
 
+    (void)in_pipe;
 	i = 1;
 	while (shell->cmds->argv[i] && info_flags(shell->cmds->argv[i], &n_flag, &e_flag))
 		i++;

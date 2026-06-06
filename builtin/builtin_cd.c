@@ -40,11 +40,12 @@ char	*cd_special_control(t_shell *shell)
 	return (shell->cmds->argv[1]);
 }
 
-int	builtin_cd(t_shell *shell)
+int	builtin_cd(t_shell *shell, int in_pipe)
 {
 	char	*new_path;
 	char	buf[MAX_PATH];
 	char	old_pwd[MAX_PATH];
+    (void)in_pipe;
 
 	if (!getcwd(old_pwd, sizeof(old_pwd)))
 		return (perror("minishell: getcwd"), 1);

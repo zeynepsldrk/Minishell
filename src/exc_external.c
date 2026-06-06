@@ -56,6 +56,7 @@ char *check_the_path(char *path, char *cmd)
 
 void	print_path_error(char *cmd, char *msg, int exit_code)
 {
+    (void)exit_code;
 	write(2, "minishell: ", 11);
 	if (cmd && *cmd)
 	{

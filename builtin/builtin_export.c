@@ -98,12 +98,13 @@ int	process_export_arg(t_shell *shell, int i)
 	return (0);
 }
 
-int builtin_export(t_shell *shell)
+int builtin_export(t_shell *shell, int in_pipe)
 {
 	int i;
 	int ret;
 
 	i = 1;
+	(void)in_pipe;
 	ret = 0;
 	if (!shell->cmds->argv[1])
 		return (only_export_command(shell->env_list), 0);
