@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 17:05:32 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 19:29:48 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/06 20:51:42 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,31 @@ void expander_helper(t_shell *sh, t_expander *exp)
     if(exp->curr_token->expand == 1 && exp->str[exp->i] == '$')
     {
         exp->i++;
-        exp->key = get_env_key(exp->str, exp->i);
-        exp->value = get_env_value(sh, exp->key);
+        if(exp->str[exp->i] == '?')
+            handle_exitval(sh, exp);
+        else
+        {
+            exp->key = get_env_key(exp->str, exp->i);
+            exp->value = get_env_value(sh, exp->key);
+        }
         if (!exp->key || exp->key[0] == '\0')
         {
             free(exp->key);
             return ;
         }
         exp->old = exp->curr_token->context;
-        exp->curr_token->context = ch_value(exp); 
+        exp->curr_token->context = ch_value(exp);
         exp->str = exp->curr_token->context; //bir sonraki döngü için curr_token güncellenmeli
         exp->i = -1; // 0 yapsaydık while sonundaki i++ ile str[0] atlanırdı.
         free(exp->old);
         free(exp->key);
         free(exp->value);
     }
+}
+
+void handle_exitval(t_shell *sh, t_expander *exp)
+{
+    exp->value = ft_itoa(sh->exit_value);
+    exp->i++;
+    exp->key = ft_strdup("?");
 }
