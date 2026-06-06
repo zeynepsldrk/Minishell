@@ -32,16 +32,60 @@ void	init_builtins(t_builtin *builtins)
 	builtins[7].func = NULL;
 }
 
+static int	add_envp_node(t_shell *shell, char *envp)
+{
+	int	i;
+	char	*key;
+	char	*value;
+
+	i = 0;
+	while (envp[i] && envp[i] != '=')
+		i++;
+	if (!envp[i])
+		return (1);
+	key = ft_substr(envp, 0, i);
+	value = ft_substr(envp, i + 1, ft_strlen(envp) - i - 1);
+	if (!key || !value)
+	{
+		free(key);
+		free(value);
+		return (1);
+	}
+	if (create_new_node(shell, key, value))
+	{
+		free(key);
+		free(value);
+		return (1);
+	}
+	free(key);
+	free(value);
+	return (0);
+}
+
+static void	init_env_list(t_shell *shell, char **envp)
+{
+	int i;
+
+	i = 0;
+	while (envp && envp[i])
+	{
+		add_envp_node(shell, envp[i]);
+		i++;
+	}
+}
+
 t_shell	*init_shell(t_shell *shell, char **envp)
 {
 	shell->pipes.pipe_count = 0;
 	shell->pipes.command_count = 0;
 	shell->env_list = NULL;
-	shell->env = envp;
+	shell->env = NULL;
 	shell->exit_value = 0;
 	shell->tokens = NULL;
 	shell->cmds = NULL;
 	init_builtins(shell->list_builtin); //header dosyasına eklediğim struct ın 
 	//içini builtin fonksiyonlarının adları ve çalıştıracağı fonk. atadım. İndex kullanarak fonksiyonları çağırmak istediğimde kolaylık sağlayacak.
+	init_env_list(shell, envp);
+	init_env_list(shell, envp);
 	return (shell);
 }
