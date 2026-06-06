@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:16:13 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 13:35:03 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/06 19:29:09 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,17 @@ t_cmd *get_cmds (t_shell *sh) // parserda kaullanacagimiz icin tum cmd'leri alma
     cmd = malloc(sizeof(t_cmd)); // her cmd icin yer acmamiz gerektigi icin while'ın icinde
     if (!cmd)
         return NULL;
-    cmd->argv = get_argv(token); // cmd'nin argv'sini dolduruyoruz
-    cmd->redirects = get_redirs(token); // cmd'nin redirectlerini dolduruyoruz
+    fill_cmd(cmd, token); // cmd yapisini dolduruyoruz
     head = cmd; // cmd yapisinin basini kaybetmemek icin
     while (token != NULL) // token listesinde dolasarak pipe gorene kadar cmd'leri alacagiz
     {
-        if (token->type == PIPE) // pipe gorunce cmd'yi bitirip yeni cmd'ye baslamamiz gerekiyor
-        {
-            cmd->next = malloc(sizeof(t_cmd)); // yeni cmd icin yer acmamiz gerektigi icin
-            if (!cmd->next)
-            {
-                // dongudeyken onceden actiklarimi da free'lemem gerekmez mi? sor?
-                return (NULL);
-            }
-            cmd = cmd->next; // yeni cmd'ye geciyoruz
-        }
         token = token->next;
+        if(token == NULL)
+            break;
+        if (token->type == PIPE) // pipe gorunce cmd'yi bitirip yeni cmd'ye baslamamiz gerekiyor
+            handle_pipe(&cmd, &token); // pipe gorunce cmd'yi bitirip yeni cmd'ye baslamamiz gerekiyor
     }
+    cmd->next = NULL; // son cmd'nin next'ini NULL yaparak cmd listesinin sonunu belirtiyoruz.
     return (head);
 }
 
@@ -74,6 +68,7 @@ t_redirect *get_redirs(t_token *token)
 {
     t_redirect *rdr;
     t_redirect *head;
+    t_redirect *pre;
 
     head = NULL;
     rdr = NULL;
@@ -85,7 +80,13 @@ t_redirect *get_redirs(t_token *token)
             if(!rdr)
                 return NULL;
             rdr->type = token->type;
+            if(head == NULL) // eger ilk redirect ise head'i guncelliyoruz
+                head = rdr;
+            else // eger ilk redirect degilse onceki redirectin nextine bagliyoruz
+                pre->next = rdr; // yeni redirectin presi eski head oluyor
+            pre = rdr; // yeni redirectin presi eski head oluyor
             rdr->target = ft_strdup(token->next->context);
+            rdr->next = NULL; // son redirectin next'ini NULL yaparak redirect listesinin sonunu belirtiyoruz.
         }
         token = token->next;
     }
@@ -94,10 +95,5 @@ t_redirect *get_redirs(t_token *token)
 
 void parser (t_shell *sh)
 {
-    t_token *curr;
-    t_token *token;
-
-    curr =sh->tokens;
-    sh->cmds = get_cmds(sh); //shell icerisindeki cmd'ye ayırdıgımız token listesinden cmd'leri eklicez.
-    sh->cmds->argv = get_argv(token);
+    sh->cmds = get_cmds(sh);
 }
