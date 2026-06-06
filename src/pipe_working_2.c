@@ -20,7 +20,7 @@ void execute_command(t_shell *shell)
     }
 	if (is_builtin(shell->cmds->argv[0], shell))
     {
-		execute_builtin(shell->cmds->argv[0], shell, 0);
+		execute_builtin(shell->cmds->argv[0], shell, 0, 1); //pipe içinde çalışacaksa in_pipe 1 olacak
         exit(shell->exit_value);
     }
 	else
@@ -29,11 +29,17 @@ void execute_command(t_shell *shell)
 
 static void dup2_with_check(int i, int newfd, int **fd, int pipe_count)
 {
-    if(ft_safe_dup2(fd[i][1], newfd) == -1)
-    {
-        ft_free_pipes(fd, pipe_count);
-        exit(1);
-    }
+	int fd_to_use;
+
+	if (newfd == STDOUT_FILENO)
+		fd_to_use = fd[i][1];
+	else
+		fd_to_use = fd[i][0];
+	if (ft_safe_dup2(fd_to_use, newfd) == -1)
+	{
+		ft_free_pipes(fd, pipe_count);
+		exit(1);
+	}
 }
 
 void connect_child_fds(int i, int cmd_count, int **fd)
@@ -58,8 +64,12 @@ void execute_child_logic(t_shell *shell, t_cmd *cmd, int i)
 {
 	shell->cmds = cmd;
 	connect_child_fds(i, shell->pipes.command_count, shell->pipes.fd);
-	if (apply_redir(shell->cmds->redirects, shell))
+	if (apply_redir(shell->cmds->redirects))
+	{
+		if (g_signal == SIGINT)
+			exit(130);
 		exit(1);
+	}
 	execute_command(shell);
 	exit(127); //execve başarısızsa buradayız
 }
