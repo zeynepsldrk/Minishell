@@ -53,9 +53,11 @@ void execute_export(t_shell *shell, char *key, char *value, int i)
 void only_export_command(t_env_node *env_list)
 {
 	t_env_node	*printable_copy;
+	t_env_node	*head;
 
 
 	printable_copy = ft_copy_env_list(env_list);
+	head = printable_copy;
 	ft_bubble_sort(&printable_copy, 1);
 	while (printable_copy)
 	{
@@ -64,6 +66,15 @@ void only_export_command(t_env_node *env_list)
 			printf("=\"%s\"", printable_copy->value); //value tırnak içinde yazılmalı
 		printf("\n");
 		printable_copy = printable_copy->next;
+	}
+	// free the copied list
+	while (head)
+	{
+		printable_copy = head->next;
+		free(head->key);
+		free(head->value);
+		free(head);
+		head = printable_copy;
 	}
 }
 
@@ -77,8 +88,13 @@ int	process_export_arg(t_shell *shell, int i)
 	key = find_key_or_value(shell->cmds->argv[i], 0, KEY);
 	value = find_key_or_value(shell->cmds->argv[i], 0, VALUE);
 	if (!key)
+	{
+		free(value);
 		return (1);
+	}
 	execute_export(shell, key, value, i);
+	free(key);
+	free(value);
 	return (0);
 }
 
