@@ -42,7 +42,7 @@ char *check_the_path(char *path, char *cmd)
 	{
 		full_path = ft_strjoin(splited_path[i], "/");
 		full_path = ft_join_and_free(full_path, cmd);
-		if (access(full_path, F_OK) == 0)
+		if (access(full_path, F_OK | X_OK) == 0)
 		{
 			ft_free_split(splited_path);
 			return (full_path);
@@ -142,6 +142,7 @@ void	execute_external(t_shell *shell, int in_pipe)
 	path = find_command_path(shell);
 	if (!path)
     {
+        print_path_error(shell->cmds->argv[0], "command not found", 127);
         shell->exit_value = 127;
         if (in_pipe)
             exit(127);
