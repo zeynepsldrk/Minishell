@@ -14,7 +14,7 @@
 
 int	g_signal;
 
-t_cmd *start_parser(char *input, t_shell *shell)
+t_cmd	*start_parser(char *input, t_shell *shell)
 {
 	(void)input;
 	(void)shell;
@@ -35,10 +35,10 @@ void start_execute(t_shell *shell)
 		//en son child içinde en son child in exit kodunu shell->exit_value a yazmak lazım
 		//Bu pipe'ta 3 komut var. Bash'in kuralı: en sondaki komutun exit kodu önemli. ls hata verse bile, wc -l başarılıysa $? = 0 olur.
 	else if (is_builtin(cmd->argv[0], shell)) //cmd tek ise builtin mi diye kontrol eder
-		execute_builtin(cmd->argv[0], shell, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+		execute_builtin(cmd->argv[0], shell, 0, 0); //forklamadan built-in komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
 		//builtinler doğru ise 0 dönmeli hatalı ise 1 dönmeli
 	else
-		execute_external(shell, 0); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
+		execute_external(shell, 0, 0); //fork lazımdıır,external komutları çalıştırır. İçeride redirect işlemleri kontrolü yapmayı unutma
 	//!!sondaki else bir şekilde azaltılabilir mi diye düşünüyorum, çünkü cmd tek ise ve builtin değilse zaten external komut oluyor, yani tek if ile de halledilebilir gibi geliyor bana.!!
 	//externallerin nasıl çalıştırıldığını anlayınca tekrar değerlendirilecektir bu durum.!!
 	//execute_external içinde waitpid'den gelen kodu
@@ -49,14 +49,11 @@ void lets_start_shell(t_shell *shell)
 {
 	while (1)
 	{
-		if (g_signal == SIGINT)  // ← sinyal geldi mi kontrol et
-        {
+		if (g_signal == SIGINT)
+		{
 			shell->exit_value = 130;
-            rl_on_new_line();
-            rl_replace_line("", 0);
-            rl_redisplay();
-            g_signal = 0;
-        }
+			g_signal = 0;
+		}
 		shell->input = readline("minishell> ");
 		if(shell->input == NULL) //crtl+d de readline NULL döner
 		{
@@ -72,6 +69,8 @@ void lets_start_shell(t_shell *shell)
 			shell->pipes.command_count = ft_command_count(shell->cmds);
 			shell->pipes.pipe_count = shell->pipes.command_count - 1;
 			start_execute(shell);
+			free_cmd_list(shell->cmds);
+			shell->cmds = NULL;
 		}
 		free(shell->input);
 	}
@@ -81,6 +80,9 @@ void works_ctrl_c(int signal)
 {
 	g_signal = signal;
 	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_forced_update_display();
 }
 
 int main(int argc, char **argv, char **envp)
