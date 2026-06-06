@@ -61,7 +61,7 @@ typedef struct s_cmd
 typedef struct s_builtin
 {
     char *name;
-    int (*func)(t_shell *shell);
+    int (*func)(t_shell *shell, int in_pipe);
 } t_builtin;
 
 typedef struct s_env_node
@@ -131,7 +131,7 @@ int apply_append(t_redirect *redir);
 int apply_redir(t_redirect *redir);
 
 // builtin/builtin.c
-void execute_builtin(char *cmd, t_shell *shell, int i);
+void execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe);
 int is_builtin(char *cmd, t_shell *shell);
 char *my_little_getenv(t_env_node *env_list, char *key);
 
@@ -148,7 +148,7 @@ int builtin_echo(t_shell *shell);
 int builtin_pwd(t_shell *shell);
 int builtin_env(t_shell *shell);
 int builtin_unset(t_shell *shell);
-int builtin_exit(t_shell *shell);
+int builtin_exit(t_shell *shell, int in_pipe);
 
 // builtin/builtin_export.c
 void handle_append(t_shell *shell, char *key, char *new_val);
