@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 14:50:44 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:58:09 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/06 18:59:03 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 -sinyallerin nasıl işlediğini araştır
 */
 
-int **create_pipes(int pipe_count)
+int	**create_pipes(int pipe_count)
 {
-	int **fd;
-	int i;
+	int	**fd;
+	int	i;
 
 	fd = malloc(sizeof(int *) * pipe_count);
 	if (!fd)
@@ -43,7 +43,7 @@ int **create_pipes(int pipe_count)
 void	wait_for_children(t_shell *shell, int *how_died, pid_t *pid)
 {
 	int	i;
-	int status;
+	int	status;
 
 	i = 0;
 	status = 0;
@@ -63,27 +63,11 @@ void	wait_for_children(t_shell *shell, int *how_died, pid_t *pid)
 	free(pid);
 }
 
-void pipe_working(t_shell *shell)
+static void	pipe_working_signal(t_shell *shell, pid_t *pid)
 {
-	pid_t *pid;
-	int how_died;
+	int		how_died;
 
 	how_died = 0;
-    if (shell->pipes.command_count <= 1) // tek komut pipe_working'e gelmemeli
-    {
-        return ;
-    }
-	shell->pipes.fd = create_pipes(shell->pipes.pipe_count);
-	if (!shell->pipes.fd)
-		return;
-	pid = malloc(sizeof(pid_t) * shell->pipes.command_count); //child process sayısı kadar pid tutacak bir dizi
-	if (!pid)
-	{
-		ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count);
-		return;
-	}
-	spawn_commands(shell, pid, 0);
-    ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
 	signal(SIGINT, SIG_IGN); //güvenli olması için child processler için bekleme yaaprken sinyal gelmesi durumunu engellemek için kısa bir süreliğine 
 	//tanımsız davranış olmaması adına sinyalleri görmezden geliyoruz olmasa da olur ama olması daha iyi
 	signal(SIGQUIT, SIG_IGN);
@@ -95,4 +79,26 @@ void pipe_working(t_shell *shell)
 	}
 	signal(SIGINT, works_ctrl_c);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	pipe_working(t_shell *shell)
+{
+	pid_t	*pid;
+	
+	if (shell->pipes.command_count <= 1) // tek komut pipe_working'e gelmemeli
+	{
+		return ;
+	}
+	shell->pipes.fd = create_pipes(shell->pipes.pipe_count);
+	if (!shell->pipes.fd)
+		return;
+	pid = malloc(sizeof(pid_t) * shell->pipes.command_count); //child process sayısı kadar pid tutacak bir dizi
+	if (!pid)
+	{
+		ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count);
+		return;
+	}
+	spawn_commands(shell, pid, 0);
+	ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count); //parent process tüm pipe'ları kapatır çünkü artık kullanmayacak
+	pipe_working_signal(shell, pid);
 }
