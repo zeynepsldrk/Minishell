@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/05 17:05:41 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/06 19:29:35 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,12 @@ int				ft_strncmp(char *str1, char *str2, int n);
 void 			expander_helper(t_shell *sh, t_expander *exp);
 char 			*ch_value(t_expander *exp);
 int				word_count(t_token *token);
-void expander(t_shell *sh);
+void			expander(t_shell *sh);
+void			fill_cmd(t_cmd *cmd, t_token *token);
+char **get_argv(t_token *token);
+t_redirect *get_redirs(t_token *token);
+int				handle_pipe(t_cmd **cmd, t_token **token);
+void parser (t_shell *sh);
+
 
 #endif
