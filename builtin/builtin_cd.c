@@ -44,8 +44,9 @@ int	builtin_cd(t_shell *shell)
 {
 	char	*new_path;
 	char	buf[MAX_PATH];
+	char	old_pwd[MAX_PATH];
 
-	if (!getcwd(buf, sizeof(buf)))
+	if (!getcwd(old_pwd, sizeof(old_pwd)))
 		return (perror("minishell: getcwd"), 1);
 	new_path = cd_special_control(shell);
 	if (!new_path)
@@ -57,9 +58,7 @@ int	builtin_cd(t_shell *shell)
 	}
 	if (shell->cmds->argv[1] && (ft_strcmp(shell->cmds->argv[1], "-") == 0))
 		printf("%s\n", new_path);
-	if (getcwd(buf, sizeof(buf)))
-		update_env_node("OLDPWD", buf, shell);
-	ft_bzero(buf, MAX_PATH);
+	update_env_node("OLDPWD", old_pwd, shell);
 	if (getcwd(buf, sizeof(buf)))
 		update_env_node("PWD", buf, shell);
 	return (0);
