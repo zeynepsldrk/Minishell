@@ -140,8 +140,7 @@ char *cd_special_control(t_shell *shell);
 int builtin_cd(t_shell *shell, int in_pipe);
 
 // builtin/buitin_echo.c
-int print_with_escapes(char *str, int i);
-int info_flags(char *arg, int *n_flag, int *e_flag);
+int info_flags(char *arg);
 int builtin_echo(t_shell *shell, int in_pipe);
 
 // builtin/builtin_pwd_env_unset_exit.c
