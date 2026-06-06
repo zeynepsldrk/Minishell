@@ -19,17 +19,24 @@ void ft_free_cmd_list(t_cmd *cmds)
 {
     t_cmd *current;
     t_cmd *next;
+    t_redirect *redir;
+    t_redirect *redir_next;
 
     current = cmds;
     while (current)
     {
         next = current->next;
-        if (current->args)
-            free_array(current->args);   // char **args -> her elemanı free
-        if (current->input_file)
-            free(current->input_file);
-        if (current->output_file)
-            free(current->output_file);
+        if (current->argv)
+            free_array(current->argv);
+        redir = current->redirects;
+        while (redir)
+        {
+            redir_next = redir->next;
+            if (redir->target_file)
+                free(redir->target_file);
+            free(redir);
+            redir = redir_next;
+        }
         free(current);
         current = next;
     }
