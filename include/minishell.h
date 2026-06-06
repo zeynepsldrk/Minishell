@@ -137,17 +137,17 @@ char *my_little_getenv(t_env_node *env_list, char *key);
 
 // builtin/builtin_cd.c
 char *cd_special_control(t_shell *shell);
-int builtin_cd(t_shell *shell);
+int builtin_cd(t_shell *shell, int in_pipe);
 
 // builtin/buitin_echo.c
 int print_with_escapes(char *str, int i);
 int info_flags(char *arg, int *n_flag, int *e_flag);
-int builtin_echo(t_shell *shell);
+int builtin_echo(t_shell *shell, int in_pipe);
 
 // builtin/builtin_pwd_env_unset_exit.c
-int builtin_pwd(t_shell *shell);
-int builtin_env(t_shell *shell);
-int builtin_unset(t_shell *shell);
+int builtin_pwd(t_shell *shell, int in_pipe);
+int builtin_env(t_shell *shell, int in_pipe);
+int builtin_unset(t_shell *shell, int in_pipe);
 int builtin_exit(t_shell *shell, int in_pipe);
 
 // builtin/builtin_export.c
@@ -155,7 +155,7 @@ void handle_append(t_shell *shell, char *key, char *new_val);
 void execute_export(t_shell *shell, char *key, char *value, int i);
 void only_export_command(t_env_node *env_list);
 int process_export_arg(t_shell *shell, int i);
-int builtin_export(t_shell *shell);
+int builtin_export(t_shell *shell, int in_pipe);
 
 // builtin/builtin_export_2.c
 int is_key_inside(char *key, t_env_node *env_list);
@@ -188,6 +188,9 @@ int ft_command_count(t_cmd *cmd);
 
 // lib/ft_copy_env_list.c
 t_env_node *ft_copy_env_list(t_env_node *env_list);
+
+// lib/ft_free_cmd_list.c
+void ft_free_cmd_list(t_cmd *cmds);
 
 // lib/ft_free_pipes.c
 void ft_free_pipes(int **fd, int count);
