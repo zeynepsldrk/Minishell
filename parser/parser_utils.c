@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: asay <asay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 15:28:39 by asay              #+#    #+#             */
-/*   Updated: 2026/06/05 17:05:26 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/06 16:58:00 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,25 @@ int word_count(t_token *token)
         token = token->next;
     }
     return (count);
+}
+
+void fill_cmd(t_cmd *cmd, t_token *token)
+{
+    cmd->argv = get_argv(token); 
+    cmd->redirects = get_redirs(token);
+    cmd->argc = word_count(token);
+    cmd->next = NULL;
+}
+
+int handle_pipe(t_cmd **cmd, t_token **token)
+{
+    (*cmd)->next = malloc(sizeof(t_cmd)); // yeni cmd icin yer acmamiz gerektigi icin
+    if (!(*cmd)->next)
+        return 0;
+    *token = (*token)->next; // pipe'dan sonraki token'a geciyoruz
+    if(*token == NULL) // eger pipe'dan sonra token yoksa donguden cik
+        return 0;
+    *cmd = (*cmd)->next; // yeni cmd'ye geciyoruz
+    fill_cmd(*cmd, *token); // yeni cmd'yi dolduruyoruzü
+    return 1;
 }
