@@ -88,6 +88,11 @@ void pipe_working(t_shell *shell)
 	//tanımsız davranış olmaması adına sinyalleri görmezden geliyoruz olmasa da olur ama olması daha iyi
 	signal(SIGQUIT, SIG_IGN);
 	wait_for_children(shell, &how_died, pid); //parent process tüm child processlerin bitmesini bekler
+	if (g_signal == SIGINT)
+	{
+		shell->exit_value = 130;
+		g_signal = 0;
+	}
 	signal(SIGINT, works_ctrl_c);
 	signal(SIGQUIT, SIG_IGN);
 }

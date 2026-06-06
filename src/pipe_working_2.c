@@ -86,6 +86,8 @@ void spawn_commands(t_shell *shell, pid_t *pid, int i)
 		{
 			perror("fork");
             ft_free_pipes(shell->pipes.fd, shell->pipes.pipe_count);
+            while (--i >= 0)
+                waitpid(pid[i], NULL, 0);
             free(pid);
 			exit(1);
 		}
