@@ -17,8 +17,15 @@ void execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem te
 	int backup_stdout;
 	int backup_stdin;
 
-	backup_stdout = dup(STDOUT_FILENO); //standart girdi/çıktıları önceden kaydediyoruz çünkü redirlere göre değerleri kaybolacak
-	backup_stdin = dup(STDIN_FILENO);
+	backup_stdout = -1;
+	backup_stdin = -1;
+	if (!in_pipe)
+	{
+		backup_stdout = dup(STDOUT_FILENO);
+		backup_stdin = dup(STDIN_FILENO);
+		if (backup_stdout == -1 || backup_stdin == -1)
+			return ;
+	}
 	if(shell->cmds->redirects != NULL) //redir uygula -varsa tabii-
 	{
 		if (apply_redir(shell->cmds->redirects))
@@ -27,12 +34,15 @@ void execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem te
 				shell->exit_value = 130;
 			else
 				shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
-			if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
-				exit(1);
-			if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
-				exit(1);
-			close(backup_stdout);
-			close(backup_stdin);
+			if (!in_pipe)
+			{
+				if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
+					exit(1);
+				if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
+					exit(1);
+				close(backup_stdout);
+				close(backup_stdin);
+			}
             return ; //redir uygularken hata olursa fonksiyondan çık
 		}
 	}
@@ -45,14 +55,15 @@ void execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem te
 		}
 		i++;
 	}
-	if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
-		exit(1);
-	if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
-		exit(1);
-	close(backup_stdout); // eski fdleri kapatma sebebimiz: hem eski fd nin hemde yeni fd nin
-	close(backup_stdin);  //aynı anda açık kalması, sınırlı fd sayısına sahip olmamızdan kaynaklı boş yere çalışan fdlerin bulunmasına
-	//ve iki fd nin de aynı yeri yönlendirmesine neden olur. Bunlardan kaynaklı ileride problemler çıkabilir.
-	//Ayrıca dup yapınca bir dosya açmış oluyoruz, bu yüzden kapatmak gerekiyor.
+	if (!in_pipe)
+	{
+		if (ft_safe_dup2(backup_stdout, STDOUT_FILENO) == -1)
+			exit(1);
+		if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
+			exit(1);
+		close(backup_stdout); // eski fdleri kapatma sebebimiz: hem eski fd nin hemde yeni fd nin
+		close(backup_stdin);  //aynı anda açık kalması, sınırlı fd sayısına sahip olmamızdan kaynaklı boş yere çalışan fdlerin bulunmasına
+	}
 }
 
 int is_builtin(char *cmd, t_shell *shell)
