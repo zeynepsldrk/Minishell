@@ -86,6 +86,5 @@ t_shell	*init_shell(t_shell *shell, char **envp)
 	init_builtins(shell->list_builtin); //header dosyasına eklediğim struct ın 
 	//içini builtin fonksiyonlarının adları ve çalıştıracağı fonk. atadım. İndex kullanarak fonksiyonları çağırmak istediğimde kolaylık sağlayacak.
 	init_env_list(shell, envp);
-	init_env_list(shell, envp);
 	return (shell);
 }
