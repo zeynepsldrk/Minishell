@@ -54,26 +54,33 @@ int builtin_unset(t_shell *shell)
 	return (0);
 }
 
-int builtin_exit(t_shell *shell)
+static int	do_exit(int in_pipe, int code)
+{
+	if (!in_pipe)
+		exit(code);
+	return (code);
+}
+
+int builtin_exit(t_shell *shell, int in_pipe)
 {
 	if (!shell->cmds->argv[1])
 	{
 		write(2, "exit\n", 5);
-		exit(shell->exit_value);
+		return (do_exit(in_pipe, shell->exit_value));
 	}
 	if (shell->cmds->argc > 2)
 	{
 		write(2, "exit\n", 5);
 		write(2, "minishell: exit: too many arguments\n", 37);
 		shell->exit_value = 1;
-		return 1;
+		return (1);
 	}
 	if (!is_valid_exit_arg(shell->cmds->argv[1])) //exit code nin sayısal olması gerekir
 	{
 		write(2, "exit\n", 5);
-		write(2, "minishell: exit: numeric argument required\n", 43);
-		exit(255);
+		write(2, "minishell: exit: numeric argument required\n", 43); //hata veren agümanı da ekle!!
+        return (do_exit(in_pipe, 255)); // pipe'daysa return
 	}
 	write(2, "exit\n", 5);
-	exit(ft_atol(shell->cmds->argv[1]) % 256);
+    return (do_exit(in_pipe, ft_atol(shell->cmds->argv[1]) % 256)); // pipe'daysa return
 }
