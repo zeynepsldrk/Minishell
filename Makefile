@@ -21,7 +21,7 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lreadline
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lreadline -fsanitize=address
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)

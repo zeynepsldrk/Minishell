@@ -6,7 +6,7 @@
 /*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 19:29:35 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/06 20:46:11 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,9 @@ char **get_argv(t_token *token);
 t_redirect *get_redirs(t_token *token);
 int				handle_pipe(t_cmd **cmd, t_token **token);
 void parser (t_shell *sh);
+int numlen(long nbr);
+char *ft_itoa(int nbr);
+void handle_exitval(t_shell *sh, t_expander *exp);
 
 
 #endif
