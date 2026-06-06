@@ -65,7 +65,6 @@ void	print_path_error(char *cmd, char *msg, int exit_code)
 	if (msg)
 		write(2, msg, ft_strlen(msg));
 	write(2, "\n", 1);
-	exit(exit_code);
 }
 
 int	is_path_okey(char *path)
@@ -117,10 +116,7 @@ char	*find_command_path(t_shell *shell)
 	}
 	path = my_little_getenv(shell->env_list, "PATH");
 	if (!path)
-    {
-        print_path_error(shell->cmds->argv[0], "command not found", 127);
-        return (NULL);
-    }
+		return (NULL);
 	path = check_the_path(path, shell->cmds->argv[0]);
 	if (path && (is_path_okey(path) == 0))
 		return (path);
@@ -145,17 +141,19 @@ void	execute_external(t_shell *shell, int in_pipe)
 	path = find_command_path(shell);
 	if (!path)
     {
-        print_path_error(shell->cmds->argv[0], "command not found", 127);
+        shell->exit_value = 127;
         if (in_pipe)
             exit(127);
         return ;
     }
     if (in_pipe) //buradaki sinyal işini spawn içinde yapıyorum zaten
     {
-        if (apply_redir(shell->cmds->redirects, shell))
-		{
-			free(path);
-			exit(1);
+        if (apply_redir(shell->cmds->redirects))
+		{   
+		free(path);
+		if (g_signal == SIGINT)
+			exit(130);
+		exit(1);
 		}
 		ft_check_env(shell);
         execve(path, shell->cmds->argv, shell->env);
@@ -174,7 +172,7 @@ void	execute_external(t_shell *shell, int in_pipe)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		//redirler de hata varsa execve çalışmamalı, o yüzden redirler de hata var mı diye kontrol etmek lazım
-		if (apply_redir(shell->cmds->redirects, shell))
+		if (apply_redir(shell->cmds->redirects))
 		{
 			free(path);
 			exit(1);
