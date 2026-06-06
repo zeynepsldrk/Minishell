@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 13:01:23 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:01:29 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/06 18:39:29 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu gÃ
 	}
 	return (1);
 }
+
+
 
 int create_new_node(t_shell *shell, char *key, char *value)
 {
