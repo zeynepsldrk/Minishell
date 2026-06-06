@@ -48,30 +48,41 @@ int apply_redirect_in(t_redirect *redir)
 
 int apply_heredoc(t_redirect *redir)
 {
-	//şimdii burada stdin (0) e yazdıklarım yeni bir dosyaya birikecek EOF kadar sonra o dosyadan stdout (1) a yönlendirilecek
+	int pid;
+	int status;
 	char *line;
 
 	if (pipe(redir->heredoc_fd) == -1)
 		return (1);
-	while (1)
+	pid = fork();
+	if (pid == 0)
 	{
-		if (g_signal == SIGINT)
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
+		while (1)
 		{
-			close(redir->heredoc_fd[0]);
-			close(redir->heredoc_fd[1]);
-			return (1);
-		}
-		line = readline("> ");
-		if (line == NULL || ft_strcmp(line, redir->target_file) == 0)
-		{
+			line = readline("> ");
+			if (line == NULL || ft_strcmp(line, redir->target_file) == 0)
+			{
+				free(line);
+				break;
+			}
+			write(redir->heredoc_fd[1], line, ft_strlen(line));
+			write(redir->heredoc_fd[1], "\n", 1);
 			free(line);
-			break;
 		}
-		write(redir->heredoc_fd[1], line, ft_strlen(line));
-		write(redir->heredoc_fd[1], "\n", 1);
-		free(line);
+		close(redir->heredoc_fd[0]);
+		close(redir->heredoc_fd[1]);
+		exit(0);
 	}
 	close(redir->heredoc_fd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		g_signal = SIGINT;
+		close(redir->heredoc_fd[0]);
+		return (1);
+	}
 	if (ft_safe_dup2(redir->heredoc_fd[0], STDIN_FILENO) == -1)
 	{
 		close(redir->heredoc_fd[0]);
@@ -79,7 +90,6 @@ int apply_heredoc(t_redirect *redir)
 	}
 	close(redir->heredoc_fd[0]);
 	return (0);
-	//pipe kullandım fd nin 1 i yazma ucudur. fd nin 0 ı standart girdiyi buraya bağladım ki okumayı pipe dan yapsın
 }
 
 int apply_append(t_redirect *redir)
