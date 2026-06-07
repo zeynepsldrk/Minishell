@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 20:46:11 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/07 19:32:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,5 @@ void parser (t_shell *sh);
 int numlen(long nbr);
 char *ft_itoa(int nbr);
 void handle_exitval(t_shell *sh, t_expander *exp);
-
 
 #endif
