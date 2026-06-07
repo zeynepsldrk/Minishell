@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/07 20:50:23 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/07 21:55:39 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,9 +172,11 @@ void			free_commands(t_cmd *cmds);
 void			*ft_memset(void *b, int c, size_t len);
 int				ft_strncmp(char *str1, char *str2, int n);
 char			*trim(char *str);
-int				prompt(t_shell *shell);
 int				numlen(long nbr);
 char			*ft_itoa(int nbr);
+char			*ft_strdup(char *s);
+int ft_strlen(const char *str);
+
 
 // src/main.c
 int				main(int argc, char **argv, char **envp);
@@ -263,6 +265,7 @@ t_env_node		*ft_copy_env_list(t_env_node *env_list);
 void			ft_free_cmd_list(t_cmd *cmds);
 void			ft_free_pipes(int **fd, int count);
 int				ft_isalpha(int c);
+int				ft_isalnum(char c);
 int				ft_isappend(char *arg);
 t_env_node		*ft_lstlast(t_env_node *env_list);
 int				ft_redir_error(int fd);
