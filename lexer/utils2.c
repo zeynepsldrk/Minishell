@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:04:17 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 20:51:21 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/07 20:48:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_isalnum(char c)
-{
-    if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122) 
-        || (c >= 48 && c <= 57))
-		return (1);
-	return (0);
-}
 
 int	ft_strncmp(char *str1, char *str2, int n)
 {
