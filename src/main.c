@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 19:04:17 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/07 21:03:44 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,21 @@
 
 int	g_signal;
 
-t_cmd	*start_parser(char *input, t_shell *shell)
+t_cmd *start_parser(char *input, t_shell *shell)
 {
-	(void)input;
-	(void)shell;
-	return (NULL);
+    char *trimmed;
+
+    trimmed = trim(input);
+    if (!trimmed || trimmed[0] == '\0')
+    {
+        free(trimmed);
+        return (NULL);
+    }
+    lexer(shell, trimmed);
+    expander(shell);
+    parser(shell);
+    free(trimmed);
+    return (shell->cmds);
 }
 
 void start_execute(t_shell *shell)

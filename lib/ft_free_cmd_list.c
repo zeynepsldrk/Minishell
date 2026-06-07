@@ -32,8 +32,8 @@ void ft_free_cmd_list(t_cmd *cmds)
         while (redir)
         {
             redir_next = redir->next;
-            if (redir->target_file)
-                free(redir->target_file);
+            if (redir->target)
+                free(redir->target);
             free(redir);
             redir = redir_next;
         }

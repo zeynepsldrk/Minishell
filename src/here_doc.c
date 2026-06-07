@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 20:19:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 20:33:06 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/07 20:31:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	here_doc(t_redirect *redir)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL || ft_strcmp(line, redir->target_file) == 0)
+		if (line == NULL || ft_strcmp(line, redir->target) == 0)
 		{
 			free(line);
 			break;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:13 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 20:19:49 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/07 20:32:08 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int apply_redirect_out(t_redirect *redir)
 {
 	int fd;
 
-	fd = open(redir->target_file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	fd = open(redir->target, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (ft_redir_error(fd))
 		return (1);
 	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1) //stadart çıktıya değil fd ye gitsin
@@ -34,7 +34,7 @@ int apply_redirect_in(t_redirect *redir)
 	//burada okumayı yani stdin i hedef dosyayay yönelendircez
 	int fd;
 
-	fd = open(redir->target_file, O_RDONLY);
+	fd = open(redir->target, O_RDONLY);
 	if (ft_redir_error(fd))
 		return (1);
 	if (ft_safe_dup2(fd, STDIN_FILENO) == -1)
@@ -50,7 +50,7 @@ int apply_append(t_redirect *redir)
 {
 	int fd;
 
-	fd = open(redir->target_file, O_WRONLY | O_APPEND | O_CREAT, 0644);
+	fd = open(redir->target, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (ft_redir_error(fd))
 		return (1);
 	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1) //artık hem stdout hem de fd aynı yere bakıyor yani hedef dosyaya yönlendirilmiş durumda yalnız bu sefer truncate yapmadık

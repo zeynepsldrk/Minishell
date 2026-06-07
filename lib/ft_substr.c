@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:24:11 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/29 18:26:51 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/07 20:50:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_substr(char const *s,int start, size_t len)
+char	*ft_substr(char *s,int start, int len)
 {
 	char	*subs;
-	size_t	size;
+	int	size;
 
 	if (!s)
 	{

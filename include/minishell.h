@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/07 20:21:02 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/07 20:50:23 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,9 +163,6 @@ t_redirect		*get_redirs(t_token *token);
 int				word_count(t_token *token);
 
 // utils
-int				ft_strlen(const char *str);
-char			*ft_strdup(const char *s);
-char			*ft_substr(char *str, int start, int len);
 char			**copy_env(char **env);
 int				sh_init(t_shell *shell, char **env);
 void			free_str(char **str);
@@ -173,7 +170,6 @@ void			free_sh(t_shell *shell);
 void			free_tokens(t_token *token);
 void			free_commands(t_cmd *cmds);
 void			*ft_memset(void *b, int c, size_t len);
-int				ft_isalnum(char c);
 int				ft_strncmp(char *str1, char *str2, int n);
 char			*trim(char *str);
 int				prompt(t_shell *shell);
@@ -283,5 +279,6 @@ void			ft_strlcat(char *dst, const char *src, size_t size);
 char			*ft_strjoin(char const *s1, char const *s2);
 int				is_valid_exit_arg(const char *str);
 int				is_valid_identifier(char *arg);
+char	*ft_substr(char *s,int start, int len);
 
 #endif

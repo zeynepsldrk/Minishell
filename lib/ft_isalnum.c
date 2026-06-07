@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:23:39 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/29 18:23:40 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/07 20:33:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_isalnum(int c)
+int ft_isalnum(char c)
 {
     return (ft_isalpha(c) || (c >= '0' && c <= '9'));
 }
