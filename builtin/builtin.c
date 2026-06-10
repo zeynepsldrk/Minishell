@@ -14,6 +14,8 @@
 
 static void	built_builtin(t_shell *shell, int i, int in_pipe, char *cmd)
 {
+	if (!cmd)
+		return ;
 	while (shell->list_builtin[i].name) //komutu çalıştır
 	{
 		if (ft_strcmp(cmd, shell->list_builtin[i].name) == 0)
@@ -81,8 +83,8 @@ int	is_builtin(char *cmd, t_shell *shell)
 {
 	if (!cmd)
 	{
-		shell->exit_value = 127;
-		return (0);
+		shell->exit_value = 0;
+		return (1);
 	}
 	if (ft_strcmp(cmd, "cd") == 0 || ft_strcmp(cmd, "echo") == 0)
 		return (1);
