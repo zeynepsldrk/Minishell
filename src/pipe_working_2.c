@@ -16,7 +16,7 @@ void	execute_command(t_shell *shell)
 {
 	if (!shell->cmds->argv || !shell->cmds->argv[0])
 	{
-		exit(1);
+		exit(0);
 	}
 	if (is_builtin(shell->cmds->argv[0], shell))
 	{
