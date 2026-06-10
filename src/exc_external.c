@@ -112,13 +112,14 @@ void	execute_external(t_shell *shell, int in_pipe)
 	//Ayrıca execve nin argümanlarından komutun yolunu da bulan bir fonksiyon yazmak lazım
 	char	*path;
 
+	shell->exit_value = 0;
 	path = find_command_path(shell);
 	if (!path)
 	{
-		print_path_error(shell, shell->cmds->argv[0], "command not found", 127);
-		shell->exit_value = 127;
+		if (shell->exit_value == 0)
+			print_path_error(shell, shell->cmds->argv[0], "command not found", 127);
 		if (in_pipe)
-			exit(127);
+			exit(shell->exit_value);
 		return ;
 	}
 	external_in_pipe(in_pipe, shell, path);
