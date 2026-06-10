@@ -82,7 +82,7 @@ int builtin_exit(t_shell *shell, int in_pipe)
 	{
 		write(2, "exit\n", 5);
 		write(2, "minishell: exit: numeric argument required\n", 43); //hata veren agümanı da ekle!!
-        return (do_exit(in_pipe, 255)); // pipe'daysa return
+        return (do_exit(in_pipe, 2)); // pipe'daysa return
 	}
 	write(2, "exit\n", 5);
     return (do_exit(in_pipe, ft_atol(shell->cmds->argv[1]) % 256)); // pipe'daysa return
