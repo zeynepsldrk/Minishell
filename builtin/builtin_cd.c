@@ -40,27 +40,35 @@ char	*cd_special_control(t_shell *shell)
 	return (shell->cmds->argv[1]);
 }
 
+static void	update_cd_envs(t_shell *shell, char *old_pwd)
+{
+	char	buf[MAX_PATH];
+
+	update_env_node("OLDPWD", old_pwd, shell);
+	if (getcwd(buf, sizeof(buf)))
+		update_env_node("PWD", buf, shell);
+}
+
 int	builtin_cd(t_shell *shell, int in_pipe)
 {
 	char	*new_path;
-	char	buf[MAX_PATH];
 	char	old_pwd[MAX_PATH];
-    (void)in_pipe;
+	(void)in_pipe;
 
+	if (shell->cmds->argv[1] && shell->cmds->argv[2])
+	{
+		write(2, "minishell: cd: too many arguments\n", 34);
+		return (1);
+	}
 	if (!getcwd(old_pwd, sizeof(old_pwd)))
 		return (perror("minishell: getcwd"), 1);
 	new_path = cd_special_control(shell);
 	if (!new_path)
 		return (1);
 	if (chdir(new_path) == -1)
-	{
-		perror("cd:");
-		return (1);
-	}
+		return (perror("cd:"), 1);
 	if (shell->cmds->argv[1] && (ft_strcmp(shell->cmds->argv[1], "-") == 0))
 		printf("%s\n", new_path);
-	update_env_node("OLDPWD", old_pwd, shell);
-	if (getcwd(buf, sizeof(buf)))
-		update_env_node("PWD", buf, shell);
+	update_cd_envs(shell, old_pwd);
 	return (0);
 }
