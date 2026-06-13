@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/07 21:03:44 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/13 04:50:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_cmd *start_parser(char *input, t_shell *shell)
     }
     lexer(shell, trimmed);
     expander(shell);
+	join_tokens(shell);
     parser(shell);
     free(trimmed);
     return (shell->cmds);

@@ -2,6 +2,7 @@ NAME = minishell
 
 SRCS =	lexer/lexer.c \
 		lexer/lexer_utils.c \
+		lexer/lexer_utils2.c \
 		lexer/utils.c \
 		lexer/clean.c \
 		lexer/init.c \

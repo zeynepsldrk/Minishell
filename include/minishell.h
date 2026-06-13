@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/07 21:55:39 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/13 04:43:04 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_token
 	char			*context;
 	struct s_token	*next;
 	int				expand;
+	int 			is_joined;
 } t_token;
 
 typedef struct s_redirect
@@ -111,6 +112,7 @@ typedef struct s_lexer
 	int				j;
 	char			*buff;
 	t_token			*head;
+	t_token			*tail;
 	t_token			*curr;
 	t_token_type	value;
 	int				in_single;
@@ -144,6 +146,7 @@ void			clean_get_tkns(t_lexer *ptr);
 void			is_gonna_expand(t_lexer *lex, t_token *tkn);
 void			get_token_helper(t_lexer *lex);
 void			general_quote_handler(t_lexer *ptr, char *str);
+void join_tokens(t_shell *shell);
 
 // expander
 void			expander(t_shell *sh);

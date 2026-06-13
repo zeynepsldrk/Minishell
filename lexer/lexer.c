@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:37:52 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 19:30:00 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/13 04:49:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_token	*new_token(t_token_type type, char *context)
 	token->type = type;
 	token->context = ft_strdup(context);
 	token->next = NULL;
+    token->is_joined = 0;
 	return (token);
 }
 
@@ -67,6 +68,7 @@ void get_token_helper(t_lexer *lex)
 		current = new_token(WORD, lex->buff);
 		is_gonna_expand(lex, current);
 		add_token(&lex->head, current);
+        lex->tail = current;
 	}
 }
 
@@ -86,7 +88,7 @@ t_token *get_tokens(char *str)
         else if (str[ptr->i] == '<' || str[ptr->i] == '>')
             redirect_tkn(ptr, str);
         else if (str[ptr->i] == 34 || str[ptr->i] == 39)
-            quote_tkn(ptr, str);
+            general_quote_handler(ptr, str);
         else if (str[ptr->i] == '|')
             pipe_tkn(ptr, str);
         else
