@@ -28,9 +28,18 @@ void	external_in_pipe(int in_pipe, t_shell *shell, char *path)
 		}
 		ft_check_env(shell);
 		execve(path, shell->cmds->argv, shell->env);
-		perror("execve fail");
-		free(path);
-		exit(127);
+		if (errno == EACCES)
+        {
+            free(path);
+            write(2, "minishell: permission denied\n", 29);
+            exit(126);
+        }
+        else
+        {
+            free(path);
+            write(2, "minishell: command not found\n", 29);
+            exit(127);
+        }
 	}
 }
 
@@ -46,12 +55,20 @@ void	external_none_pipe_child(char *path, t_shell *shell)
 		exit(1);
 	}
 	ft_check_env(shell);
-	if (execve(path, shell->cmds->argv, shell->env) == -1)
-	{
-		perror("execve fail");
-		free(path);
-		exit(127);
-	}
+    execve(path, shell->cmds->argv, shell->env);
+    // execve buraya düşerse başarısız olmuş demek
+    if (errno == EACCES)
+    {
+        free(path);
+        write(2, "minishell: permission denied\n", 29);
+        exit(126);
+    }
+    else
+    {
+        free(path);
+        write(2, "minishell: command not found\n", 29);
+        exit(127);
+    }
 }
 
 void	external_none_pipe_parent(t_shell *shell)
