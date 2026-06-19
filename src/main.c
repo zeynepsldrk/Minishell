@@ -6,11 +6,12 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/19 17:51:32 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/19 23:34:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "getnextline/get_next_line.h" //added for tester, will be deleted after
 
 int	g_signal;
 
@@ -28,13 +29,6 @@ t_cmd *start_parser(char *input, t_shell *shell)
     expander(shell);
 	rm_empty_token(shell);
 	join_tokens(shell);
-	//token yazdırma testi
-	//t_token *temp = shell->tokens;
-	//while (temp)
-	//{
-	//	printf("Token: %s, Type: %d, Expand: %d, Is_joined: %d\n", temp->context, temp->type, temp->expand, temp->is_joined);
-	//	temp = temp->next;
-	//}
     parser(shell);
     free(trimmed);
     return (shell->cmds);
@@ -64,8 +58,27 @@ void start_execute(t_shell *shell)
 	//shell->exit_value'a yazman lazım
 }
 
+static char    *trim_newline(char *line) //added for tester, will be deleted after
+{
+    int     len;
+    char    *result;
+
+    len = 0;
+    while (line[len] && line[len] != '\n')
+        len++;
+    result = malloc(len + 1);
+    if (!result)
+        return (NULL);
+    result[len] = '\0';
+    while (len--)
+        result[len] = line[len];
+    free(line);
+    return (result);
+}
 void lets_start_shell(t_shell *shell)
 {
+	char	*line;
+
 	while (1)
 	{
 		if (g_signal == SIGINT)
@@ -73,14 +86,24 @@ void lets_start_shell(t_shell *shell)
 			shell->exit_value = 130;
 			g_signal = 0;
 		}
-		shell->input = readline("minishell> ");
-		if(shell->input == NULL) //crtl+d de readline NULL döner
+		// change this part for tester, will be changed after
+		if (isatty(fileno(stdin)))
+			shell->input = readline("minishell> ");
+		else
 		{
-			write(2, "exit\n", 5);
+			line = get_next_line(fileno(stdin));
+			if (!line)
+				shell->input = NULL;
+			else
+				shell->input = trim_newline(line);
+		}
+		if (shell->input == NULL)
+		{
+			//write(2, "exit\n", 5); // commented for tester, will be added after
 			rl_clear_history();
 			break ;
 		}
-		if (*shell->input != '\0') //bash de enter a basınca boş inputu kaydetmiyor soo biz de kaydetmiyoruz
+		if (*shell->input != '\0')
 			add_history(shell->input);
 		shell->cmds = start_parser(shell->input, shell);
 		if (shell->cmds)
