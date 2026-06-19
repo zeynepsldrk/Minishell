@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:37:52 by asay              #+#    #+#             */
-/*   Updated: 2026/06/13 04:49:26 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/19 16:22:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void add_token(t_token **head, t_token *new)
 	while (temp->next)
     	temp = temp->next;
 	temp->next = new;
-    
 }
 void get_token_helper(t_lexer *lex)
 {

@@ -20,13 +20,13 @@ void general_quote_handler(t_lexer *ptr, char *str)
         ptr->j = 0;
     }
     else
-{
-    get_token_helper(ptr);
-    ptr->tail->is_joined = 1;
-    ptr->j = 0;
-    ft_memset(ptr->buff, 0, ft_strlen(ptr->buff) + 1);
-    ptr->has_quote = 0;
-}
+    {
+        get_token_helper(ptr);
+        ptr->tail->is_joined = 1;
+        ptr->j = 0;
+        ft_memset(ptr->buff, 0, ft_strlen(ptr->buff) + 1);
+        ptr->has_quote = 0;
+    }
     ptr->in_single = 0;
     ptr->in_double = 0; //quote durumlarını sıfırlıyorum ki bi sonraki tokeni etkilecek bi şey olmasin
 }
@@ -44,10 +44,9 @@ void join_tokens(t_shell *shell)
             joined = ft_join_and_free(curr->context, curr->next->context);
             //join'den sonra free gerekir mi zeynebe sor
             curr->context = joined;
-            curr->is_joined = 0; //sonrakileri etkilemesin diye sifirliyorum
             curr->next = curr->next->next;
         }
         else
             curr = curr->next;
-        }
     }
+}

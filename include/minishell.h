@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/13 04:43:04 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/19 17:51:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ char			*ch_value(t_expander *exp);
 char			*get_env_key(char *str, int i);
 char			*get_env_value(t_shell *sh, char *key);
 void			handle_exitval(t_shell *sh, t_expander *exp);
+void rm_empty_token(t_shell *sh);
 
 // parser
 void			parser(t_shell *sh);

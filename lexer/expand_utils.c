@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 15:24:47 by asay              #+#    #+#             */
-/*   Updated: 2026/06/07 21:24:20 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/19 17:50:50 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,3 +78,32 @@ char *ch_value(t_expander *exp)
 // str:         hello $USER/docs 
 // new_context: hello asay/docs
 // hello asay/docs
+
+void rm_empty_token(t_shell *sh)
+{
+    t_token *curr;
+    t_token *prev;
+    t_token *tmp;
+    
+    curr = sh->tokens;
+    prev = NULL;
+    while(curr != NULL)
+    {
+        if(curr->context && curr->context[0] == '\0')
+        {
+            tmp = curr->next;
+            if(prev == NULL) //silinecek token head ise
+                sh->tokens = tmp;
+            else
+                prev->next = tmp;
+            free(curr->context);
+            free(curr);
+            curr = tmp; 
+        }
+        else
+        {
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+}
