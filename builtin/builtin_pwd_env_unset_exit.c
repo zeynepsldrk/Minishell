@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd_env_unset_exit.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 12:43:49 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:02:44 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/19 22:10:51 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:12:21 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 19:11:02 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/19 19:25:41 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	built_builtin(t_shell *shell, int i, int in_pipe, char *cmd)
 	}
 }
 
-static void	is_redir(t_shell *shell, int in_pipe, int bcp_stdout, int bcp_stdin)
+static int	is_redir(t_shell *shell, int in_pipe, int bcp_stdout, int bcp_stdin)
 {
 	if(shell->cmds->redirects != NULL) //redir uygula -varsa tabii-
 	{
@@ -46,9 +46,10 @@ static void	is_redir(t_shell *shell, int in_pipe, int bcp_stdout, int bcp_stdin)
 				close(bcp_stdout);
 				close(bcp_stdin);
 			}
-			return ; //redir uygularken hata olursa fonksiyondan çık
+			return (1); //redir uygularken hata olursa fonksiyondan çık
 		}
 	}
+	return (0);
 }
 
 void	execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
@@ -65,7 +66,8 @@ void	execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem te
 		if (backup_stdout == -1 || backup_stdin == -1)
 			return ;
 	}
-	is_redir(shell, in_pipe, backup_stdout, backup_stdin);
+	if (is_redir(shell, in_pipe, backup_stdout, backup_stdin))
+		return ;
 	built_builtin(shell, i, in_pipe, cmd);
 	if (!in_pipe)
 	{
@@ -77,7 +79,6 @@ void	execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem te
 		close(backup_stdin);  //aynı anda açık kalması, sınırlı fd sayısına sahip olmamızdan kaynaklı boş yere çalışan fdlerin bulunmasına
 	}
 }
-
 
 int	is_builtin(char *cmd, t_shell *shell)
 {
