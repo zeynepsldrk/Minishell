@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exc_external.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:48:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 20:39:09 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/20 14:58:46 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,4 +141,5 @@ void	execute_external(t_shell *shell, int in_pipe)
 	}
 	external_in_pipe(in_pipe, shell, path);
 	external_none_pipe(shell, path);
+	//free(path);
 }

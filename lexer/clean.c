@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 21:22:11 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 19:29:40 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/20 14:22:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void    free_str(char **str)
     int i;
 
     i = 0;
+    if (!str)
+        return ;
     while(str[i])
     {
         free(str[i]);
@@ -25,19 +27,39 @@ void    free_str(char **str)
     free(str);
 }
 
+void clean_get_tkns(t_lexer *lex)
+{
+    free(lex->buff);
+    free(lex);
+}
+
 void free_tokens(t_token *token)
 {
-    t_token *ptr;
+    t_token *tmp;
 
     while(token)
     {
-        ptr = token;
+        tmp = token;
         token = token->next;
-        if(ptr->context)
-            free(ptr->context);
-        free(ptr);
+        if(tmp->context)
+            free(tmp->context);
+        free(tmp);
     }
-    ptr = NULL;
+}
+
+void free_redirects(t_redirect *rdr)
+{
+    t_redirect *tmp;
+
+    while(rdr)
+    {
+        tmp = rdr;
+        rdr = rdr->next;
+        if(tmp->target)
+            free(tmp->target);
+        free(tmp);
+    }
+    //açık olan fd'lerin kapatılması gerek!! unutmayinn    
 }
 
 void free_commands(t_cmd *cmds)
@@ -50,22 +72,8 @@ void free_commands(t_cmd *cmds)
         cmds = cmds->next;
         if (tmp->argv)
             free_str(tmp->argv); // char **argv temizliği
-        //if (tmp->redirects)
-            //free_redirects(tmp->redirects); // t_redirect listesi temizliği
+        if (tmp->redirects)
+            free_redirects(tmp->redirects); // t_redirect listesi temizliği
         free(tmp);
     }
-}
-
-void clean_get_tkns(t_lexer *ptr)
-{
-    free(ptr->buff);
-    free(ptr);
-}
-
-void free_sh(t_shell *shell)
-{
-    free_str(shell->env);
-    free_tokens(shell->tokens);
-    free_commands(shell->cmds);
-    free(shell);
 }

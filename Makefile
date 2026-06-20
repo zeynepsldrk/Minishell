@@ -5,6 +5,7 @@ SRCS =	lexer/lexer.c \
 		lexer/lexer_utils2.c \
 		lexer/utils.c \
 		lexer/clean.c \
+		lexer/clean2.c \
 		lexer/init.c \
 		lexer/expand.c \
 		lexer/utils2.c \
@@ -59,15 +60,14 @@ SRCS =	lexer/lexer.c \
 
 OBJS = $(SRCS:.c=.o)
 
-INCLUDES = -I include
+INCLUDES = -I include 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -lreadline -o $(NAME)
-
+	$(CC) $(CFLAGS) $(OBJS) -lreadline -o $(NAME) 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 

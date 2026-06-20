@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:15:57 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:02:56 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/20 17:05:49 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void only_export_command(t_env_node *env_list)
 {
 	t_env_node	*printable_copy;
 	t_env_node	*head;
-
 
 	printable_copy = ft_copy_env_list(env_list);
 	head = printable_copy;

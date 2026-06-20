@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/19 17:51:07 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/20 16:12:14 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int				word_count(t_token *token);
 char			**copy_env(char **env);
 int				sh_init(t_shell *shell, char **env);
 void			free_str(char **str);
-void			free_sh(t_shell *shell);
+void free_sh(t_shell *shell);
 void			free_tokens(t_token *token);
 void			free_commands(t_cmd *cmds);
 void			*ft_memset(void *b, int c, size_t len);
@@ -180,6 +180,10 @@ int				numlen(long nbr);
 char			*ft_itoa(int nbr);
 char			*ft_strdup(char *s);
 int ft_strlen(const char *str);
+void clean_get_tkns(t_lexer *lex);
+void free_redirects(t_redirect *rdr);
+void free_env_node(t_env_node *env);
+
 
 
 // src/main.c
