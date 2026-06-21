@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:38:00 by asay              #+#    #+#             */
-/*   Updated: 2026/06/20 13:45:32 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 00:07:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,19 @@ void whitespace_tkn(t_lexer *ptr, char *str)
     if(ptr->buff[0] || ptr->has_quote)
     {
         ptr->curr = new_token(WORD, ptr->buff);
-        is_gonna_expand(ptr, ptr->curr);
+        if (ptr->is_heredoc) // << $USER gelirse expand yapılmasın diye
+        {
+            ptr->curr->expand = 0;
+            ptr->is_heredoc = 0;
+        }
+        else
+            is_gonna_expand(ptr->curr, ptr->in_single);
         add_token(&ptr->head, ptr->curr);
         ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;
         ptr->has_quote = 0; 
     }
-    while(str[ptr->i] == 32 && str[ptr->i])
+    while((str[ptr->i] == 32 || str[ptr->i] == '\t') && str[ptr->i])
         ptr->i++;
 }
 
@@ -58,7 +64,7 @@ void redirect_tkn(t_lexer *ptr, char *str)
     if (ptr->buff[0] || ptr->has_quote)
     {
         ptr->curr = new_token(WORD, ptr->buff);
-        is_gonna_expand(ptr, ptr->curr);
+        is_gonna_expand(ptr->curr, ptr->in_single);
         add_token(&ptr->head, ptr->curr);
         ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;
@@ -68,7 +74,10 @@ void redirect_tkn(t_lexer *ptr, char *str)
     if (ptr->value == APPEND)
         ptr->curr = new_token(ptr->value, ">>");
     else if (ptr->value == HEREDOC)
+    {
         ptr->curr = new_token(ptr->value, "<<");
+        ptr->is_heredoc = 1; //bash heredoc icin $'ı expand  yapmıyo onun icin kullanicam
+    }
     else if (ptr->value == REDIRECT_OUT)
         ptr->curr = new_token(ptr->value, ">");
     else
@@ -100,7 +109,10 @@ void quote_tkn(t_lexer *ptr, char *str)
     if (str[ptr->i] == quote_type) // tirnak kapandi 
         ptr->i++; // quote karakterini atla
     else
-        printf("Error: Open quote!\n"); // quote kapanmadan fonksiyon bittiyse hata verdiriyoruz.
+    {
+        ptr->syntax = 1; // quote kapanmadiysa syntax hatasi var demektir. bunu parser'da handle edecegiz.
+        write(2, "minishell: syntax error: unclosed quote\n", 40); // quote kapanmadiysa handlelamama gerek yok o yuzden stder hatasi veriyoruz
+    }
     //burada has_quote = 1 yapildigi icin get_tokens'a geri dondugumuzde sondaki if sayesidne "kullanici tirnak kullandi, bir WORD token'i eklenmeli" diyebilmeyi sagliyoruz
 }
 // "hello"aleyna"world" -> "helloaleynaworld" şeklinde tek bir token olarak alınacak. 
@@ -115,7 +127,7 @@ void pipe_tkn(t_lexer *ptr, char *str)
     if(ptr->buff[0] || ptr->has_quote)
     {
         ptr->curr = new_token(WORD, ptr->buff);
-        is_gonna_expand(ptr, ptr->curr);
+        is_gonna_expand(ptr->curr, ptr->in_single);
         add_token(&ptr->head, ptr->curr);
         ft_memset(ptr->buff, 0, ptr->j);
         ptr->j = 0;

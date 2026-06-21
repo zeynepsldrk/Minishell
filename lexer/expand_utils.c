@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/02 15:24:47 by asay              #+#    #+#             */
-/*   Updated: 2026/06/19 17:50:50 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/20 19:28:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ void rm_empty_token(t_shell *sh)
     prev = NULL;
     while(curr != NULL)
     {
-        if(curr->context && curr->context[0] == '\0')
+        //bash tek basina olan boslari silmiyo bosluk alıyo o yuzden is_joined1se siliyoruz
+        if(curr->context && curr->context[0] == '\0' && curr->is_joined) 
         {
             tmp = curr->next;
             if(prev == NULL) //silinecek token head ise

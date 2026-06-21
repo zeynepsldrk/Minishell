@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 21:02:35 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 19:29:51 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/21 00:06:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,7 @@ int lexer_init(t_lexer *ptr, char *str)
     ptr->in_single = 0;
     ptr->in_double = 0;
     ptr->has_quote = 0;
+    ptr->is_heredoc = 0;
+    ptr->syntax = 0;
     return (0);
 }

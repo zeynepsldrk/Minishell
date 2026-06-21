@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/20 16:12:14 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 00:06:01 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ typedef struct s_lexer
 	int				in_single;
 	int				in_double;
 	int				has_quote;
+	int				is_heredoc;
+	int				syntax;
 } t_lexer;
 
 typedef struct s_expander
@@ -143,8 +145,8 @@ void			pipe_tkn(t_lexer *ptr, char *str);
 int				lexer_init(t_lexer *ptr, char *str);
 void			add_token(t_token **head, t_token *new);
 void			clean_get_tkns(t_lexer *ptr);
-void			is_gonna_expand(t_lexer *lex, t_token *tkn);
-void			get_token_helper(t_lexer *lex);
+void is_gonna_expand(t_token *tkn, int in_single);
+void			get_token_helper(t_lexer *lex, int in_single);
 void			general_quote_handler(t_lexer *ptr, char *str);
 void join_tokens(t_shell *shell);
 

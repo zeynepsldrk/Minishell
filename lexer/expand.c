@@ -6,24 +6,27 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 17:05:32 by asay              #+#    #+#             */
-/*   Updated: 2026/06/20 17:07:15 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/20 23:17:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void is_gonna_expand(t_lexer *lex, t_token *tkn)
+void is_gonna_expand(t_token *tkn, int in_single)
 {
     int     i;
 
     i = 0;
 	tkn->expand = 0;
-    if (!lex->in_single)
+    if (!in_single)
     {
         while (tkn->context[i])
         {
             if (tkn->context[i] == '$')
+            {
+                if(tkn->type )
                 tkn->expand = 1;
+            }
             i++;
         }
     }

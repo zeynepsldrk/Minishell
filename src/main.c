@@ -6,7 +6,7 @@
 /*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/20 17:08:34 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 03:21:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,23 @@ t_cmd *start_parser(char *input, t_shell *shell)
         return (NULL);
     }
     lexer(shell, trimmed);
+	/*t_token *tmp = shell->tokens;
+	while(tmp)
+	{
+		printf("token: [%s] expand: %d is_joined: %d\n", tmp->context, tmp->expand, tmp->is_joined);
+		tmp = tmp->next;
+	}*/
 	expander(shell);
+	/*while(tmp)
+	{
+		printf("token: [%s] expand: %d is_joined: %d\n", tmp->context, tmp->expand, tmp->is_joined);
+		tmp = tmp->next;
+	}*/
 	rm_empty_token(shell);
 	// rm_empty_token sonrası, join_tokens öncesi
-/*t_token *tmp2 = shell->tokens;
-while(tmp2)
-{
-    printf("before join: [%s] expand: %d is_joined: %d\n", tmp2->context, tmp2->expand, tmp2->is_joined);
-    tmp2 = tmp2->next;
-}*/
 	join_tokens(shell);
+	
     parser(shell);
-/*t_token *tmp = shell->tokens;
-while(tmp)
-{
-    printf("token: [%s] expand: %d is_joined: %d\n", tmp->context, tmp->expand, tmp->is_joined);
-    tmp = tmp->next;
-}*/
 	free_tokens(shell->tokens);
 	shell->tokens = NULL;
     free(trimmed);
@@ -162,5 +162,6 @@ int main(int argc, char **argv, char **envp)
 	}
 	lets_start_shell(shell); //repl döngüsü başlatıldı
 	free_sh(shell); //shell içindeki tüm pointerlar temizlendi
-	return (0);
+	return (shell->exit_value);
 }
+

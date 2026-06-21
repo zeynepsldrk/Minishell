@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:16:13 by asay              #+#    #+#             */
-/*   Updated: 2026/06/06 19:29:09 by asay             ###   ########.fr       */
+/*   Updated: 2026/06/21 01:21:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int cmds_syntax_checker(t_shell *sh)
+{
+    t_token *token;
+
+    token = sh->tokens;
+    while (token && token->type != PIPE)
+    {
+        if ((token->type == REDIRECT_IN || token->type == REDIRECT_OUT || token->type == HEREDOC 
+            || token->type == APPEND) && token->next && token->next->type == PIPE)
+        {
+            write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+            sh->exit_value = 2;
+            return (1);
+        }
+        token = token->next;
+    }
+    return (0);
+}
 
 t_cmd *get_cmds (t_shell *sh) // parserda kaullanacagimiz icin tum cmd'leri almalıyım
 {
@@ -33,6 +52,8 @@ t_cmd *get_cmds (t_shell *sh) // parserda kaullanacagimiz icin tum cmd'leri alma
             handle_pipe(&cmd, &token); // pipe gorunce cmd'yi bitirip yeni cmd'ye baslamamiz gerekiyor
     }
     cmd->next = NULL; // son cmd'nin next'ini NULL yaparak cmd listesinin sonunu belirtiyoruz.
+    if (cmds_syntax_checker(sh))
+        return (ft_free_cmd_list(head), NULL);
     return (head);
 }
 
