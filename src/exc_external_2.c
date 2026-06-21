@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exc_external_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 17:30:29 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/20 20:34:12 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 14:08:44 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ char	*check_the_path(char *path, char *cmd)
 void	print_path_error(t_shell *shell, char *cmd, char *msg, int exit_code)
 {
 	shell->exit_value = exit_code;
-	write(2, "minishell: ", 11);
 	if (cmd && *cmd)
 	{
 		write(2, cmd, ft_strlen(cmd));

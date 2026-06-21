@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:15:57 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/20 17:05:49 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 14:12:56 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,11 @@ int	process_export_arg(t_shell *shell, int i)
 {
 	char	*key;
 	char	*value;
-
+	char	*arg;
+	
+	arg = shell->cmds->argv[i];
+	if (arg[0] == '-' && arg[1] != '\0')
+		return (write(2, "export: invalid option\n", 23), 2);
 	if (is_valid_identifier(shell->cmds->argv[i]))
 		return (write(2, "export: not a valid identifier\n", 31), 1);
 	key = find_key_or_value(shell->cmds->argv[i], 0, KEY);
@@ -101,6 +105,7 @@ int builtin_export(t_shell *shell, int in_pipe)
 {
 	int i;
 	int ret;
+	int status;
 
 	i = 1;
 	(void)in_pipe;
@@ -109,7 +114,10 @@ int builtin_export(t_shell *shell, int in_pipe)
 		return (only_export_command(shell->env_list), 0);
 	while (shell->cmds->argv[i])
 	{
-		if (process_export_arg(shell, i))
+		status = process_export_arg(shell, i);
+		if (status == 2)
+			return (2);
+		if (status == 1)
 			ret = 1;
 		i++;
 	}

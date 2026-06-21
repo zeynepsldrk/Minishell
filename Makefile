@@ -55,8 +55,8 @@ SRCS =	lexer/lexer.c \
 		lib/ft_substr.c \
 		lib/is_valid_exit_args.c \
 		lib/is_valid_indentifier.c \
-		src/getnextline/get_next_line.c \
-		src/getnextline/get_next_line_utils.c 
+		src/get_next_line/get_next_line.c \
+		src/get_next_line/get_next_line_utils.c 
 
 OBJS = $(SRCS:.c=.o)
 

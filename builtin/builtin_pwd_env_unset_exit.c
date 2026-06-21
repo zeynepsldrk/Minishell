@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd_env_unset_exit.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 12:43:49 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/19 22:10:51 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 14:37:57 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ int builtin_pwd(t_shell *shell, int in_pipe)
 int builtin_env(t_shell *shell, int in_pipe)
 {
 	(void)in_pipe;
+	if (shell->cmds->argv[1])
+	{
+		write(2, "minishell: env: too many arguments\n", 36);
+		return (127);
+	}
 	print_env_list(shell->env_list);
 	return (0);
 }
@@ -66,6 +71,10 @@ static int	do_exit(int in_pipe, int code)
 
 int builtin_exit(t_shell *shell, int in_pipe)
 {
+	unsigned char exit_code;
+
+	if (!in_pipe)
+		write(2, "exit\n", 5);
 	if (!shell->cmds->argv[1])
 	{
 		write(2, "exit\n", 5);
@@ -84,6 +93,6 @@ int builtin_exit(t_shell *shell, int in_pipe)
 		write(2, "minishell: exit: numeric argument required\n", 43); //hata veren agümanı da ekle!!
         return (do_exit(in_pipe, 2)); // pipe'daysa return
 	}
-	write(2, "exit\n", 5);
-    return (do_exit(in_pipe, ft_atol(shell->cmds->argv[1]) % 256)); // pipe'daysa return
+	exit_code = (unsigned char)ft_atol(shell->cmds->argv[1]); //exit code 0-255 arası olmalı
+    return (do_exit(in_pipe, exit_code)); // pipe'daysa return
 }

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:09 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/21 03:21:33 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 13:56:32 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "getnextline/get_next_line.h" //added for tester, will be deleted after
+#include "get_next_line/get_next_line.h" //added for tester, will be deleted after
 
 int	g_signal;
 

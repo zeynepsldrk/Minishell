@@ -6,7 +6,7 @@
 /*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:04:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 18:39:51 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 14:05:55 by zedurak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ int	builtin_echo(t_shell *shell, int in_pipe)
 	}
 	while (shell->cmds->argv[i])
 	{
-		printf("%s", shell->cmds->argv[i]);
+		write(1, shell->cmds->argv[i], ft_strlen(shell->cmds->argv[i]));
 		if (shell->cmds->argv[i + 1])
-			printf(" ");
+			write(1, " ", 1);
 		i++;
 	}
 	if (!n_flag)
-		printf("\n");
+		write(1, "\n", 1);
 	return (0);
 }
