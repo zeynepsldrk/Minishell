@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:09:12 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/21 14:07:47 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 20:22:16 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 char	*cd_special_control(t_shell *shell)
 {
-	char *new_path;
+	char	*new_path;
 
 	new_path = NULL;
 	if (!shell->cmds->argv[1] || (ft_strcmp(shell->cmds->argv[1], "~") == 0))
 	{
 		new_path = my_little_getenv(shell->env_list, "HOME");
 		if (!new_path)
-        {
-            write(2, "cd: HOME not set\n", 17);
-            return (NULL);
-        }
+		{
+			write(2, "cd: HOME not set\n", 17);
+			return (NULL);
+		}
 		return (new_path);
 	}
 	else if (ft_strcmp(shell->cmds->argv[1], "-") == 0)
 	{
 		new_path = my_little_getenv(shell->env_list, "OLDPWD");
 		if (!new_path)
-        {
-            write(2, "cd: OLDPWD not set\n", 20);
-            return (NULL);
-        }
+		{
+			write(2, "cd: OLDPWD not set\n", 20);
+			return (NULL);
+		}
 		return (new_path);
 	}
 	return (shell->cmds->argv[1]);
@@ -53,15 +53,15 @@ int	builtin_cd(t_shell *shell, int in_pipe)
 {
 	char	*new_path;
 	char	old_pwd[MAX_PATH];
-	(void)in_pipe;
 
+	(void)in_pipe;
 	if (shell->cmds->argv[1] && shell->cmds->argv[2])
 	{
-		write(2, "minishell: cd: too many arguments\n", 34);
+		write(2, "cd: too many arguments\n", 34);
 		return (1);
 	}
 	if (!getcwd(old_pwd, sizeof(old_pwd)))
-		return (perror("minishell: getcwd"), 1);
+		return (perror("getcwd"), 1);
 	new_path = cd_special_control(shell);
 	if (!new_path)
 		return (1);

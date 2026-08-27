@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir_error.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:23:53 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/19 19:18:18 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 17:24:47 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_redir_error(int fd)
+int	ft_redir_error(int fd)
 {
-    if (fd < 0)
-    {
-        perror("open");
-        return (1);
-    }
-    return (0);
+	if (fd < 0)
+	{
+		perror("open");
+		return (1);
+	}
+	return (0);
 }

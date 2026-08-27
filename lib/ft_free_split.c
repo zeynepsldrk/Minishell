@@ -3,18 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 17:31:46 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 17:32:00 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 17:20:50 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_free_split(char **arr)
+void	ft_free_split(char **arr)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (arr[i])
 		free(arr[i++]);
 	free(arr);

@@ -3,36 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:13 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/07 20:32:08 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 18:08:55 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int apply_redirect_out(t_redirect *redir)
+int	apply_redirect_out(t_redirect *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open(redir->target, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (ft_redir_error(fd))
 		return (1);
-	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1) //stadart çıktıya değil fd ye gitsin
+	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1)
 	{
-        close(fd);
-        return (1);
-    }
-	close(fd); //fd yi kapatıyoruz çünkü artık standart çıktı yönlendirilmiş durumda
-	//hedef dosyayı bir tane dosya açarak yönlendirmesini yaptıktan sonra artık kullanılması bitmiş oluyor.
+		close(fd);
+		return (1);
+	}
+	close(fd);
 	return (0);
 }
 
-int apply_redirect_in(t_redirect *redir)
+int	apply_redirect_in(t_redirect *redir)
 {
-	//burada okumayı yani stdin i hedef dosyayay yönelendircez
-	int fd;
+	int	fd;
 
 	fd = open(redir->target, O_RDONLY);
 	if (ft_redir_error(fd))
@@ -42,46 +40,46 @@ int apply_redirect_in(t_redirect *redir)
 		close(fd);
 		return (1);
 	}
-	close(fd); //hedef dosyayı yöneldirdik bitti kapat gari
+	close(fd);
 	return (0);
 }
 
-int apply_append(t_redirect *redir)
+int	apply_append(t_redirect *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open(redir->target, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (ft_redir_error(fd))
 		return (1);
-	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1) //artık hem stdout hem de fd aynı yere bakıyor yani hedef dosyaya yönlendirilmiş durumda yalnız bu sefer truncate yapmadık
+	if (ft_safe_dup2(fd, STDOUT_FILENO) == -1)
 	{
 		close(fd);
 		return (1);
 	}
-	close(fd); //yani hedef dosyanın içeriği silinmediği için append modunda açtık
+	close(fd);
 	return (0);
 }
 
-int apply_redir(t_redirect *redir)
+int	apply_redir(t_redirect *redir)
 {
 	while (redir)
 	{
-		if(redir->type == REDIRECT_IN)
+		if (redir->type == REDIRECT_IN)
 		{
 			if (apply_redirect_in(redir))
 				return (1);
 		}
-		else if(redir->type == REDIRECT_OUT)
+		else if (redir->type == REDIRECT_OUT)
 		{
 			if (apply_redirect_out(redir))
 				return (1);
 		}
-		else if(redir->type == HEREDOC)
+		else if (redir->type == HEREDOC)
 		{
 			if (apply_heredoc(redir))
 				return (1);
 		}
-		else if(redir->type == APPEND)
+		else if (redir->type == APPEND)
 		{
 			if (apply_append(redir))
 				return (1);

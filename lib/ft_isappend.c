@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isappend.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:23:45 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/29 18:23:46 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 17:23:27 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int  ft_isappend(char *arg)
+int	ft_isappend(char *arg)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (arg[i] && arg[i] != '=')
-    {
-        if (arg[i] == '+' && arg[i + 1] == '=')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (arg[i] == '+' && arg[i + 1] == '=')
+			return (1);
+		i++;
+	}
+	return (0);
 }

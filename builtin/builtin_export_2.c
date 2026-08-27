@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 12:43:55 by zedurak           #+#    #+#             */
-/*   Updated: 2026/05/16 13:03:06 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 16:03:10 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_key_inside(char *key, t_env_node *env_list)
+int	is_key_inside(char *key, t_env_node *env_list)
 {
 	while (env_list)
 	{
@@ -23,15 +23,16 @@ int is_key_inside(char *key, t_env_node *env_list)
 	return (0);
 }
 
-char *find_key_or_value(char *arg, int i, int which_one)
+char	*find_key_or_value(char *arg, int i, int which_one)
 {
 	char	*result;
-	int	 len;
+	int		len;
 
 	if (which_one == KEY)
 	{
 		len = 0;
-		while (arg[len] && arg[len] != '=' && !(arg[len] == '+' && arg[len + 1] == '='))
+		while (arg[len] && arg[len] != '=' && !(arg[len] == '+'
+				&& arg[len + 1] == '='))
 			len++;
 		result = ft_substr(arg, 0, len);
 		return (result);

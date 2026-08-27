@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_copy_env_list.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/21 17:18:40 by asay              #+#    #+#             */
+/*   Updated: 2026/06/21 17:19:10 by asay             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static t_env_node *ft_new_env_node(t_env_node *src)
+static t_env_node	*ft_new_env_node(t_env_node *src)
 {
-	t_env_node *new_node;
+	t_env_node	*new_node;
 
 	new_node = malloc(sizeof(t_env_node));
 	if (!new_node)
@@ -15,11 +27,11 @@ static t_env_node *ft_new_env_node(t_env_node *src)
 	return (new_node);
 }
 
-t_env_node *ft_copy_env_list(t_env_node *env_list)
+t_env_node	*ft_copy_env_list(t_env_node *env_list)
 {
-	t_env_node *head;
-	t_env_node *prev;
-	t_env_node *new_node;
+	t_env_node	*head;
+	t_env_node	*prev;
+	t_env_node	*new_node;
 
 	head = NULL;
 	prev = NULL;

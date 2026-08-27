@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   env_transactions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 13:01:23 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/20 13:57:21 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 16:15:41 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu günceller
+int	update_env_node(char *key, char *value, t_shell *shell)
 {
-	//shell içinde ki env_list in içerisinde gezineceğim ve key olarak verilen değeri gödüğümüzde onu value ile değiştireceğiz.
 	t_env_node	*temp;
 
 	temp = shell->env_list;
@@ -32,9 +31,9 @@ int	update_env_node(char *key, char *value, t_shell *shell) //sadece value yu g�
 	return (1);
 }
 
-int create_new_node(t_shell *shell, char *key, char *value)
+int	create_new_node(t_shell *shell, char *key, char *value)
 {
-	t_env_node *new_node;
+	t_env_node	*new_node;
 
 	new_node = (t_env_node *)malloc(sizeof(t_env_node));
 	if (!new_node)
@@ -42,7 +41,7 @@ int create_new_node(t_shell *shell, char *key, char *value)
 	new_node->key = ft_safe_strdup(key);
 	new_node->value = ft_safe_strdup(value);
 	new_node->next = NULL;
-	if (!new_node->key)  // key her zaman olmalı, value NULL olabilir
+	if (!new_node->key)
 	{
 		free(new_node->value);
 		free(new_node);
@@ -52,9 +51,9 @@ int create_new_node(t_shell *shell, char *key, char *value)
 	return (0);
 }
 
-int delete_env_node(t_env_node **env_list, char *key)
+int	delete_env_node(t_env_node **env_list, char *key)
 {
-	t_env_node *temp;
+	t_env_node	*temp;
 
 	while (*env_list)
 	{
@@ -72,7 +71,7 @@ int delete_env_node(t_env_node **env_list, char *key)
 	return (1);
 }
 
-int print_env_list(t_env_node *env_list)
+int	print_env_list(t_env_node *env_list)
 {
 	while (env_list)
 	{

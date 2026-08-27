@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_valid_indentifier.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:26:15 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/29 18:26:57 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 17:33:16 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_valid_identifier(char *arg)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	if (!(ft_isalpha(arg[0]) || arg[0] == '_'))

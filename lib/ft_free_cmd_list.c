@@ -1,43 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_free_cmd_list.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/21 17:20:05 by asay              #+#    #+#             */
+/*   Updated: 2026/06/21 17:20:08 by asay             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static void free_array(char **arr)
+static void	free_array(char **arr)
 {
-    int i;
+	int	i;
 
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
 }
 
-void ft_free_cmd_list(t_cmd *cmds)
+void	ft_free_cmd_list(t_cmd *cmds)
 {
-    t_cmd *current;
-    t_cmd *next;
-    t_redirect *redir;
-    t_redirect *redir_next;
+	t_cmd		*current;
+	t_cmd		*next;
+	t_redirect	*redir;
+	t_redirect	*redir_next;
 
-    current = cmds;
-    while (current)
-    {
-        next = current->next;
-        if (current->argv)
-            free_array(current->argv);
-        redir = current->redirects;
-        while (redir)
-        {
-            redir_next = redir->next;
-            if (redir->target)
-                free(redir->target);
-            free(redir);
-            redir = redir_next;
-        }
-        free(current);
-        current = next;
-    }
+	current = cmds;
+	while (current)
+	{
+		next = current->next;
+		if (current->argv)
+			free_array(current->argv);
+		redir = current->redirects;
+		while (redir)
+		{
+			redir_next = redir->next;
+			if (redir->target)
+				free(redir->target);
+			free(redir);
+			redir = redir_next;
+		}
+		free(current);
+		current = next;
+	}
 }

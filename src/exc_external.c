@@ -3,21 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exc_external.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:48:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/20 14:58:46 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 18:02:03 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*F_OK: Dosya/Yol sistemde mevcut mu? (Sadece varlığını kontrol eder).
-
-X_OK: Çalıştırma (execute) yetkin var mı?*/
 
 void	external_in_pipe(int in_pipe, t_shell *shell, char *path)
 {
-	if (in_pipe) //buradaki sinyal işini spawn içinde yapıyorum zaten
+	if (in_pipe)
 	{
 		if (apply_redir(shell->cmds->redirects))
 		{
@@ -29,24 +26,22 @@ void	external_in_pipe(int in_pipe, t_shell *shell, char *path)
 		ft_check_env(shell);
 		execve(path, shell->cmds->argv, shell->env);
 		if (errno == EACCES)
-        {
-            free(path);
-            write(2, "minishell: permission denied\n", 29);
-            exit(126);
-        }
-        else
-        {
-            free(path);
-            write(2, "minishell: command not found\n", 29);
-            exit(127);
-        }
+		{
+			free(path);
+			write(2, "minishell: permission denied\n", 29);
+			exit(126);
+		}
+		else
+		{
+			free(path);
+			write(2, "minishell: command not found\n", 29);
+			exit(127);
+		}
 	}
 }
 
 void	external_none_pipe_child(char *path, t_shell *shell)
 {
-	//redirler de hata varsa execve çalışmamalı, o yüzden
-	//redirler de hata var mı diye kontrol etmek lazım
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (apply_redir(shell->cmds->redirects))
@@ -55,25 +50,24 @@ void	external_none_pipe_child(char *path, t_shell *shell)
 		exit(1);
 	}
 	ft_check_env(shell);
-    execve(path, shell->cmds->argv, shell->env);
-    // execve buraya düşerse başarısız olmuş demek
-    if (errno == EACCES)
-    {
-        free(path);
-        write(2, "minishell: permission denied\n", 29);
-        exit(126);
-    }
-    else
-    {
-        free(path);
-        write(2, "minishell: command not found\n", 29);
-        exit(127);
-    }
+	execve(path, shell->cmds->argv, shell->env);
+	if (errno == EACCES)
+	{
+		free(path);
+		write(2, "minishell: permission denied\n", 29);
+		exit(126);
+	}
+	else
+	{
+		free(path);
+		write(2, "minishell: command not found\n", 29);
+		exit(127);
+	}
 }
 
 void	external_none_pipe_parent(t_shell *shell)
 {
-	int		how_died;
+	int	how_died;
 
 	how_died = 0;
 	if (wait(&how_died) == -1)
@@ -112,21 +106,11 @@ void	external_none_pipe(t_shell *shell, char *path)
 	{
 		free(path);
 		external_none_pipe_parent(shell);
-		 /*wait() kullanmazsak child process zombie process olarak öylece kalır. Arka planda
-		boş yere yer kaplayan processler olur. İşletim sisteminin de belirli sayıda child
-		process açma hakkı olduğu için ileride sıkıntı oluşturur.*/
 	}
 }
 
 void	execute_external(t_shell *shell, int in_pipe)
 {
-	//externallerin çalıştırılması için child process açılmalıdır.
-	/*fork() bir pid döner ve bu pid == 0 ise child process
-								 pid == -1 ise child process başarısız
-								 pid > 0 parent process*/
-	/*The child process uses the same 
-	pc(program counter), same CPU registers, and same open files which use in the parent process.*/
-	//Ayrıca execve nin argümanlarından komutun yolunu da bulan bir fonksiyon yazmak lazım
 	char	*path;
 
 	shell->exit_value = 0;
@@ -134,12 +118,12 @@ void	execute_external(t_shell *shell, int in_pipe)
 	if (!path)
 	{
 		if (shell->exit_value == 0)
-			print_path_error(shell, shell->cmds->argv[0], "command not found", 127);
+			print_path_error(shell, shell->cmds->argv[0],
+				"command not found", 127);
 		if (in_pipe)
 			exit(shell->exit_value);
 		return ;
 	}
 	external_in_pipe(in_pipe, shell, path);
 	external_none_pipe(shell, path);
-	//free(path);
 }

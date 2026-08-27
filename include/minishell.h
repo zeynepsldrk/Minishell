@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/02 22:01:03 by asay              #+#    #+#             */
-/*   Updated: 2026/06/21 15:05:15 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 20:36:43 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>
+# include <stddef.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <errno.h>
@@ -31,12 +32,12 @@
 # define ERR_CMD_NOT_FOUND 127
 # define ERR_CANNOT_EXEC 126
 
-# define ERANGE	34
+# define ERANGE 34
 
-extern int g_signal;
+extern int					g_signal;
 
-typedef struct s_minishell t_shell;
-typedef struct s_builtin t_builtin;
+typedef struct s_minishell	t_shell;
+typedef struct s_builtin	t_builtin;
 
 typedef enum e_token_type
 {
@@ -46,7 +47,7 @@ typedef enum e_token_type
 	REDIRECT_OUT,
 	HEREDOC,
 	APPEND
-} t_token_type;
+}	t_token_type;
 
 typedef struct s_token
 {
@@ -54,45 +55,45 @@ typedef struct s_token
 	char			*context;
 	struct s_token	*next;
 	int				expand;
-	int 			is_joined;
-} t_token;
+	int				is_joined;
+}	t_token;
 
 typedef struct s_redirect
 {
-	int				heredoc_fd[2];
-	t_token_type	type;
-	char			*target;
-	struct s_redirect *next;
-} t_redirect;
+	int					heredoc_fd[2];
+	t_token_type		type;
+	char				*target;
+	struct s_redirect	*next;
+}	t_redirect;
 
 typedef struct s_cmd
 {
-	int			argc;
-	char		**argv;
-	struct s_cmd *next;
-	t_redirect	*redirects;
-} t_cmd;
+	int				argc;
+	char			**argv;
+	struct s_cmd	*next;
+	t_redirect		*redirects;
+}	t_cmd;
 
 typedef struct s_builtin
 {
 	char	*name;
 	int		(*func)(t_shell *shell, int in_pipe);
-} t_builtin;
+}	t_builtin;
 
 typedef struct s_env_node
 {
-	char			*key;
-	char			*value;
-	int				has_value;
-	struct s_env_node *next;
-} t_env_node;
+	char				*key;
+	char				*value;
+	int					has_value;
+	struct s_env_node	*next;
+}	t_env_node;
 
 typedef struct s_pipe
 {
-	int		pipe_count;
-	int		command_count;
-	int		**fd;
-} t_pipe;
+	int	pipe_count;
+	int	command_count;
+	int	**fd;
+}	t_pipe;
 
 typedef struct s_minishell
 {
@@ -104,7 +105,7 @@ typedef struct s_minishell
 	t_token		*tokens;
 	t_builtin	list_builtin[8];
 	t_cmd		*cmds;
-} t_shell;
+}	t_shell;
 
 typedef struct s_lexer
 {
@@ -120,7 +121,7 @@ typedef struct s_lexer
 	int				has_quote;
 	int				is_heredoc;
 	int				syntax;
-} t_lexer;
+}	t_lexer;
 
 typedef struct s_expander
 {
@@ -130,7 +131,7 @@ typedef struct s_expander
 	char	*value;
 	char	*old;
 	t_token	*curr_token;
-} t_expander;
+}	t_expander;
 
 // lexer
 t_token			*new_token(t_token_type type, char *context);
@@ -145,19 +146,19 @@ void			pipe_tkn(t_lexer *ptr, char *str);
 int				lexer_init(t_lexer *ptr, char *str);
 void			add_token(t_token **head, t_token *new);
 void			clean_get_tkns(t_lexer *ptr);
-void is_gonna_expand(t_token *tkn, int in_single);
+void			is_gonna_expand(t_token *tkn, int in_single);
 void			get_token_helper(t_lexer *lex, int in_single);
 void			general_quote_handler(t_lexer *ptr, char *str);
-void join_tokens(t_shell *shell);
+void			join_tokens(t_shell *shell);
 
 // expander
 void			expander(t_shell *sh);
 void			expander_helper(t_shell *sh, t_expander *exp);
-char			*ch_value(t_expander *exp);
+char			*ch_value(t_expander *exp, int i, int j, int k);
 char			*get_env_key(char *str, int i);
 char			*get_env_value(t_shell *sh, char *key);
 void			handle_exitval(t_shell *sh, t_expander *exp);
-void rm_empty_token(t_shell *sh);
+void			rm_empty_token(t_shell *sh);
 
 // parser
 void			parser(t_shell *sh);
@@ -172,7 +173,7 @@ int				word_count(t_token *token);
 char			**copy_env(char **env);
 int				sh_init(t_shell *shell, char **env);
 void			free_str(char **str);
-void free_sh(t_shell *shell);
+void			free_sh(t_shell *shell);
 void			free_tokens(t_token *token);
 void			free_commands(t_cmd *cmds);
 void			*ft_memset(void *b, int c, size_t len);
@@ -181,12 +182,10 @@ char			*trim(char *str);
 int				numlen(long nbr);
 char			*ft_itoa(int nbr);
 char			*ft_strdup(char *s);
-int ft_strlen(const char *str);
-void clean_get_tkns(t_lexer *lex);
-void free_redirects(t_redirect *rdr);
-void free_env_node(t_env_node *env);
-
-
+int				ft_strlen(const char *str);
+void			clean_get_tkns(t_lexer *lex);
+void			free_redirects(t_redirect *rdr);
+void			free_env_node(t_env_node *env);
 
 // src/main.c
 int				main(int argc, char **argv, char **envp);
@@ -203,7 +202,8 @@ void			init_builtins(t_builtin *builtins);
 char			*ft_join_and_free(char *s1, char *s2);
 void			ft_free_split(char **arr);
 char			*check_the_path(char *path, char *cmd);
-void			print_path_error(t_shell *shell, char *cmd, char *msg, int exit_code);
+void			print_path_error(t_shell *shell, char *cmd,\
+					char *msg, int exit_code);
 int				is_path_okey(t_shell *shell, char *path);
 int				is_absolute_path(char *path);
 char			*find_command_path(t_shell *shell);
@@ -292,6 +292,6 @@ void			ft_strlcat(char *dst, const char *src, size_t size);
 char			*ft_strjoin(char const *s1, char const *s2);
 int				is_valid_exit_arg(const char *str);
 int				is_valid_identifier(char *arg);
-char	*ft_substr(char *s,int start, int len);
+char			*ft_substr(char *s, int start, int len);
 
 #endif

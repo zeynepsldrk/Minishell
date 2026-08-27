@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   buitin_echo.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:04:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/21 14:05:55 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 16:14:56 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*echo komutu için -n, -e ve -E flaglerinin kombinasyonlarında davranışlarını belirledim. */
+
 int	info_flags(char *arg)
 {
 	int	i;
@@ -33,7 +33,7 @@ int	builtin_echo(t_shell *shell, int in_pipe)
 	int	i;
 	int	n_flag;
 
-    (void)in_pipe;
+	(void) in_pipe;
 	i = 1;
 	n_flag = 0;
 	while (shell->cmds->argv[i] && info_flags(shell->cmds->argv[i]))
@@ -43,12 +43,12 @@ int	builtin_echo(t_shell *shell, int in_pipe)
 	}
 	while (shell->cmds->argv[i])
 	{
-		write(1, shell->cmds->argv[i], ft_strlen(shell->cmds->argv[i]));
+		printf("%s", shell->cmds->argv[i]);
 		if (shell->cmds->argv[i + 1])
-			write(1, " ", 1);
+			printf(" ");
 		i++;
 	}
 	if (!n_flag)
-		write(1, "\n", 1);
+		printf("\n");
 	return (0);
 }

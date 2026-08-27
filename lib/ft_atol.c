@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 18:23:26 by zedurak           #+#    #+#             */
-/*   Updated: 2026/04/29 18:23:27 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 17:14:48 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void safe_transform(const char *str, int *i, long *result)
+static void	safe_transform(const char *str, int *i, long *result)
 {
-    while (str[*i] >= '0' && str[*i] <= '9')
-    {
-        if (*result > (LONG_MAX - (str[*i] - '0')) / 10)
-        {
-            errno = ERANGE;
-            return;
-        }
-        *result = *result * 10 + (str[*i] - '0');
-        (*i)++;
-    }
+	while (str[*i] >= '0' && str[*i] <= '9')
+	{
+		if (*result > (LONG_MAX - (str[*i] - '0')) / 10)
+		{
+			errno = ERANGE;
+			return ;
+		}
+		*result = *result * 10 + (str[*i] - '0');
+		(*i)++;
+	}
 }
 
 long	ft_atol(const char *str)
@@ -46,8 +46,7 @@ long	ft_atol(const char *str)
 		}
 		i++;
 	}
-    errno = 0; // errno'yu sıfırla, safe_transform sırasında sayısal olmayan karakterler varsa errno'yu ERANGE yapacak
-    //errno zaten kütüphane içinde tanımlı geliyor
-    safe_transform(str, &i, &result); // sayısal olmayan karakterler varsa errno'yu ERANGE yapar
+	errno = 0;
+	safe_transform(str, &i, &result);
 	return (sign * result);
 }

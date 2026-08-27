@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 13:25:05 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/06 20:34:19 by zedurak          ###   ########.fr       */
+/*   Updated: 2026/06/21 18:03:13 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	init_builtins(t_builtin *builtins)
 	builtins[7].func = NULL;
 }
 
-static	int ft_mini_free(char *key, char *value)
+static	int	ft_mini_free(char *key, char *value)
 {
 	if (!key || !value)
 	{
@@ -90,8 +90,7 @@ t_shell	*init_shell(t_shell *shell, char **envp)
 	shell->exit_value = 0;
 	shell->tokens = NULL;
 	shell->cmds = NULL;
-	init_builtins(shell->list_builtin); //header dosyasına eklediğim struct ın 
-	//içini builtin fonksiyonlarının adları ve çalıştıracağı fonk. atadım. İndex kullanarak fonksiyonları çağırmak istediğimde kolaylık sağlayacak.
+	init_builtins(shell->list_builtin);
 	init_env_list(shell, envp);
 	return (shell);
 }

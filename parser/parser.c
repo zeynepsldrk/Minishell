@@ -3,118 +3,102 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zedurak <zedurak@student.42istanbul.com    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/16 14:16:13 by asay              #+#    #+#             */
-/*   Updated: 2026/06/21 15:18:11 by zedurak          ###   ########.fr       */
+/*   Created: 2026/06/21 20:06:08 by asay              #+#    #+#             */
+/*   Updated: 2026/06/21 20:06:14 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int cmds_syntax_checker(t_shell *sh)
+static	int	cmds_syntax_checker(t_shell *sh)
 {
-    t_token *token;
+	t_token	*token;
 
-    token = sh->tokens;
-    while (token && token->type != PIPE)
-    {
-        if ((token->type == REDIRECT_IN || token->type == REDIRECT_OUT || token->type == HEREDOC 
-            || token->type == APPEND) && token->next && token->next->type == PIPE)
-        {
-            write(2, "minishell: syntax error near unexpected token `|'\n", 50);
-            sh->exit_value = 2;
-            return (1);
-        }
-        token = token->next;
-    }
-    return (0);
+	token = sh->tokens;
+	while (token && token->type != PIPE)
+	{
+		if ((token->type == REDIRECT_IN || token->type == REDIRECT_OUT
+				|| token->type == HEREDOC || token->type == APPEND)
+			&& token->next && token->next->type == PIPE)
+		{
+			write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+			sh->exit_value = 2;
+			return (1);
+		}
+		token = token->next;
+	}
+	return (0);
 }
 
-t_cmd *get_cmds (t_shell *sh) // parserda kaullanacagimiz icin tum cmd'leri almalıyım
+t_cmd	*get_cmds(t_shell *sh)
 {
-    t_token *token;   // token listesinde dolasmamiz icin
-    t_cmd   *cmd;     // olusturdugumuz cmd yapisi
-    t_cmd   *head;         // dondurecegim degisken. cmd yapisinin basi.
+	t_token	*token;
+	t_cmd	*cmd;
+	t_cmd	*head;
 
-    token = sh->tokens;
-    cmd = malloc(sizeof(t_cmd)); // her cmd icin yer acmamiz gerektigi icin while'ın icinde
-    if (!cmd)
-        return NULL;
-    fill_cmd(cmd, token); // cmd yapisini dolduruyoruz
-    head = cmd; // cmd yapisinin basini kaybetmemek icin
-    while (token != NULL) // token listesinde dolasarak pipe gorene kadar cmd'leri alacagiz
-    {
-        token = token->next;
-        if(token == NULL)
-            break;
-        if (token->type == PIPE) // pipe gorunce cmd'yi bitirip yeni cmd'ye baslamamiz gerekiyor
-            handle_pipe(&cmd, &token); // pipe gorunce cmd'yi bitirip yeni cmd'ye baslamamiz gerekiyor
-    }
-    cmd->next = NULL; // son cmd'nin next'ini NULL yaparak cmd listesinin sonunu belirtiyoruz.
-    if (cmds_syntax_checker(sh))
-        return (ft_free_cmd_list(head), NULL);
-    return (head);
+	token = sh->tokens;
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	fill_cmd(cmd, token);
+	head = cmd;
+	while (token != NULL)
+	{
+		token = token->next;
+		if (token == NULL)
+			break ;
+		if (token->type == PIPE)
+			handle_pipe(&cmd, &token);
+	}
+	cmd->next = NULL;
+	if (cmds_syntax_checker(sh))
+		return (ft_free_cmd_list(head), NULL);
+	return (head);
 }
 
-char **get_argv(t_token *token)
+static t_redirect	*new_redirect(t_token *token)
 {
-    char **argv;
-    int i;
+	t_redirect	*rdr;
 
-    argv = malloc(sizeof(char *) * (word_count(token) + 1));
-    i = 0;
-    if (!argv)
-        return NULL;
-    while(token != NULL && token->type != PIPE)
-    {
-        if (token->type == WORD)
-        {
-            argv[i] = ft_strdup(token->context);
-            i++;
-        }
-        if(token->type == REDIRECT_IN || token->type == REDIRECT_OUT || token->type == HEREDOC || token->type == APPEND)
-        {
-            if(token->next == NULL) // eger redirect'in targeti yoksa donguden cik
-                break; 
-            token = token->next; // redir sonrasi target word'u saymayalim diye
-        }
-        token = token->next;
-    }
-    argv[i] = NULL;
-    return (argv);
+	rdr = malloc(sizeof(t_redirect));
+	if (!rdr)
+		return (NULL);
+	rdr->type = token->type;
+	rdr->target = ft_strdup(token->next->context);
+	rdr->next = NULL;
+	return (rdr);
 }
 
-t_redirect *get_redirs(t_token *token)
+t_redirect	*get_redirs(t_token *token)
 {
-    t_redirect *rdr;
-    t_redirect *head;
-    t_redirect *pre;
+	t_redirect	*rdr;
+	t_redirect	*head;
+	t_redirect	*pre;
 
-    head = NULL;
-    rdr = NULL;
-    while (token != NULL && token->type != PIPE)
-    {
-        if (token->type == REDIRECT_IN || token->type == REDIRECT_OUT || token->type == HEREDOC || token->type == APPEND)
-        {
-            rdr = malloc(sizeof(t_redirect));
-            if(!rdr)
-                return NULL;
-            rdr->type = token->type;
-            if(head == NULL) // eger ilk redirect ise head'i guncelliyoruz
-                head = rdr;
-            else // eger ilk redirect degilse onceki redirectin nextine bagliyoruz
-                pre->next = rdr; // yeni redirectin presi eski head oluyor
-            pre = rdr; // yeni redirectin presi eski head oluyor
-            rdr->target = ft_strdup(token->next->context);
-            rdr->next = NULL; // son redirectin next'ini NULL yaparak redirect listesinin sonunu belirtiyoruz.
-        }
-        token = token->next;
-    }
-    return (head);
+	head = NULL;
+	pre = NULL;
+	while (token != NULL && token->type != PIPE)
+	{
+		if (token->type == REDIRECT_IN || token->type == REDIRECT_OUT
+			|| token->type == HEREDOC || token->type == APPEND)
+		{
+			rdr = new_redirect(token);
+			if (!rdr)
+				return (NULL);
+			if (head == NULL)
+				head = rdr;
+			else
+				pre->next = rdr;
+			pre = rdr;
+		}
+		token = token->next;
+	}
+	return (head);
 }
 
-void parser (t_shell *sh)
+void	parser(t_shell *sh)
 {
-    sh->cmds = get_cmds(sh);
+	sh->cmds = get_cmds(sh);
 }

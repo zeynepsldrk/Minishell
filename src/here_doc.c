@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 20:19:36 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/07 20:31:25 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 18:02:36 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	here_doc_signal(t_redirect *redir, int status)
 
 void	here_doc(t_redirect *redir)
 {
-	char *line;
+	char	*line;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
@@ -35,7 +35,7 @@ void	here_doc(t_redirect *redir)
 		if (line == NULL || ft_strcmp(line, redir->target) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(redir->heredoc_fd[1], line, ft_strlen(line));
 		write(redir->heredoc_fd[1], "\n", 1);
@@ -44,10 +44,10 @@ void	here_doc(t_redirect *redir)
 	close(redir->heredoc_fd[1]);
 }
 
-int apply_heredoc(t_redirect *redir)
+int	apply_heredoc(t_redirect *redir)
 {
-	int pid;
-	int status;
+	int	pid;
+	int	status;
 
 	if (pipe(redir->heredoc_fd) == -1)
 		return (1);

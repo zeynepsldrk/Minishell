@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <asay@student.42istanbul.com.tr>    +#+  +:+       +#+        */
+/*   By: asay <asay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 20:12:21 by zedurak           #+#    #+#             */
-/*   Updated: 2026/06/19 19:25:41 by marvin           ###   ########.fr       */
+/*   Updated: 2026/06/21 16:13:08 by asay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	built_builtin(t_shell *shell, int i, int in_pipe, char *cmd)
+static	void	built_builtin(t_shell *shell, int i, int in_pipe, char *cmd)
 {
 	if (!cmd)
 		return ;
-	while (shell->list_builtin[i].name) //komutu çalıştır
+	while (shell->list_builtin[i].name)
 	{
 		if (ft_strcmp(cmd, shell->list_builtin[i].name) == 0)
 		{
@@ -27,16 +27,16 @@ static void	built_builtin(t_shell *shell, int i, int in_pipe, char *cmd)
 	}
 }
 
-static int	is_redir(t_shell *shell, int in_pipe, int bcp_stdout, int bcp_stdin)
+static	int	is_redir(t_shell *shell, int in_pipe, int bcp_stdout, int bcp_stdin)
 {
-	if(shell->cmds->redirects != NULL) //redir uygula -varsa tabii-
+	if (shell->cmds->redirects != NULL)
 	{
 		if (apply_redir(shell->cmds->redirects))
 		{
 			if (g_signal == SIGINT)
 				shell->exit_value = 130;
 			else
-				shell->exit_value = 1; //redir uygularken hata olursa çıkış değeri 1 yap
+				shell->exit_value = 1;
 			if (!in_pipe)
 			{
 				if (ft_safe_dup2(bcp_stdout, STDOUT_FILENO) == -1)
@@ -46,16 +46,16 @@ static int	is_redir(t_shell *shell, int in_pipe, int bcp_stdout, int bcp_stdin)
 				close(bcp_stdout);
 				close(bcp_stdin);
 			}
-			return (1); //redir uygularken hata olursa fonksiyondan çık
+			return (1);
 		}
 	}
 	return (0);
 }
 
-void	execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem tek node hem de builtin ise zaten buraya gelmişizdir.
-{										  //Burada redir olup olmaması fark etmeksizin
-	int backup_stdout;
-	int backup_stdin;
+void	execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe)
+{
+	int	backup_stdout;
+	int	backup_stdin;
 
 	backup_stdout = -1;
 	backup_stdin = -1;
@@ -75,8 +75,8 @@ void	execute_builtin(char *cmd, t_shell *shell, int i, int in_pipe) //cmd hem te
 			exit(1);
 		if (ft_safe_dup2(backup_stdin, STDIN_FILENO) == -1)
 			exit(1);
-		close(backup_stdout); // eski fdleri kapatma sebebimiz: hem eski fd nin hemde yeni fd nin
-		close(backup_stdin);  //aynı anda açık kalması, sınırlı fd sayısına sahip olmamızdan kaynaklı boş yere çalışan fdlerin bulunmasına
+		close(backup_stdout);
+		close(backup_stdin);
 	}
 }
 
@@ -100,14 +100,14 @@ int	is_builtin(char *cmd, t_shell *shell)
 
 char	*my_little_getenv(t_env_node *env_list, char *key)
 {
-	t_env_node *temp;
+	t_env_node	*temp;
 
 	temp = env_list;
 	while (temp)
 	{
 		if (ft_strcmp(temp->key, key) == 0)
-			return (temp->value); // Değeri bulduk, adresi döndür
+			return (temp->value);
 		temp = temp->next;
 	}
-	return (NULL); // Bulamazsak NULL dön
+	return (NULL);
 }
